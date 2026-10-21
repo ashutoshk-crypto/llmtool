@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T14:34:16.773838+00:00",
+  "generated_at": "2026-10-21T16:47:01.415988+00:00",
   "competitors": [
     "CoinSwitch",
     "CoinDCX",
@@ -1473,6 +1473,2287 @@
       "response": "",
       "mentions": [],
       "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Read timed out. (read timeout=60)"
+    },
+    {
+      "prompt": "What are the most common security threats to investment platforms?",
+      "intent": "Transactional",
+      "category": "CoinSwitch Cares",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Read timed out. (read timeout=60)"
+    },
+    {
+      "prompt": "What are the most common security threats to cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "CoinSwitch Cares",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Read timed out. (read timeout=60)"
+    },
+    {
+      "prompt": "What are the most common security threats to cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "CoinSwitch Cares",
+      "platform": "Gemini",
+      "response": "Cryptocurrency exchanges are prime targets for cybercriminals because they hold massive pools of digital assets and liquidity in a single environment. The most common and dangerous security threats facing cryptocurrency exchanges include: 1. Hot Wallet Compromises & Private Key Thefts The Threat: Exchanges use \"hot wallets\" (internet-connected wallets) to facilitate fast daily trading and withdrawals for users. If attackers infiltrate the exchange's servers and compromise these hot wallets, they can steal the private keys and instantly drain millions of dollars in digital assets. Because blockchain transactions are irreversible, stolen funds cannot be easily clawed back. 2. Sophisticated Phishing & Social Engineering The Threat: Rather than breaking through technical firewalls directly, hackers often target the human element. Employees or high-net-worth users are targeted with spear-phishing emails, fake login pages, or voice phishing (vishing) to steal admin credentials, multi-factor authentication (MFA) codes, or session cookies, granting attackers privileged access to backend systems. 3. Insider Threats The Threat: Malicious or compromised employees—such as customer support agents, system administrators, or developers—possess privileged access to internal infrastructure. An insider can abuse their credentials to bypass security controls, extract customer data, alter database records, or assist external hackers in executing a heist. 4. Distributed Denial of Service (DDoS) & Extortion The Threat: Attackers flood an exchange's servers with massive volumes of traffic to overwhelm its infrastructure, causing downtime or service outages. While users are locked out and panic, extortionists often demand ransom payments to call off the attack or to prevent further disruption during critical market movements. 5. Advanced Persistent Threats (APTs) & Supply Chain Attacks The Threat: State-sponsored hacker groups (such as North Korea-linked syndicates like Lazarus) frequently deploy sophisticated APTs. They infiltrate an exchange's network and remain undetected for months, mapping out the architecture. They may also compromise third-party software vendors, open-source libraries, or plugin tools used by the exchange (a supply chain attack) to inject malicious code directly into the platform's update cycle. Key Mitigations Used by Top Exchanges To combat these threats, secure exchanges implement rigorous defenses, including: Cold Storage Infrastructure: Keeping the vast majority (often 90%+) of customer funds offline in air-gapped hardware cold storage. Multi-Signature (Multisig) & Threshold Signatures: Requiring multiple independent approvals or private key fragments to authorize major fund movements. Zero Trust Architecture & Strict Access Controls: Enforcing hardware-key-based MFA (like FIDO2/WebAuthn YubiKeys) for all employees and administrative actions.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "What are the most secure ways to store cryptocurrency?",
+      "intent": "Informational",
+      "category": "CoinSwitch Cares",
+      "platform": "ChatGPT",
+      "response": "The most secure way to store cryptocurrency for the long term is generally a hardware wallet combined with carefully protected offline backups of your recovery phrase . The key is to protect both your crypto's private keys and your ability to recover them if your device is lost, stolen, damaged, or compromised. There isn't one perfect solution for everyone. The best choice depends on how much crypto you hold, how often you trade, and how comfortable you are managing your own security. The 5 safest ways to store cryptocurrency Hardware wallet\nBest for most long-term holders\nA dedicated device keeps private keys isolated from your internet-connected computer or phone. Transactions are signed on the device rather than exposing your keys to the internet. Pros: Strong protection against many malware and phishing attacks. Risks: Fake devices, compromised purchase channels, malicious transaction approvals, and stolen recovery phrases. Best practice: Buy from the manufacturer's official store, verify the device, and initialize it yourself. Offline recovery phrase backup\nEssential backup\nYour recovery phrase can restore access to your crypto if your wallet is lost or destroyed. A metal backup is more resistant to fire, water, and physical deterioration than paper. Pros: Durable, offline, and independent of the original device. Risks: Anyone who obtains the phrase may be able to steal your funds. Best practice: Store it securely, away from the wallet, and never photograph it or put it in cloud storage. Multisignature wallet\nBest for high-value holdings\nA multisig wallet requires multiple independent keys to authorize a transaction—for example, two out of three keys. Pros: One compromised or lost key usually isn't enough to steal the funds. Risks: More complicated setup and recovery; losing too many keys can permanently lock you out. Best practice: Keep keys in separate secure locations and document a recovery procedure without exposing the keys. Reputable exchange with strong security\nConvenient if you trade frequently or need quick access to your funds. Pros: Simple trading, account recovery options, and potentially institutional custody protections. Risks: Exchange insolvency, account takeover, withdrawal freezes, and custody or regulatory risks. Best practice: Enable a hardware security key or strong two-factor authentication, use withdrawal allowlists where available, and avoid keeping your entire long-term balance on an exchange. Air-gapped cold storage\nKeeps signing keys on a device that is never connected to the internet. Pros: Reduces exposure to online attacks. Risks: Setup mistakes, insecure transfer methods, malicious transaction data, and difficult recovery. Best practice: Use a well-documented, audited wallet process and verify every transaction on the trusted signing device. The security setup I'd recommend For someone holding cryptocurrency as a long-term investment, I'd use this approach: 1. Keep savings in a hardware wallet Use a reputable device that supports your specific coins and networks. 2. Back up the recovery phrase offline Write it down accurately, consider a metal backup, and keep backups in secure, separate locations. 3. Use a separate hot wallet for spending Keep only a small amount there for regular transactions and interacting with crypto apps. 4. Protect against scams and mistakes Verify recipient addresses and transaction details on your device. Never disclose your recovery phrase, and test a small transfer before moving a large amount. This combines offline key protection, recovery planning, and everyday convenience. The basic principles are also covered by Bitcoin.org's wallet security guide and Ethereum.org's security guidance . Five mistakes that can cost you everything Never share your seed phrase with anyone, including someone claiming to be customer support. Never enter your seed phrase into an unexpected website, link, or app. Never assume a hardware wallet makes every transaction safe; malicious approvals can still put your funds at risk. Never buy a used wallet or trust a device that comes with a pre-written recovery phrase. Never forget to plan for recovery if you lose your device, become incapacitated, or die. Self-custody eliminates some third-party risks, but it also means there may be no one who can reverse a theft or recover lost keys. Let me tailor the safest option to you The best setup depends on your situation. One question: approximately how much cryptocurrency are you planning to store? Approximate total value Under €1,000 €1,000–€10,000 €10,000–€100,000 Over €100,000 Prefer not to say How will you use it? Hold for years Trade frequently Use DeFi or staking Your experience Beginner Some experience Experienced crypto user",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "What are the most secure ways to store cryptocurrency?",
+      "intent": "Informational",
+      "category": "CoinSwitch Cares",
+      "platform": "Gemini",
+      "response": "When it comes to securing cryptocurrency, the primary rule is understanding that you aren't storing the actual coins; you are storing the private keys that give you ownership and authorization to move them on the blockchain. The most secure storage methods eliminate online vulnerabilities (internet connections, malicious software, and third-party exchange risks). 1. Hardware Wallets (The Gold Standard for Cold Storage) A hardware wallet (often called a cold wallet) is a physical electronic device—typically resembling a USB drive—designed to store your private keys completely offline. How it works: Your keys never touch an internet-connected device. When you want to make a transaction, you plug the device into a computer or phone, and the transaction is signed locally on the physical hardware. Pros: Highly resistant to online hacking, malware, and phishing attacks. Cons: They cost money (usually around $70 to $200), require careful physical handling, and involve a slight learning curve. 2. Multi-Signature (Multisig) Wallets For larger holdings, institutional funds, or advanced security, a multisig wallet requires more than one private key to authorize a transaction. How it works: You can set up a \"2-of-3\" configuration, where you own three separate hardware wallets (or distribute keys among trusted parties/devices), and any transfer requires approval from at least two of them. Pros: Eliminates a single point of failure. If one device is stolen or compromised, the hacker still cannot move your funds. Cons: Highly complex to set up and manage; if you lose access to a majority of the keys, your funds are permanently locked. 3. Air-Gapped Hardware Wallets A specialized step above standard hardware wallets, air-gapped wallets never physically connect to a computer via USB or Bluetooth. How it works: They communicate with your online device exclusively through QR codes or MicroSD cards, ensuring zero direct electronic connection to the internet. Pros: Maximum physical and digital isolation. Cons: Less convenient for frequent transactions; can be cumbersome to use. Critical Security Rules (Regardless of Wallet Choice) Choosing the right hardware is only half the battle. Your setup is only as secure as how you handle your seed phrase (the 12-to-24-word backup generated when you initialize a wallet): Never store your seed phrase digitally: Do not take a screenshot, save it in a notes app, or type it into a cloud backup (like Google Drive or iCloud). If a hacker breaches your cloud account, your crypto is gone. Physically back it up offline: Write your seed phrase down on paper or, even better, stamp/engrave it onto a stainless steel backup plate to protect against fire and water damage. Store physical backups securely: Keep your seed phrase in a secure location, such as a home safe or a bank safe-deposit box. Beware of Phishing: Scammers frequently create fake lookalike websites or browser extensions pretending to be popular wallet brands. Always double-check URLs and download software exclusively from official sources. Alternative Storage: When to Use Custodial/Hot Wallets? While self-custody cold storage is unmatched for long-term security, some investors use a tiered approach: Exchange (Custodial) Wallets: Major, regulated crypto exchanges are convenient for active trading, but they mean you are trusting a third party. Never keep long-term or life-changing amounts of crypto on an exchange. Software/Mobile Wallets: Great for small amounts of spending money (like a physical leather wallet containing daily cash), but too vulnerable for a primary nest egg.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I choose the best cryptocurrency wallet?",
+      "intent": "Informational",
+      "category": "Crypto Deposit",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Read timed out. (read timeout=60)"
+    },
+    {
+      "prompt": "How do I choose the best cryptocurrency wallet?",
+      "intent": "Informational",
+      "category": "Crypto Deposit",
+      "platform": "Gemini",
+      "response": "Choosing the best cryptocurrency wallet depends on how much crypto you plan to hold, how often you intend to trade, and what level of security or convenience you prefer. Because a wallet doesn't actually store your coins (the blockchain does), its primary job is to securely store your private keys —the cryptographic passwords that grant access to your funds. The evaluation process breaks down into several key steps: Step 1: Decide Between Custodial vs. Non-Custodial Custodial Wallets: Managed by a third party (like keeping your crypto on a centralized exchange). It is easy to use and recovery is simple if you lose your password, but you do not truly own your private keys (\"not your keys, not your coins\"). If the platform goes down or gets hacked, your funds are at risk. Non-Custodial (Self-Custody) Wallets: You have 100% control over your private keys and seed phrase. No one else can freeze or access your funds, but you are entirely responsible for backing up your recovery phrase. If you lose it, nobody can reset your password. Step 2: Choose Hot vs. Cold Storage Hot Wallets (Software): Connected to the internet (apps on your phone, desktop software, or browser extensions). Best for: Everyday trading, interacting with decentralized apps (dApps), NFTs, and smaller balances. Popular examples: MetaMask (for Ethereum/EVM chains), Trust Wallet (multi-chain mobile), Exodus, or Zengo (keyless/MPC security). Cold Wallets (Hardware): Physical devices that isolate your private keys completely offline, away from internet-connected malware. You must physically press buttons on the device to approve any transaction. Best for: Long-term storage and substantial crypto holdings. Popular examples: Ledger (Nano series), Trezor, or Tangem (card-based hardware). Step 3: Evaluate Core Features When looking at specific options, check for these vital criteria: Asset & Network Compatibility: Make sure the wallet supports the specific blockchains and tokens you want to hold (e.g., Bitcoin, Ethereum, Solana, or specific Layer-2 networks). Backup & Recovery Mechanics: Understand how the wallet handles recovery. Traditional wallets provide a 12-to-24-word seed phrase, while newer models use multi-party computation (MPC) or biometric recovery options. Open-Source Transparency: Many security-conscious users prefer open-source wallets (like Trezor) because independent developers can publicly audit the code for hidden vulnerabilities. Web3 Integration: If you plan to trade NFTs, stake assets, or use DeFi protocols, ensure the wallet features WalletConnect or a built-in dApp browser. Summary Checklist to Find Your Fit Absolute Beginner keeping small amounts on mobile: Look for a reputable non-custodial mobile wallet with an intuitive user interface (e.g., Trust Wallet, Zengo). Active DeFi/NFT user: Look for a robust browser extension wallet with multi-chain capability (e.g., MetaMask, Coinbase Wallet). Long-term holder or significant investor: Invest in a trusted hardware/cold wallet (e. g., Ledger, Trezor, Tangem) to keep your private keys permanently offline.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "What do isolated margin and leverage (e.g., 1x, 5x, 10x) mean on a futures platform, and how do they affect liquidation price?",
+      "intent": "Commercial",
+      "category": "Crypto Deposit",
+      "platform": "ChatGPT",
+      "response": "On a futures trading platform, isolated margin determines how much money you put at risk on a particular position, while leverage determines how large a position you can control with that money. Together, they affect how far the market can move against you before your position is liquidated. Let's break it down with simple examples. 1. What is isolated margin? Isolated margin means you allocate a specific amount of margin to one futures position. That margin is kept separate from the rest of your available trading balance, unlike cross margin, which can use more of your account balance to support a position. For example, suppose you have $1,000 in your futures wallet and open a position using $100 of isolated margin. Total futures wallet\n$1,000 Margin allocated to your position\n$100 Isolated Generally, the other $900 is not automatically used to prevent liquidation of this isolated position. Adding margin manually or through an auto-add-margin feature can change this. If the position loses money, its allocated margin absorbs the loss. When its remaining margin becomes insufficient to meet the exchange's maintenance-margin requirement, the exchange can liquidate the position. The key benefit: isolated margin limits how much of your account is directly exposed to a single position, provided you don't add more margin or have automatic margin additions enabled. It does not eliminate the risk of losing the allocated margin. 2. What does leverage mean? Leverage lets you control a position larger than the margin you put up. The basic relationship is: [\n\\text{Position size}=\\text\\times\\text\n] Suppose you use $100 of margin: Leverage Position size Approx. profit/loss from a 1% price move 1× $100 $1 5× $500 $5 10× $1,000 $10 20× $2,000 $20 These examples assume a linear futures contract and ignore fees and funding payments. Notice that leverage doesn't automatically make a trade profitable. It magnifies the dollar impact of price movements in both directions. If the market moves in your favor by 2%, a $1,000 position gains about $20. If the market moves against you by 2%, that position loses about $20. With only $100 of margin, a $20 loss represents 20% of your initial margin. 3. How does leverage affect liquidation price? The higher the leverage, the smaller the adverse price move needed to liquidate your position , assuming the same position type and comparable margin conditions. Imagine you open a LONG position on an asset at $100. Example: $1,000 position, entry price $100\nIllustrative estimates only; actual liquidation occurs earlier because of maintenance margin, fees and exchange rules.\n{#each [{lev:\"1×\",margin:\"$1,000\",move:\"Nearly 100%\",price:\"Near $0 in a simplified model\",pct:100},{lev:\"5×\",margin:\"$200\",move:\"Nearly 20%\",price:\"Around $80\",pct:20},{lev:\"10×\",margin:\"$100\",move:\"Nearly 10%\",price:\"Around $90\",pct:10}] as item} leverage\nMargin: Approximate liquidation region: {/each} The simplified relationship is: [\n\\text{Adverse move to liquidation}\\approx\\frac{1}{\\text}\n] For a long position, the adverse move is downward. For a short position, it is upward. This is only a rough rule of thumb, not an exact liquidation formula. Actual liquidation prices depend on maintenance margin, fees, contract specifications and the exchange's risk rules. 4. What happens when you change isolated margin? Suppose you have a $1,000 LONG position entered at $100 with 10× leverage. Initial margin: $100. Your liquidation price is relatively close to $100. Add $50 of isolated margin. Your position size stays at $1,000, but the additional collateral generally moves your liquidation price farther down. Remove margin. If the platform allows it, your liquidation price generally moves closer to your entry price. The important distinction is that adding margin to an existing position is not the same as increasing the position size. What you change Typical effect on liquidation risk Increase leverage for the same position size Liquidation moves closer to entry Decrease leverage for the same position size Liquidation moves farther from entry Add isolated margin without changing position size Liquidation moves farther away Increase position size without adding proportional margin Liquidation generally moves closer Switch to cross margin Other available collateral may help, but more of your account is exposed The exact result depends on how your platform applies leverage changes and calculates margin. 5. Try an interactive example Adjust the leverage, margin and direction below to see how the simplified calculations change. Entry price ($) <input inputType=\"number\" value= onChange= placeholder=\"100\"/> Isolated margin ($) <input inputType=\"number\" value= onChange= placeholder=\"100\"/> Leverage × <slider min={1} max={20} step={1} value= onChange= marks={[{\"value\":1,\"label\":\"1×\"},{\"value\":5,\"label\":\"5×\"},{\"value\":10,\"label\":\"10×\"},{\"value\":20,\"label\":\"20×\"}]}/> Position direction Long Short Estimated position size\n${n.toLocaleString(\"en-US\",{maximumFractionDigits:2})} Simplified liquidation-price estimate\n${Math.max(0,liq).toLocaleString(\"en-US\",{maximumFractionDigits:4})}\nAssumes a linear contract, no fees or maintenance margin, and that margin equals position size divided by leverage. This is a teaching model, not an exchange liquidation-price calculator. 6. The practical takeaway Isolated margin controls how much collateral is assigned to a specific position. Leverage determines how much exposure you take relative to your margin. Higher leverage makes liquidation more likely after a smaller adverse price move. More isolated margin on the same position generally gives the trade more room to move against you. Liquidation is usually triggered by the mark price , not necessarily the last traded price, on platforms such as Binance Futures. One final point: a liquidation price is not a guaranteed stop-loss level. In fast markets, fees, funding, slippage and the exchange's liquidation process can affect your actual outcome. Which futures platform are you using — Binance, Bybit, OKX, Bitget, or another one? I can explain how that platform calculates its liquidation price with a more realistic numerical example.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "What do isolated margin and leverage (e.g., 1x, 5x, 10x) mean on a futures platform, and how do they affect liquidation price?",
+      "intent": "Commercial",
+      "category": "Crypto Deposit",
+      "platform": "Gemini",
+      "response": "1. Isolated Margin vs. Cross Margin On a cryptocurrency or derivatives futures platform, your margin is the collateral you put up to open and maintain a leveraged position. Margin can be managed in different modes, most commonly Isolated and Cross . Isolated Margin: The margin allocated to a specific position is strictly separated from your account balance. How it works: If you allocate $ 100 \\$100 $100 as isolated margin for a trade, the maximum amount you can ever lose on that specific trade is that $ 100 \\$100 $100 . If the trade goes deeply against you, only that isolated margin is liquidated, leaving the rest of your account balance untouched. Cross Margin: Your entire account balance (or a designated pool of funds) acts as collateral for all open positions. How it works: If one position is losing money, the platform will draw funds from your overall account balance to prevent liquidation, keeping the trade alive longer. However, if the market crashes hard enough, your entire account balance can be wiped out across all positions. 2. What is Leverage (1x, 5x, 10x)? Leverage allows you to borrow funds from the exchange to open a position much larger than your actual account balance (margin). It magnifies both your potential profits and your potential losses. 1x Leverage: No leverage. You are trading with only your own capital (e. g., $ 1 , 000 \\$1,000 $1 , 000 margin controls a $ 1 , 000 \\$1,000 $1 , 000 position). A 10% price increase yields a 10% profit ($100), and a 10% drop yields a 10% loss ($100). 5x Leverage: You borrow against your collateral to open a position 5 times larger than your margin (e. g., $ 1 , 000 \\$1,000 $1 , 000 margin controls a $ 5 , 000 \\$5,000 $5 , 000 position). 10x Leverage: You control a position 10 times the size of your margin (e. g., $ 1 , 000 \\$1,000 $1 , 000 margin controls a $ 10 , 000 \\$10,000 $10 , 000 position). 3. How Leverage and Isolated Margin Affect Liquidation Price The liquidation price is the price level at which your position is automatically closed by the exchange because your remaining margin can no longer cover the losses (i. e., your margin hits the maintenance margin threshold). In an isolated margin setup, higher leverage pushes your liquidation price much closer to your entry price, making your position vastly more sensitive to market volatility. The Core Formula (Simplified Long Position) For an isolated long position, the liquidation price can be estimated as: Liquidation Price ≈ Entry Price × ( 1 − 1 Leverage + Maintenance Margin Rate ) \\text{Liquidation Price} \\approx \\text{Entry Price} \\times \\left(1 - \\frac{1}{\\text{Leverage}} + \\text{Maintenance Margin Rate}\\right) Liquidation Price ≈ Entry Price × ( 1 − Leverage 1 ​ + Maintenance Margin Rate ) (Note: Actual exchange formulas factor in trading fees, funding fees, and slight variations in maintenance margin rates based on position size). 4. Practical Example: Comparing 1x, 5x, and 10x Imagine you want to go Long on an asset with an Entry Price of $ 10 , 000 \\$10,000 $10 , 000 , and you commit $ 1 , 000 \\$1,000 $1 , 000 of isolated margin. Let's assume a maintenance margin requirement of roughly 0. 5% for simplicity. Leverage Position Size ( Margin × Leverage ) Estimated Liquidation Price (Long) Price Drop Required to Liquidate 1x $1 , 000 ( 1 , 000 × 1 ) Near $0 (effectively won't liquidate via margin call) ~100% 5x $5 , 000 ( 1 , 000 × 5 ) ≈ $8 , 100 ~19% 10x $10 , 000 ( 1 , 000 × 10 ) ≈ $9 , 050 ~9.5% Key Takeaways from the Example: At 1x: Because you aren't borrowing funds, your liquidation price is essentially zero. The asset would have to go to zero for you to lose your initial capital entirely. At 5x: Your position size is $ 5 , 000 \\$5,000 $5 , 000 . If the asset price drops by just 19% (down to $ 8 , 100 \\$8,100 $8 , 100 ), your $ 1 , 000 \\$1,000 $1 , 000 margin is entirely depleted to cover the $ 950 \\$950 $950 drop across the $ 5 , 000 \\$5,000 $5 , 000 position, triggering liquidation. At 10x: Your position size is doubled to $ 10 , 000 \\$10,000 $10 , 000 . Because the position is larger relative to your $ 1 , 000 \\$1,000 $1 , 000 margin, a mere 9.5% price drop against you wipes out your margin, setting the liquidation price at $ 9 , 050 \\$9,050 $9 , 050 . Summary Checklist for Risk Management Higher Leverage = Tighter Liquidation Buffer: Even a minor adverse market wiggle will liquidate a high-leverage position. Isolated Margin Protects Your Wallet: If liquidated, you only lose the specific margin assigned to that trade, preventing a total account wipeout. Fees Matter: Remember that borrowing funds for leverage incurs hourly or daily funding fees , which gradually eat into your margin and shift your liquidation price slightly closer to your entry price over time.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I use leverage in cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Read timed out. (read timeout=60)"
+    },
+    {
+      "prompt": "How do I use leverage in cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "Gemini",
+      "response": "Using leverage in cryptocurrency trading allows you to borrow capital from an exchange to open a position larger than your initial account balance. While it can amplify potential gains, it also proportionally magnifies potential losses and liquidation risk. How Crypto Leverage Works When trading with leverage, you put down a fraction of the total position value, known as margin . Margin Requirement: If you trade with 10x leverage, your initial margin requirement is 10%. To open a $10,000 position, you need to provide $1,000 of your own capital as collateral; the exchange lends you the remaining $9,000 . Long vs. Short: Long (Buying): You borrow capital to buy an asset, expecting its price to rise so you can sell it higher, repay the loan, and keep the profit. Short (Selling): You borrow the asset itself to sell it immediately, expecting the price to drop so you can buy it back cheaper, return the borrowed asset, and pocket the difference. Key Concepts & Mechanics Liquidation Price: This is the critical threshold where your remaining collateral is no longer sufficient to cover the losses on your borrowed position. When the market moves against you past this point, the exchange automatically force-closes your position to protect the lender, resulting in the loss of your initial margin. Margin Modes: Cross Margin: Your entire account balance across all open positions is shared as collateral. This helps prevent early liquidation on a single trade, but a severe market downturn can drain your entire account balance. Isolated Margin: Collateral is restricted strictly to a specific position. If that position hits its liquidation price, only that specific margin amount is lost, protecting the rest of your funds. Funding Rates: In perpetual futures contracts (the most common venue for crypto leverage), traders periodically pay or receive a funding fee (typically every 8 hours) to anchor the contract price to the underlying spot market price. If longs heavily outweigh shorts, longs pay shorts, and vice versa. Step-by-Step Guide to Executing a Leveraged Trade Choose a Reputable Platform: Select a regulated or established exchange offering derivatives or margin trading (e. g., Binance, Bybit, Kraken Pro, Coinbase Advanced). Ensure you understand their jurisdiction rules, as leverage restrictions vary widely by region (e. g., heavily restricted or banned for retail users in the U. S. ). Transfer Funds to Your Derivatives/Margin Wallet: Spot wallets usually cannot be used directly for leveraged futures contracts; you must transfer funds (typically stablecoins like USDT/USDC or collateral like BTC/ETH) into your dedicated futures or margin account. Select Margin Mode & Leverage Level: Choose between Cross or Isolated margin, and set your desired leverage multiplier (e. g., 2x, 5x, 10x, 20x). Caution: Higher leverage moves your liquidation price dangerously close to your entry price. Configure Order Types: Limit Orders: Enter at a specific price. Market Orders: Execute instantly at current market prices. Set Risk Management Controls (Crucial): Always define your Stop-Loss and Take-Profit orders before or immediately after entering the trade to protect against sudden market volatility. Monitor and Close: Keep a close eye on your maintenance margin and funding fees, and manually close the position when your target is reached. Major Risks of Crypto Leverage Extreme Volatility: Cryptocurrency markets operate 24/7 and experience sharp price swings. Sudden flash crashes or liquidations of other traders can wipe out leveraged positions in minutes. Borrowing Costs (Interest/Funding): Holding leveraged positions open for days or weeks incurs ongoing interest charges or funding fees that eat into potential profits. Psychological Pressure: High-stress trading often leads to emotional decision-making, revenge trading, or moving stop-losses, which accelerates account depletion. Risk Management Tip: If you choose to experiment with leverage, always start small (e.g., 2x to 3x), use Isolated Margin to cap your maximum loss per trade, and never risk capital you cannot afford to lose.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "Can you explain how futures trading works in crypto and what risks I should know about?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Read timed out. (read timeout=60)"
+    },
+    {
+      "prompt": "Can you explain how futures trading works in crypto and what risks I should know about?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "Gemini",
+      "response": "Crypto futures trading allows investors to speculate on the future price of digital assets (like Bitcoin or Ethereum) without actually owning the underlying tokens. Instead of buying crypto on a spot market, you enter into a contract agreeing to buy or sell an asset at a predetermined price on a future date—or, more commonly in crypto, trade a contract that can be closed out at any time. How Crypto Futures Work Contracts, Not Ownership: When you trade crypto futures, you hold a contract. There are two main types: Standard Futures: Expire on a set date (e.g., monthly or quarterly). Perpetual Futures (\"Perps\"): Have no expiration date and can be held indefinitely. They use a mechanism called a funding rate to tether the contract price closely to the actual spot market price. Going Long or Short: Long: You agree to buy, expecting the price to rise. You profit if the market goes up. Short: You agree to sell, expecting the price to fall. You profit if the market goes down. Margin and Leverage: You don’t need to put up 100% of the trade's value. Instead, you deposit a fraction called margin . This unlocks leverage (e.g., 5x, 10x, or 50x), which lets you control a much larger position with a smaller amount of capital. Example: With 10x leverage, a $1, 000 margin allows you to control a $10, 000 position. A 5% upward move yields a $500 profit (a 50% return on your margin), but a 5% downward move wipes out half your capital. Major Risks to Know About Because of leverage and the inherent volatility of cryptocurrency, futures trading carries high financial risk: Liquidation: If the market moves against your position past a certain threshold, your margin is no longer enough to cover the losses. The exchange will automatically force-close (liquidate) your position, and you will lose your entire initial deposit for that trade. Extreme Volatility: Crypto markets move rapidly 24/7. Sudden market wicks or flash crashes can instantly trigger liquidations before you have time to react or add more margin. Funding Fees (on Perps): If you hold a perpetual contract over time, you may have to pay (or receive) periodic funding fees depending on market sentiment. During strong bull or bear runs, these fees can eat significantly into your returns. Counterparty / Exchange Risk: Many crypto futures platforms operate offshore or lack robust regulatory oversight. If an exchange experiences technical failures, liquidity crunches, or insolvency, your funds could be trapped or lost. Key Risk Management Best Practices Use Low Leverage: Beginners often make the mistake of using high leverage (e. g., 20x+), where a tiny 5% market swing destroys the account. Lower leverage (like 2x or 3x) significantly reduces the odds of sudden liquidation. Always Set Stop-Loss Orders: Define your maximum acceptable loss per trade ahead of time so the position cuts automatically if the market turns against you. Never Risk Capital You Can’t Afford to Lose: Futures should be treated as high-risk speculation rather than a safe long-term investment strategy.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "What is a crypto perpetual futures contract and how does funding rate work?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Read timed out. (read timeout=60)"
+    },
+    {
+      "prompt": "What is a crypto perpetual futures contract and how does funding rate work?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "Gemini",
+      "response": "A crypto perpetual futures contract is a specialized type of derivative contract that allows traders to speculate on the future price of a cryptocurrency without an expiration date. Unlike traditional futures contracts, which settle on a specific date (e. g., the last Friday of the month), perpetual contracts can be held indefinitely as long as the trader maintains sufficient margin in their account. To ensure the contract price stays closely aligned with the underlying spot price (the actual market price of the asset), perpetual exchanges use a mechanism called the funding rate . How Perpetual Contracts Work Because there is no expiration date, a perpetual contract functions almost like a synthetic spot market. Leverage: Traders can use borrowed funds (leverage) to open positions much larger than their initial capital. Margin: Traders must maintain a minimum amount of equity (maintenance margin) to keep their positions open. If the market moves against them too drastically, they face liquidation . How the Funding Rate Works Since perpetual futures don't expire, their prices can occasionally drift away from the spot price based on market sentiment (bullish vs. bearish). The funding rate is a periodic payment exchanged directly between long position holders (those betting the price will rise) and short position holders (those betting the price will fall). It acts as an anchor to pull the perpetual contract price back toward the spot price. 1. Positive Funding Rate (Bullish Market) Condition: When the perpetual contract price is higher than the spot price, longs are more aggressive than shorts. Action: Longs pay shorts. Effect: Holding a long position becomes more expensive, which discourages buyers and encourages sellers to enter, bringing the contract price back down toward the spot price. 2. Negative Funding Rate (Bearish Market) Condition: When the perpetual contract price is lower than the spot price, shorts dominate the market. Action: Shorts pay longs. Effect: Holding a short position becomes costly, which discourages sellers and encourages buyers, pushing the contract price back up toward the spot price. 3. Neutral Funding Rate Condition: When the perpetual price equals the spot price, the funding rate is typically zero, and no payments are exchanged between traders. Key Mechanics of Funding Rates Frequency: Funding payments usually occur every 8 hours (though some exchanges settle every 1 hour). If you close your position just before the funding timestamp, you neither pay nor receive the funding fee. Exchange Role: The exchange does not take a cut of the funding fee. It is a peer-to-peer transfer directly from one side of the market to the other. Calculation: The payment amount is usually calculated as: Payment = Position Size (Notional Value) × Funding Rate \\text{Payment} = \\text{Position Size (Notional Value)} \\times \\text{Funding Rate} Payment = Position Size (Notional Value) × Funding Rate For example, if you hold a $10,000 long position and the funding rate is +0.01%, you will pay $1 to the short holders every 8 hours. Summary Checklist for Traders If you are Long in a strong bull market, you will likely have to pay funding fees regularly, which eats into your profits over time. If you are Short in a bear market, you may collect steady funding payments just for holding your position open.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I place a long or short order on a perpetual futures trading screen using market vs limit orders?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Read timed out. (read timeout=60)"
+    },
+    {
+      "prompt": "How do I place a long or short order on a perpetual futures trading screen using market vs limit orders?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+place+a+long+or+short+order+on+a+perpetual+futures+trading+screen+using+market+vs+limit+orders%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How can I read the futures order book and recent market trades to decide when to enter a position?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+can+I+read+the+futures+order+book+and+recent+market+trades+to+decide+when+to+enter+a+position%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How can I read the futures order book and recent market trades to decide when to enter a position?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+can+I+read+the+futures+order+book+and+recent+market+trades+to+decide+when+to+enter+a+position%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are crypto perpetual futures contracts, and how do they work compared to traditional futures with expiry?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+crypto+perpetual+futures+contracts%2C+and+how+do+they+work+compared+to+traditional+futures+with+expiry%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are crypto perpetual futures contracts, and how do they work compared to traditional futures with expiry?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+crypto+perpetual+futures+contracts%2C+and+how+do+they+work+compared+to+traditional+futures+with+expiry%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How does the funding rate work in crypto futures, and why can funding costs get high?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+does+the+funding+rate+work+in+crypto+futures%2C+and+why+can+funding+costs+get+high%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How does the funding rate work in crypto futures, and why can funding costs get high?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+does+the+funding+rate+work+in+crypto+futures%2C+and+why+can+funding+costs+get+high%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I place a crypto futures trade using market vs limit orders, and when should I use each?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+place+a+crypto+futures+trade+using+market+vs+limit+orders%2C+and+when+should+I+use+each%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I place a crypto futures trade using market vs limit orders, and when should I use each?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+place+a+crypto+futures+trade+using+market+vs+limit+orders%2C+and+when+should+I+use+each%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How does leverage (like up to 100x) work in crypto futures, and what are the liquidation risks?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+does+leverage+%28like+up+to+100x%29+work+in+crypto+futures%2C+and+what+are+the+liquidation+risks%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How does leverage (like up to 100x) work in crypto futures, and what are the liquidation risks?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+does+leverage+%28like+up+to+100x%29+work+in+crypto+futures%2C+and+what+are+the+liquidation+risks%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a financial advisor for cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+financial+advisor+for+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a financial advisor for cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Futures Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+financial+advisor+for+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a financial platform with low transaction fees?",
+      "intent": "Informational",
+      "category": "HNIs & Institutional Investors",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+financial+platform+with+low+transaction+fees%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a financial platform with low transaction fees?",
+      "intent": "Informational",
+      "category": "HNIs & Institutional Investors",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+financial+platform+with+low+transaction+fees%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest trends in cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+latest+trends+in+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest trends in cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+latest+trends+in+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a cryptocurrency exchange with low transaction fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+cryptocurrency+exchange+with+low+transaction+fees%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a cryptocurrency exchange with low transaction fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+cryptocurrency+exchange+with+low+transaction+fees%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using an investment platform with low fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+an+investment+platform+with+low+fees%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using an investment platform with low fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+an+investment+platform+with+low+fees%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common financial challenges faced by cryptocurrency investors?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+financial+challenges+faced+by+cryptocurrency+investors%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common financial challenges faced by cryptocurrency investors?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+financial+challenges+faced+by+cryptocurrency+investors%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most popular financial products related to cryptocurrency?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+popular+financial+products+related+to+cryptocurrency%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most popular financial products related to cryptocurrency?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+popular+financial+products+related+to+cryptocurrency%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use a robo-advisor for cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+use+a+robo-advisor+for+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use a robo-advisor for cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+use+a+robo-advisor+for+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of investing in cryptocurrency?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+investing+in+cryptocurrency%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of investing in cryptocurrency?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+investing+in+cryptocurrency%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use a robo-advisor for financial planning with cryptocurrencies?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+use+a+robo-advisor+for+financial+planning+with+cryptocurrencies%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use a robo-advisor for financial planning with cryptocurrencies?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+use+a+robo-advisor+for+financial+planning+with+cryptocurrencies%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I stay updated on cryptocurrency market news?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+stay+updated+on+cryptocurrency+market+news%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I stay updated on cryptocurrency market news?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+stay+updated+on+cryptocurrency+market+news%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a trading platform with low fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+trading+platform+with+low+fees%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a trading platform with low fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+trading+platform+with+low+fees%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a financial platform with low fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+financial+platform+with+low+fees%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a financial platform with low fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+financial+platform+with+low+fees%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a trading platform with low transaction fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+trading+platform+with+low+transaction+fees%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a trading platform with low transaction fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+trading+platform+with+low+transaction+fees%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What is the current trend in cryptocurrency prices?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+is+the+current+trend+in+cryptocurrency+prices%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What is the current trend in cryptocurrency prices?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+is+the+current+trend+in+cryptocurrency+prices%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using an investment platform with low transaction fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+an+investment+platform+with+low+transaction+fees%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using an investment platform with low transaction fees?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+an+investment+platform+with+low+transaction+fees%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest crypto market news updates and major events this week?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+latest+crypto+market+news+updates+and+major+events+this+week%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest crypto market news updates and major events this week?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+latest+crypto+market+news+updates+and+major+events+this+week%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "Is crypto investing legal in India, and what compliance/KYC steps do Indian crypto platforms require?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=Is+crypto+investing+legal+in+India%2C+and+what+compliance%2FKYC+steps+do+Indian+crypto+platforms+require%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "Is crypto investing legal in India, and what compliance/KYC steps do Indian crypto platforms require?",
+      "intent": "Informational",
+      "category": "SmartInvest",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=Is+crypto+investing+legal+in+India%2C+and+what+compliance%2FKYC+steps+do+Indian+crypto+platforms+require%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the advantages of using a local cryptocurrency exchange?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+advantages+of+using+a+local+cryptocurrency+exchange%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the advantages of using a local cryptocurrency exchange?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+advantages+of+using+a+local+cryptocurrency+exchange%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the best strategies for cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+best+strategies+for+cryptocurrency+trading%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the best strategies for cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+best+strategies+for+cryptocurrency+trading%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most popular trading pairs in cryptocurrency?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+popular+trading+pairs+in+cryptocurrency%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most popular trading pairs in cryptocurrency?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+popular+trading+pairs+in+cryptocurrency%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the best practices for cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+best+practices+for+cryptocurrency+trading%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the best practices for cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+best+practices+for+cryptocurrency+trading%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common trading strategies for Bitcoin?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+trading+strategies+for+Bitcoin%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common trading strategies for Bitcoin?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+trading+strategies+for+Bitcoin%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I start trading cryptocurrencies as a beginner?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+start+trading+cryptocurrencies+as+a+beginner%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I start trading cryptocurrencies as a beginner?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+start+trading+cryptocurrencies+as+a+beginner%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common mistakes in cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+mistakes+in+cryptocurrency+trading%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common mistakes in cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+mistakes+in+cryptocurrency+trading%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between centralized and decentralized exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+differences+between+centralized+and+decentralized+exchanges%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between centralized and decentralized exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+differences+between+centralized+and+decentralized+exchanges%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a cryptocurrency exchange with a mobile app?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+cryptocurrency+exchange+with+a+mobile+app%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a cryptocurrency exchange with a mobile app?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+cryptocurrency+exchange+with+a+mobile+app%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the features of different trading platforms?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+compare+the+features+of+different+trading+platforms%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the features of different trading platforms?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+compare+the+features+of+different+trading+platforms%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a cryptocurrency exchange?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+cryptocurrency+exchange%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a cryptocurrency exchange?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+cryptocurrency+exchange%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest trends in cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+latest+trends+in+cryptocurrency+trading%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest trends in cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+latest+trends+in+cryptocurrency+trading%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most reliable indicators for cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+reliable+indicators+for+cryptocurrency+trading%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most reliable indicators for cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+reliable+indicators+for+cryptocurrency+trading%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest trends in cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+latest+trends+in+cryptocurrency+exchanges%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest trends in cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+latest+trends+in+cryptocurrency+exchanges%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a trading platform with advanced features?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+trading+platform+with+advanced+features%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a trading platform with advanced features?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+trading+platform+with+advanced+features%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the security features of top cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+security+features+of+top+cryptocurrency+exchanges%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the security features of top cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+security+features+of+top+cryptocurrency+exchanges%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How can I minimize risks when trading cryptocurrencies?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+can+I+minimize+risks+when+trading+cryptocurrencies%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How can I minimize risks when trading cryptocurrencies?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+can+I+minimize+risks+when+trading+cryptocurrencies%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare different cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+compare+different+cryptocurrency+exchanges%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare different cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+compare+different+cryptocurrency+exchanges%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the advantages of using a decentralized exchange?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+advantages+of+using+a+decentralized+exchange%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the advantages of using a decentralized exchange?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+advantages+of+using+a+decentralized+exchange%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common challenges faced by cryptocurrency traders?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+challenges+faced+by+cryptocurrency+traders%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common challenges faced by cryptocurrency traders?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+challenges+faced+by+cryptocurrency+traders%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I manage risks in cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+manage+risks+in+cryptocurrency+trading%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I manage risks in cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+manage+risks+in+cryptocurrency+trading%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the fees associated with cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+fees+associated+with+cryptocurrency+exchanges%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the fees associated with cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+fees+associated+with+cryptocurrency+exchanges%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a cryptocurrency exchange app?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+cryptocurrency+exchange+app%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a cryptocurrency exchange app?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+cryptocurrency+exchange+app%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the features of different cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+compare+the+features+of+different+cryptocurrency+exchanges%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the features of different cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+compare+the+features+of+different+cryptocurrency+exchanges%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I trade cryptocurrencies on an exchange?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+trade+cryptocurrencies+on+an+exchange%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I trade cryptocurrencies on an exchange?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+trade+cryptocurrencies+on+an+exchange%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use technical analysis in cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+use+technical+analysis+in+cryptocurrency+trading%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use technical analysis in cryptocurrency trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+use+technical+analysis+in+cryptocurrency+trading%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the liquidity of different cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+compare+the+liquidity+of+different+cryptocurrency+exchanges%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the liquidity of different cryptocurrency exchanges?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+compare+the+liquidity+of+different+cryptocurrency+exchanges%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between spot trading and futures trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+differences+between+spot+trading+and+futures+trading%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between spot trading and futures trading?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+differences+between+spot+trading+and+futures+trading%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I calculate potential returns from cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+calculate+potential+returns+from+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I calculate potential returns from cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+calculate+potential+returns+from+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between active and passive cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+differences+between+active+and+passive+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between active and passive cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+differences+between+active+and+passive+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common financial strategies for Bitcoin investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+financial+strategies+for+Bitcoin+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common financial strategies for Bitcoin investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+financial+strategies+for+Bitcoin+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common investment strategies for Bitcoin?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+investment+strategies+for+Bitcoin%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common investment strategies for Bitcoin?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+investment+strategies+for+Bitcoin%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I diversify my cryptocurrency investment portfolio?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+diversify+my+cryptocurrency+investment+portfolio%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I diversify my cryptocurrency investment portfolio?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+diversify+my+cryptocurrency+investment+portfolio%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of investing in a cryptocurrency index fund?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+investing+in+a+cryptocurrency+index+fund%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of investing in a cryptocurrency index fund?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+investing+in+a+cryptocurrency+index+fund%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the risks associated with cryptocurrency investments?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+risks+associated+with+cryptocurrency+investments%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the risks associated with cryptocurrency investments?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+risks+associated+with+cryptocurrency+investments%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I find the best investment opportunities in cryptocurrencies?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+find+the+best+investment+opportunities+in+cryptocurrencies%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I find the best investment opportunities in cryptocurrencies?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+find+the+best+investment+opportunities+in+cryptocurrencies%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the features of different financial platforms?",
+      "intent": "Commercial",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+compare+the+features+of+different+financial+platforms%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the features of different financial platforms?",
+      "intent": "Commercial",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+compare+the+features+of+different+financial+platforms%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I manage risks in cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+manage+risks+in+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I manage risks in cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+manage+risks+in+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I diversify my financial portfolio with cryptocurrencies?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+diversify+my+financial+portfolio+with+cryptocurrencies%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I diversify my financial portfolio with cryptocurrencies?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+diversify+my+financial+portfolio+with+cryptocurrencies%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How can I start investing in cryptocurrency safely?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+can+I+start+investing+in+cryptocurrency+safely%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How can I start investing in cryptocurrency safely?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+can+I+start+investing+in+cryptocurrency+safely%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the best financial strategies for investing in cryptocurrency?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+best+financial+strategies+for+investing+in+cryptocurrency%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the best financial strategies for investing in cryptocurrency?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+best+financial+strategies+for+investing+in+cryptocurrency%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common mistakes in cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+mistakes+in+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common mistakes in cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+mistakes+in+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How does cryptocurrency taxation work in India?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+does+cryptocurrency+taxation+work+in+India%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How does cryptocurrency taxation work in India?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+does+cryptocurrency+taxation+work+in+India%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most popular investment strategies for cryptocurrencies?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+popular+investment+strategies+for+cryptocurrencies%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most popular investment strategies for cryptocurrencies?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+popular+investment+strategies+for+cryptocurrencies%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I choose an investment platform with the best user interface?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+choose+an+investment+platform+with+the+best+user+interface%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I choose an investment platform with the best user interface?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+choose+an+investment+platform+with+the+best+user+interface%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I manage my finances when investing in cryptocurrencies?",
+      "intent": "Commercial",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+manage+my+finances+when+investing+in+cryptocurrencies%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I manage my finances when investing in cryptocurrencies?",
+      "intent": "Commercial",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+manage+my+finances+when+investing+in+cryptocurrencies%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I choose a financial platform with the best user interface?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+choose+a+financial+platform+with+the+best+user+interface%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I choose a financial platform with the best user interface?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+choose+a+financial+platform+with+the+best+user+interface%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the tax implications of cryptocurrency trading in India?",
+      "intent": "Commercial",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+tax+implications+of+cryptocurrency+trading+in+India%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the tax implications of cryptocurrency trading in India?",
+      "intent": "Commercial",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+tax+implications+of+cryptocurrency+trading+in+India%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use a financial calculator for cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+use+a+financial+calculator+for+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use a financial calculator for cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+use+a+financial+calculator+for+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I start investing in cryptocurrencies as a beginner?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+start+investing+in+cryptocurrencies+as+a+beginner%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I start investing in cryptocurrencies as a beginner?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+start+investing+in+cryptocurrencies+as+a+beginner%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the features of different investment platforms?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+compare+the+features+of+different+investment+platforms%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the features of different investment platforms?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+compare+the+features+of+different+investment+platforms%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I calculate potential profits from cryptocurrency trading?",
+      "intent": "Commercial",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+calculate+potential+profits+from+cryptocurrency+trading%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I calculate potential profits from cryptocurrency trading?",
+      "intent": "Commercial",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+calculate+potential+profits+from+cryptocurrency+trading%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most reliable indicators for cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+reliable+indicators+for+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most reliable indicators for cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+reliable+indicators+for+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use a cryptocurrency investment calculator?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+use+a+cryptocurrency+investment+calculator%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use a cryptocurrency investment calculator?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+use+a+cryptocurrency+investment+calculator%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I find the best financial opportunities in cryptocurrencies?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+find+the+best+financial+opportunities+in+cryptocurrencies%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I find the best financial opportunities in cryptocurrencies?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+find+the+best+financial+opportunities+in+cryptocurrencies%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most reliable financial indicators for cryptocurrency investment?",
+      "intent": "Commercial",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+reliable+financial+indicators+for+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most reliable financial indicators for cryptocurrency investment?",
+      "intent": "Commercial",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+reliable+financial+indicators+for+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use a crypto SIP calculator?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+use+a+crypto+SIP+calculator%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use a crypto SIP calculator?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+use+a+crypto+SIP+calculator%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common financial mistakes in cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+financial+mistakes+in+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common financial mistakes in cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+financial+mistakes+in+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I calculate potential financial returns from cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+calculate+potential+financial+returns+from+cryptocurrency+investment%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I calculate potential financial returns from cryptocurrency investment?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+calculate+potential+financial+returns+from+cryptocurrency+investment%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common challenges faced by cryptocurrency investors?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+challenges+faced+by+cryptocurrency+investors%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common challenges faced by cryptocurrency investors?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+challenges+faced+by+cryptocurrency+investors%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "I'm new to crypto—can you walk me through the basics of blockchain, wallets, and how trading works?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=I%27m+new+to+crypto%E2%80%94can+you+walk+me+through+the+basics+of+blockchain%2C+wallets%2C+and+how+trading+works%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "I'm new to crypto—can you walk me through the basics of blockchain, wallets, and how trading works?",
+      "intent": "Informational",
+      "category": "Systematic Investment Plan",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=I%27m+new+to+crypto%E2%80%94can+you+walk+me+through+the+basics+of+blockchain%2C+wallets%2C+and+how+trading+works%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most secure blockchain platforms?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+secure+blockchain+platforms%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most secure blockchain platforms?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+secure+blockchain+platforms%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between traditional and cryptocurrency finance?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+differences+between+traditional+and+cryptocurrency+finance%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between traditional and cryptocurrency finance?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+differences+between+traditional+and+cryptocurrency+finance%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest trends in financial technology related to cryptocurrency?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+latest+trends+in+financial+technology+related+to+cryptocurrency%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest trends in financial technology related to cryptocurrency?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+latest+trends+in+financial+technology+related+to+cryptocurrency%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most innovative uses of blockchain technology?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+innovative+uses+of+blockchain+technology%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most innovative uses of blockchain technology?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+innovative+uses+of+blockchain+technology%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common applications of blockchain technology?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+applications+of+blockchain+technology%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common applications of blockchain technology?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+applications+of+blockchain+technology%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I choose a blockchain platform with the best user interface?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+choose+a+blockchain+platform+with+the+best+user+interface%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I choose a blockchain platform with the best user interface?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+choose+a+blockchain+platform+with+the+best+user+interface%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use blockchain technology for secure transactions?",
+      "intent": "Commercial",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+use+blockchain+technology+for+secure+transactions%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use blockchain technology for secure transactions?",
+      "intent": "Commercial",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+use+blockchain+technology+for+secure+transactions%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest developments in blockchain technology?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+latest+developments+in+blockchain+technology%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest developments in blockchain technology?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+latest+developments+in+blockchain+technology%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common challenges in blockchain development?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+challenges+in+blockchain+development%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common challenges in blockchain development?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+challenges+in+blockchain+development%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common security threats to blockchain platforms?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+common+security+threats+to+blockchain+platforms%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most common security threats to blockchain platforms?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+common+security+threats+to+blockchain+platforms%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the features of different blockchain platforms?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+compare+the+features+of+different+blockchain+platforms%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I compare the features of different blockchain platforms?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+compare+the+features+of+different+blockchain+platforms%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between Bitcoin and Ethereum?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+differences+between+Bitcoin+and+Ethereum%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between Bitcoin and Ethereum?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+differences+between+Bitcoin+and+Ethereum%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How is blockchain technology transforming the finance industry?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+is+blockchain+technology+transforming+the+finance+industry%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How is blockchain technology transforming the finance industry?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+is+blockchain+technology+transforming+the+finance+industry%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most popular cryptocurrencies in India?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+popular+cryptocurrencies+in+India%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most popular cryptocurrencies in India?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+popular+cryptocurrencies+in+India%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the best cryptocurrencies to invest in for long-term growth?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+best+cryptocurrencies+to+invest+in+for+long-term+growth%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the best cryptocurrencies to invest in for long-term growth?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+best+cryptocurrencies+to+invest+in+for+long-term+growth%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use blockchain technology for data security?",
+      "intent": "Commercial",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+use+blockchain+technology+for+data+security%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I use blockchain technology for data security?",
+      "intent": "Commercial",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+use+blockchain+technology+for+data+security%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using blockchain for identity verification?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+blockchain+for+identity+verification%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using blockchain for identity verification?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+blockchain+for+identity+verification%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I develop a smart contract on a blockchain platform?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+develop+a+smart+contract+on+a+blockchain+platform%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I develop a smart contract on a blockchain platform?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+develop+a+smart+contract+on+a+blockchain+platform%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest trends in blockchain technology?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+latest+trends+in+blockchain+technology%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the latest trends in blockchain technology?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+latest+trends+in+blockchain+technology%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How is cryptocurrency impacting the global financial system?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+is+cryptocurrency+impacting+the+global+financial+system%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How is cryptocurrency impacting the global financial system?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+is+cryptocurrency+impacting+the+global+financial+system%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I choose the best blockchain platform for my project?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+choose+the+best+blockchain+platform+for+my+project%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I choose the best blockchain platform for my project?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+choose+the+best+blockchain+platform+for+my+project%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the top cryptocurrencies to invest in this year?",
+      "intent": "Commercial",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+top+cryptocurrencies+to+invest+in+this+year%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the top cryptocurrencies to invest in this year?",
+      "intent": "Commercial",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+top+cryptocurrencies+to+invest+in+this+year%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I find the best blockchain development tools?",
+      "intent": "Commercial",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+find+the+best+blockchain+development+tools%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I find the best blockchain development tools?",
+      "intent": "Commercial",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+find+the+best+blockchain+development+tools%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I find a blockchain platform that offers scalability?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+find+a+blockchain+platform+that+offers+scalability%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I find a blockchain platform that offers scalability?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+find+a+blockchain+platform+that+offers+scalability%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between public and private blockchains?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+differences+between+public+and+private+blockchains%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the differences between public and private blockchains?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+differences+between+public+and+private+blockchains%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I resolve issues with blockchain implementation?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+resolve+issues+with+blockchain+implementation%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I resolve issues with blockchain implementation?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+resolve+issues+with+blockchain+implementation%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a blockchain platform with low transaction fees?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+a+blockchain+platform+with+low+transaction+fees%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using a blockchain platform with low transaction fees?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+a+blockchain+platform+with+low+transaction+fees%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most promising blockchain projects to watch?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+most+promising+blockchain+projects+to+watch%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the most promising blockchain projects to watch?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+most+promising+blockchain+projects+to+watch%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How does blockchain technology work?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+does+blockchain+technology+work%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How does blockchain technology work?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+does+blockchain+technology+work%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I start learning about blockchain technology?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+start+learning+about+blockchain+technology%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I start learning about blockchain technology?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+start+learning+about+blockchain+technology%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using blockchain for supply chain management?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+the+benefits+of+using+blockchain+for+supply+chain+management%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are the benefits of using blockchain for supply chain management?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+the+benefits+of+using+blockchain+for+supply+chain+management%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are some realistic price prediction scenarios for Bitcoin and Ethereum over the next few years?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=What+are+some+realistic+price+prediction+scenarios+for+Bitcoin+and+Ethereum+over+the+next+few+years%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "What are some realistic price prediction scenarios for Bitcoin and Ethereum over the next few years?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=What+are+some+realistic+price+prediction+scenarios+for+Bitcoin+and+Ethereum+over+the+next+few+years%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I evaluate new coin listings and avoid scams or overly risky tokens?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=How+do+I+evaluate+new+coin+listings+and+avoid+scams+or+overly+risky+tokens%3F (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "How do I evaluate new coin listings and avoid scams or overly risky tokens?",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=How+do+I+evaluate+new+coin+listings+and+avoid+scams+or+overly+risky+tokens%3F&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "Explain what cryptocurrency market capitalization means and how it's calculated.",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "ChatGPT",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/chatgpt?prompt=Explain+what+cryptocurrency+market+capitalization+means+and+how+it%27s+calculated. (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
+    },
+    {
+      "prompt": "Explain what cryptocurrency market capitalization means and how it's calculated.",
+      "intent": "Informational",
+      "category": "Web3 Coins",
+      "platform": "Gemini",
+      "response": "",
+      "mentions": [],
+      "error": "HTTPSConnectionPool(host='app.scrapingbee.com', port=443): Max retries exceeded with url: /api/v1/gemini?prompt=Explain+what+cryptocurrency+market+capitalization+means+and+how+it%27s+calculated.&country_code=us (Caused by NameResolutionError(\"HTTPSConnection(host='app.scrapingbee.com', port=443): Failed to resolve 'app.scrapingbee.com' ([Errno 8] nodename nor servname provided, or not known)\"))"
     }
   ]
 }

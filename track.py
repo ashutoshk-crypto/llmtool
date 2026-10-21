@@ -25,7 +25,7 @@ ANTHROPIC_MODEL = "claude-sonnet-5"
 GEMINI_MODEL = "gemini-3.8-flash"
 
 LIMIT = int(os.environ.get("PROMPT_LIMIT", "0"))
-SCRAPINGBEE_CONCURRENCY = int(os.environ.get("SCRAPINGBEE_CONCURRENCY", "50"))
+SCRAPINGBEE_CONCURRENCY = int(os.environ.get("SCRAPINGBEE_CONCURRENCY", "40"))
 
 scrapingbee_semaphore = threading.Semaphore(SCRAPINGBEE_CONCURRENCY)
 
