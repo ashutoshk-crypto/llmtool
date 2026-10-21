@@ -6,6 +6,8 @@ import json
 import os
 import re
 import sys
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from urllib.parse import quote_plus
 
@@ -23,6 +25,9 @@ ANTHROPIC_MODEL = "claude-sonnet-5"
 GEMINI_MODEL = "gemini-3.8-flash"
 
 LIMIT = int(os.environ.get("PROMPT_LIMIT", "0"))
+SCRAPINGBEE_CONCURRENCY = int(os.environ.get("SCRAPINGBEE_CONCURRENCY", "50"))
+
+scrapingbee_semaphore = threading.Semaphore(SCRAPINGBEE_CONCURRENCY)
 
 def load_prompts(path):
     if not os.path.exists(path):
@@ -67,14 +72,15 @@ def extract_citations(text):
     return [{"url": u, "domain": d} for u, d in seen.items()]
 
 def query_openai(prompt):
-    resp = requests.get(
-        "https://app.scrapingbee.com/api/v1/chatgpt",
-        params={
-            "prompt": prompt,
-        },
-        headers={"authorization": f"Bearer {os.environ['SCRAPINGBEE_API_KEY']}"},
-        timeout=60,
-    )
+    with scrapingbee_semaphore:
+        resp = requests.get(
+            "https://app.scrapingbee.com/api/v1/chatgpt",
+            params={
+                "prompt": prompt,
+            },
+            headers={"authorization": f"Bearer {os.environ['SCRAPINGBEE_API_KEY']}"},
+            timeout=60,
+        )
     resp.raise_for_status()
     data = resp.json()
     return data.get("results_text") or data.get("results_markdown") or json.dumps(data)
@@ -90,15 +96,16 @@ def query_claude(prompt):
     return "".join(b.text for b in resp.content if b.type == "text")
 
 def query_gemini(prompt):
-    resp = requests.get(
-        "https://app.scrapingbee.com/api/v1/gemini",
-        params={
-            "prompt": prompt,
-            "country_code": "us",
-        },
-        headers={"authorization": f"Bearer {os.environ['SCRAPINGBEE_API_KEY']}"},
-        timeout=60,
-    )
+    with scrapingbee_semaphore:
+        resp = requests.get(
+            "https://app.scrapingbee.com/api/v1/gemini",
+            params={
+                "prompt": prompt,
+                "country_code": "us",
+            },
+            headers={"authorization": f"Bearer {os.environ['SCRAPINGBEE_API_KEY']}"},
+            timeout=60,
+        )
     resp.raise_for_status()
     data = resp.json()
     return data.get("results_text") or data.get("results_markdown") or json.dumps(data)
@@ -111,7 +118,8 @@ def _scrapingbee_get(target_url, render_js=True, extra_params=None):
     }
     if extra_params:
         params.update(extra_params)
-    resp = requests.get("https://app.scrapingbee.com/api/v1/", params=params, timeout=60)
+    with scrapingbee_semaphore:
+        resp = requests.get("https://app.scrapingbee.com/api/v1/", params=params, timeout=60)
     resp.raise_for_status()
     return resp.text
 
@@ -157,6 +165,7 @@ def main():
     print(f"Prompts: {len(rows)} | Competitors: {competitors} | Platforms: {list(active)}")
 
     runs = []
+    runs_lock = threading.Lock()
     total = len(rows) * len(active)
     done = 0
 
@@ -170,33 +179,44 @@ def main():
         with open(RESULTS_FILE, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)
 
-    for row in rows:
-        prompt = row["prompt"].strip()
-        intent = row.get("intent", "").strip()
-        category = row.get("category", "").strip()
-        for platform_name, fn in active.items():
+    jobs = [
+        (row["prompt"].strip(), row.get("intent", "").strip(), row.get("category", "").strip(), platform_name, fn)
+        for row in rows
+        for platform_name, fn in active.items()
+    ]
+
+    def run_job(job):
+        nonlocal done
+        prompt, intent, category, platform_name, fn = job
+        with runs_lock:
             done += 1
             print(f"[{done}/{total}] [{platform_name}] {prompt[:60]}")
-            try:
-                response_text = fn(prompt)
-                error = None
-            except Exception as e:
-                response_text = ""
-                error = str(e)
-                print(f"   error: {error}")
-            mentions = find_mentions(response_text, competitors) if response_text else []
-            citations = extract_citations(response_text)
-            runs.append({
-                "prompt": prompt,
-                "intent": intent,
-                "category": category,
-                "platform": platform_name,
-                "response": response_text,
-                "mentions": mentions,
-                "citations": citations,
-                "error": error,
-            })
+        try:
+            response_text = fn(prompt)
+            error = None
+        except Exception as e:
+            response_text = ""
+            error = str(e)
+            print(f"   error: {error}")
+        mentions = find_mentions(response_text, competitors) if response_text else []
+        citations = extract_citations(response_text)
+        result = {
+            "prompt": prompt,
+            "intent": intent,
+            "category": category,
+            "platform": platform_name,
+            "response": response_text,
+            "mentions": mentions,
+            "citations": citations,
+            "error": error,
+        }
+        with runs_lock:
+            runs.append(result)
             save()
+
+    max_workers = max(SCRAPINGBEE_CONCURRENCY, len(active))
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        list(executor.map(run_job, jobs))
 
     print(f"Saved {len(runs)} results to {RESULTS_FILE}")
     append_history_snapshot(competitors, runs)
