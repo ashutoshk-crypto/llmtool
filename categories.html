@@ -40,7 +40,9 @@ async function init() {
     const counts = {};
     competitors.forEach(c => counts[c] = 0);
     catRuns.forEach(r => r.mentions.forEach(m => { if (counts[m] !== undefined) counts[m]++; }));
-    const sorted = competitors.map(c => ({ name: c, count: counts[c] })).sort((a,b) => b.count - a.count);
+    const sorted = competitors
+      .map(c => ({ name: c, count: counts[c], pct: catRuns.length ? Math.round((counts[c] / catRuns.length) * 100) : 0 }))
+      .sort((a,b) => b.count - a.count);
     const max = Math.max(1, ...sorted.map(d => d.count));
     return `
       <div class="platform-card">
@@ -49,7 +51,7 @@ async function init() {
           <div class="mini-bar-row">
             <div class="name">${esc(d.name)}</div>
             <div class="mini-track"><div class="mini-fill" style="width:${(d.count/max)*100}%; background:${colorForBrand(d.name, competitors)};"></div></div>
-            <div class="count">${d.count}</div>
+            <div class="count">${d.pct}% - ${d.count}</div>
           </div>
         `).join('')}
       </div>

@@ -49,6 +49,17 @@ async function loadData() {
   }
 }
 
+async function loadHistory() {
+  try {
+    const res = await fetch('history.json');
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error('bad shape');
+    return data.sort((a, b) => a.date.localeCompare(b.date));
+  } catch (e) {
+    return [];
+  }
+}
+
 function setMetaLine(data) {
   const el = document.getElementById('meta-line');
   if (!el) return;
@@ -65,6 +76,53 @@ function brandCounts(competitors, runs) {
   competitors.forEach(c => counts[c] = 0);
   runs.forEach(r => r.mentions.forEach(m => { if (counts[m] !== undefined) counts[m]++; }));
   return counts;
+}
+
+/** Render a multi-series SoV-over-time line chart (percent, 0-100) into containerEl. */
+function renderTrendChart(containerEl, history, competitors) {
+  if (!history.length) {
+    containerEl.innerHTML = '<p class="empty-state">Not enough history yet — run the tracker on more days to build a trend.</p>';
+    return;
+  }
+  if (history.length === 1) {
+    containerEl.innerHTML = '<p class="empty-state">Only one snapshot so far (' + esc(history[0].date) + '). Run the tracker again on a later day to see a trend line.</p>';
+    return;
+  }
+
+  const W = 900, H = 260, padL = 36, padR = 16, padT = 14, padB = 28;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const n = history.length;
+  const x = i => padL + (n === 1 ? 0 : (i / (n - 1)) * plotW);
+  const y = pct => padT + plotH - (Math.max(0, Math.min(100, pct)) / 100) * plotH;
+
+  const gridLines = [0, 25, 50, 75, 100].map(pct => `
+    <line x1="${padL}" y1="${y(pct)}" x2="${W - padR}" y2="${y(pct)}" stroke="var(--gridline)" stroke-width="1"/>
+    <text x="${padL - 8}" y="${y(pct) + 4}" text-anchor="end" font-size="10" fill="var(--text-muted)">${pct}%</text>
+  `).join('');
+
+  const xLabels = history.map((h, i) => {
+    if (n > 8 && i % Math.ceil(n / 8) !== 0 && i !== n - 1) return '';
+    return `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="var(--text-muted)">${esc(h.date.slice(5))}</text>`;
+  }).join('');
+
+  const lines = competitors.map(c => {
+    const pts = history.map((h, i) => [x(i), y(h.pct ? (h.pct[c] || 0) : 0)]);
+    const path = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+    const color = colorForBrand(c, competitors);
+    const dots = pts.map((p, i) => {
+      const pct = history[i].pct ? (history[i].pct[c] || 0) : 0;
+      return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="${color}" stroke="var(--surface-1)" stroke-width="1.5"><title>${esc(c)} - ${esc(history[i].date)}: ${pct}%</title></circle>`;
+    }).join('');
+    return `<path d="${path}" fill="none" stroke="${color}" stroke-width="2"/>${dots}`;
+  }).join('');
+
+  containerEl.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%; height:auto; display:block;" role="img" aria-label="Share of voice over time">
+      ${gridLines}
+      ${lines}
+      ${xLabels}
+    </svg>
+  `;
 }
 
 /** Aggregate every citation URL seen across runs into a ranked source list. */

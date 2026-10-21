@@ -20,6 +20,20 @@
     <p class="panel-sub">Percent of AI responses that mentioned each brand, across all platforms and prompts</p>
     <div id="sov-chart"></div>
   </div>
+
+  <div class="panel">
+    <h2>Share of voice by platform</h2>
+    <p class="panel-sub">Compare every tracked platform side by side, same brand order and colors throughout</p>
+    <div class="legend" id="platform-compare-legend"></div>
+    <div class="platform-grid" id="platform-compare-grid"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Share of voice over time</h2>
+    <p class="panel-sub">Mention rate per brand across tracker runs, one snapshot per day</p>
+    <div class="legend" id="trend-legend"></div>
+    <div id="trend-chart"></div>
+  </div>
 </div>
 
 <script src="assets/data.js"></script>
@@ -74,6 +88,45 @@ async function init() {
       <div class="count">${d.pct}% - ${d.count}</div>
     </div>
   `).join('');
+
+  // Share of voice by platform, all platforms compared side by side
+  document.getElementById('platform-compare-legend').innerHTML = competitors.map(c => `
+    <div class="legend-item">
+      <span class="legend-dot" style="background:${colorForBrand(c, competitors)}"></span>
+      ${esc(c)}
+    </div>
+  `).join('');
+
+  document.getElementById('platform-compare-grid').innerHTML = platforms.map(p => {
+    const platRuns = runs.filter(r => r.platform === p);
+    const pCounts = brandCounts(competitors, platRuns);
+    const sorted = competitors
+      .map(c => ({ name: c, count: pCounts[c] || 0, pct: platRuns.length ? Math.round(((pCounts[c] || 0) / platRuns.length) * 100) : 0 }))
+      .sort((a, b) => b.count - a.count);
+    const max = Math.max(1, ...sorted.map(d => d.count));
+    return `
+      <div class="platform-card">
+        <h3>${esc(p)} <span style="color:var(--text-muted); font-weight:400;">(${platRuns.length} responses)</span></h3>
+        ${sorted.map(d => `
+          <div class="mini-bar-row">
+            <div class="name">${esc(d.name)}</div>
+            <div class="mini-track"><div class="mini-fill" style="width:${(d.count/max)*100}%; background:${colorForBrand(d.name, competitors)};"></div></div>
+            <div class="count">${d.pct}% - ${d.count}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+
+  // Share of voice over time
+  const history = await loadHistory();
+  document.getElementById('trend-legend').innerHTML = competitors.map(c => `
+    <div class="legend-item">
+      <span class="legend-dot" style="background:${colorForBrand(c, competitors)}"></span>
+      ${esc(c)}
+    </div>
+  `).join('');
+  renderTrendChart(document.getElementById('trend-chart'), history, competitors);
 }
 init();
 </script>

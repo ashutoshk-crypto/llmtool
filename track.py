@@ -16,6 +16,7 @@ load_dotenv()
 PROMPTS_FILE = "prompts.csv"
 COMPETITORS_FILE = "competitors.txt"
 RESULTS_FILE = "results.json"
+HISTORY_FILE = "history.json"
 
 OPENAI_MODEL = "gpt-5.1"
 ANTHROPIC_MODEL = "claude-sonnet-5"
@@ -198,6 +199,40 @@ def main():
             save()
 
     print(f"Saved {len(runs)} results to {RESULTS_FILE}")
+    append_history_snapshot(competitors, runs)
+
+
+def append_history_snapshot(competitors, runs):
+    """Append a dated share-of-voice snapshot so trends can be tracked over time."""
+    total = len(runs)
+    counts = {c: 0 for c in competitors}
+    for r in runs:
+        for m in r["mentions"]:
+            if m in counts:
+                counts[m] += 1
+    snapshot = {
+        "date": datetime.now(timezone.utc).date().isoformat(),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "total_runs": total,
+        "counts": counts,
+        "pct": {c: round((counts[c] / total) * 100, 1) if total else 0 for c in competitors},
+    }
+
+    history = []
+    if os.path.exists(HISTORY_FILE):
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            try:
+                history = json.load(f)
+            except json.JSONDecodeError:
+                history = []
+
+    history = [h for h in history if h.get("date") != snapshot["date"]]
+    history.append(snapshot)
+    history.sort(key=lambda h: h["date"])
+
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(history, f, indent=2, ensure_ascii=False)
+    print(f"Saved share-of-voice snapshot for {snapshot['date']} to {HISTORY_FILE}")
 
 
 if __name__ == "__main__":

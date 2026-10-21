@@ -159,7 +159,7 @@ header { margin-bottom: 20px; }
 .mini-bar-row .name { width: 90px; font-size: 11.5px; color: var(--text-muted); text-align: right; flex-shrink: 0; }
 .mini-track { flex: 1; background: var(--gridline); border-radius: 3px; height: 12px; }
 .mini-fill { height: 100%; border-radius: 3px; }
-.mini-bar-row .count { width: 20px; font-size: 11px; color: var(--text-muted); }
+.mini-bar-row .count { width: 60px; flex-shrink: 0; font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 
 .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
 .filters select {
