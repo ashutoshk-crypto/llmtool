@@ -1,0 +1,6 @@
+{
+  "buildCommand": false,
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/dashboard.html" }
+  ]
+}
