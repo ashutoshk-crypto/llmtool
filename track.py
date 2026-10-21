@@ -107,7 +107,7 @@ def query_gemini(prompt):
             "https://app.scrapingbee.com/api/v1/gemini",
             params={
                 "prompt": prompt,
-                "country_code": "us",
+                "country_code": "in",
             },
             headers={"authorization": f"Bearer {os.environ['SCRAPINGBEE_API_KEY']}"},
             timeout=60,

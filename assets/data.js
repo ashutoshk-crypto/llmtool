@@ -1,12 +1,12 @@
 const SERIES_COLORS = ['--series-1','--series-2','--series-3','--series-4','--series-5','--series-6','--series-7'];
 
 const NAV_LINKS = [
-  { href: 'index.html', label: 'Overview' },
-  { href: 'platforms.html', label: 'Platforms' },
-  { href: 'categories.html', label: 'Categories' },
-  { href: 'opportunities.html', label: 'Content Opportunities' },
-  { href: 'content-plan.html', label: 'Content Plan' },
-  { href: 'responses.html', label: 'All Responses' },
+  { href: 'index.html', label: 'Overview', icon: 'M3 13h4v7H3zm7-6h4v13h-4zm7-4h4v17h-4z' },
+  { href: 'platforms.html', label: 'Platforms', icon: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
+  { href: 'categories.html', label: 'Categories', icon: 'M4 6h16M4 12h16M4 18h10' },
+  { href: 'opportunities.html', label: 'Content Opportunities', icon: 'M12 2l2.2 6.8H21l-5.6 4.1 2.2 6.8L12 15.6 6.4 19.7l2.2-6.8L3 8.8h6.8z' },
+  { href: 'content-plan.html', label: 'Content Plan', icon: 'M5 4h14v16l-3-2-2 2-2-2-2 2-2-2-3 2z' },
+  { href: 'responses.html', label: 'All Responses', icon: 'M4 5h16v11H7l-3 3z' },
 ];
 
 function cssVar(name) {
@@ -26,15 +26,39 @@ function esc(str) {
 }
 
 function renderNav(activeHref) {
+  document.body.classList.add('has-sidebar');
+
+  const toggle = document.createElement('button');
+  toggle.className = 'sidebar-toggle';
+  toggle.setAttribute('aria-label', 'Toggle navigation');
+  toggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';
+  document.body.insertBefore(toggle, document.body.firstChild);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'sidebar-overlay';
+
   const nav = document.createElement('div');
-  nav.className = 'topnav';
+  nav.className = 'sidebar';
   nav.innerHTML = `
-    <div class="topnav-inner">
-      <a class="topnav-brand" href="index.html">AI Visibility Tracker</a>
-      ${NAV_LINKS.map(l => `<a class="nav-link${l.href === activeHref ? ' active' : ''}" href="${l.href}">${esc(l.label)}</a>`).join('')}
-    </div>
+    <a class="sidebar-brand" href="index.html">
+      <span class="sidebar-brand-mark">AI</span>
+      <span>Visibility Tracker</span>
+    </a>
+    <nav class="sidebar-nav">
+      ${NAV_LINKS.map(l => `
+        <a class="nav-link${l.href === activeHref ? ' active' : ''}" href="${l.href}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${l.icon}"/></svg>
+          <span>${esc(l.label)}</span>
+        </a>
+      `).join('')}
+    </nav>
   `;
   document.body.insertBefore(nav, document.body.firstChild);
+  document.body.insertBefore(overlay, nav.nextSibling);
+
+  const closeSidebar = () => document.body.classList.remove('sidebar-open');
+  toggle.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+  overlay.addEventListener('click', closeSidebar);
 }
 
 async function loadData() {
