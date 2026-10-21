@@ -54,21 +54,27 @@ def find_mentions(text, competitors):
     return found
 
 URL_RE = re.compile(r"\(?(https?://[^\s<>\")\]]+)\)?")
+HREF_RE = re.compile(r'href=["\'](https?://[^"\']+)["\']')
 TRACKING_PARAMS_RE = re.compile(r"[?&](utm_[^=&]+|ref|fbclid|gclid)=[^&]*")
+SKIP_DOMAINS = ("google.com", "perplexity.ai", "gstatic.com", "googleapis.com")
 
-def extract_citations(text):
-    if not text:
+def extract_citations(text, html=None):
+    if not text and not html:
         return []
     seen = {}
-    for match in URL_RE.finditer(text):
-        url = match.group(1).rstrip(".,;:!?'\"")
-        url = TRACKING_PARAMS_RE.sub("", url)
-        try:
-            domain = re.sub(r"^www\.", "", url.split("/")[2])
-        except IndexError:
-            continue
-        if url not in seen:
-            seen[url] = domain
+    for source in filter(None, [html, text]):
+        pattern = HREF_RE if source is html else URL_RE
+        for match in pattern.finditer(source):
+            url = match.group(1).rstrip(".,;:!?'\")")
+            url = TRACKING_PARAMS_RE.sub("", url)
+            try:
+                domain = re.sub(r"^www\.", "", url.split("/")[2])
+            except IndexError:
+                continue
+            if any(skip in domain for skip in SKIP_DOMAINS):
+                continue
+            if url not in seen:
+                seen[url] = domain
     return [{"url": u, "domain": d} for u, d in seen.items()]
 
 def query_openai(prompt):
@@ -129,16 +135,18 @@ def query_google_ai_overview(prompt):
     match = re.search(r'id="m-x-content"[^>]*>(.*?)</div>\s*</div>\s*</div>', html, re.DOTALL)
     if not match:
         text = re.sub(r"<[^>]+>", " ", html)
-        return "" if "AI Overview" not in html else re.sub(r"\s+", " ", text)[:3000]
-    text = re.sub(r"<[^>]+>", " ", match.group(1))
-    return re.sub(r"\s+", " ", text).strip()
+        text = "" if "AI Overview" not in html else re.sub(r"\s+", " ", text)[:3000]
+        return text, html
+    fragment = match.group(1)
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", fragment)).strip()
+    return text, fragment
 
 def query_perplexity_web(prompt):
     url = f"https://www.perplexity.ai/search?q={quote_plus(prompt)}"
     html = _scrapingbee_get(url, render_js=True, extra_params={"wait": "5000"})
-    text = re.sub(r"<script[^>]*>.*?</script>", " ", html, flags=re.DOTALL)
-    text = re.sub(r"<[^>]+>", " ", text)
-    return re.sub(r"\s+", " ", text).strip()[:5000]
+    stripped = re.sub(r"<script[^>]*>.*?</script>", " ", html, flags=re.DOTALL)
+    text = re.sub(r"<[^>]+>", " ", stripped)
+    return re.sub(r"\s+", " ", text).strip()[:5000], stripped
 
 PLATFORMS = {
     "ChatGPT": (query_openai, "SCRAPINGBEE_API_KEY"),
@@ -191,15 +199,17 @@ def main():
         with runs_lock:
             done += 1
             print(f"[{done}/{total}] [{platform_name}] {prompt[:60]}")
+        response_html = None
         try:
-            response_text = fn(prompt)
+            result_val = fn(prompt)
+            response_text, response_html = result_val if isinstance(result_val, tuple) else (result_val, None)
             error = None
         except Exception as e:
             response_text = ""
             error = str(e)
             print(f"   error: {error}")
         mentions = find_mentions(response_text, competitors) if response_text else []
-        citations = extract_citations(response_text)
+        citations = extract_citations(response_text, response_html)
         result = {
             "prompt": prompt,
             "intent": intent,
