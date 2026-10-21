@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Tracker — Content Opportunities</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Content opportunities for <span id="gap-brand-name">your brand</span></h1>
+    <p id="meta-line">Loading results...</p>
+  </header>
+
+  <div class="panel" id="content-gap-panel">
+    <p class="panel-sub" id="gap-sub"></p>
+    <div id="gap-list"></div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script>
+function renderContentGaps(competitors, runs) {
+  const TARGET = competitors.includes('CoinSwitch') ? 'CoinSwitch' : competitors[0];
+  if (!TARGET) {
+    document.getElementById('content-gap-panel').innerHTML = '<p class="empty-state">No data yet.</p>';
+    return;
+  }
+
+  document.getElementById('gap-brand-name').textContent = TARGET;
+  const uniquePrompts = [...new Map(runs.map(r => [r.prompt, r])).values()];
+  const byPrompt = {};
+  runs.forEach(r => {
+    if (!byPrompt[r.prompt]) byPrompt[r.prompt] = { category: r.category, mentions: new Set() };
+    r.mentions.forEach(m => byPrompt[r.prompt].mentions.add(m));
+  });
+
+  const targetMentioned = Object.entries(byPrompt).filter(([, v]) => v.mentions.has(TARGET));
+  const rivalWon = Object.entries(byPrompt).filter(([, v]) => !v.mentions.has(TARGET) && v.mentions.size > 0);
+  const whitespace = Object.entries(byPrompt).filter(([, v]) => v.mentions.size === 0);
+
+  if (!uniquePrompts.length) {
+    document.getElementById('gap-list').innerHTML = '<p class="empty-state">No data yet.</p>';
+    return;
+  }
+  const total = Object.keys(byPrompt).length;
+  document.getElementById('gap-sub').textContent =
+    `${TARGET} appears in ${targetMentioned.length} of ${total} prompts analyzed. `
+    + `${rivalWon.length} prompts surface competitors instead, and ${whitespace.length} name no brand at all (open territory).`;
+
+  function groupByCategory(entries) {
+    const groups = {};
+    entries.forEach(([prompt, v]) => {
+      const cat = v.category || 'Uncategorized';
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push({ prompt, mentions: [...v.mentions] });
+    });
+    return groups;
+  }
+
+  function titleCase(s) {
+    return s.replace(/\w\S*/g, t => t[0].toUpperCase() + t.slice(1));
+  }
+
+  function suggestTitle(cat, forWhitespace) {
+    const c = titleCase(cat);
+    if (forWhitespace) return `"${c}" guide — own the answer before a competitor does`;
+    return `${c}: why ${TARGET} should show up here`;
+  }
+
+  function topRivals(items, limit) {
+    const counts = {};
+    items.forEach(it => it.mentions.forEach(m => { counts[m] = (counts[m] || 0) + 1; }));
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, limit).map(([name]) => name);
+  }
+
+  const rivalGroups = groupByCategory(rivalWon);
+  const whitespaceGroups = groupByCategory(whitespace);
+
+  function renderIdeaCards(groups, { forWhitespace }) {
+    return Object.entries(groups)
+      .sort((a, b) => b[1].length - a[1].length)
+      .map(([cat, items]) => {
+        const badge = forWhitespace ? 'opportunity' : (items.length >= 3 ? 'high' : 'medium');
+        const badgeLabel = forWhitespace ? 'Opportunity' : (items.length >= 3 ? 'High priority' : 'Medium priority');
+        const rivals = forWhitespace ? [] : topRivals(items, 3);
+        const why = forWhitespace
+          ? `${items.length} prompt${items.length === 1 ? '' : 's'} in this topic got no brand mention at all — first good answer wins it.`
+          : `${items.length} prompt${items.length === 1 ? '' : 's'} in this topic currently surface ${rivals.map(esc).join(', ') || 'competitors'} instead of ${esc(TARGET)}.`;
+        return `
+          <div class="idea-card">
+            <div class="idea-head">
+              <div class="idea-title">${esc(suggestTitle(cat, forWhitespace))}</div>
+              <span class="idea-badge ${badge}">${badgeLabel}</span>
+            </div>
+            <p class="idea-why">${why}</p>
+            <details>
+              <summary>${items.length} source prompt${items.length === 1 ? '' : 's'}</summary>
+              <ul class="gap-prompt-list">
+                ${items.map(it => `
+                  <li>${esc(it.prompt)}
+                    ${it.mentions.map(m => `<span class="gap-rival-chip" style="background:${colorForBrand(m, competitors)}">${esc(m)}</span>`).join('')}
+                  </li>
+                `).join('')}
+              </ul>
+            </details>
+          </div>
+        `;
+      }).join('');
+  }
+
+  let html = '';
+
+  if (Object.keys(rivalGroups).length) {
+    html += `<div class="gap-group">
+      <h4>Where competitors are being recommended instead</h4>
+      <p class="gap-note">Publish comparison or category content so ${esc(TARGET)} surfaces for these topics.</p>
+      ${renderIdeaCards(rivalGroups, { forWhitespace: false })}
+    </div>`;
+  }
+
+  if (Object.keys(whitespaceGroups).length) {
+    html += `<div class="gap-group">
+      <h4>Open territory (no brand mentioned by any AI)</h4>
+      <p class="gap-note">No competitor owns these queries yet — first-mover content here could capture the answer.</p>
+      ${renderIdeaCards(whitespaceGroups, { forWhitespace: true })}
+    </div>`;
+  }
+
+  if (!html) {
+    html = `<p class="panel-sub">${esc(TARGET)} already appears across all tracked prompts — no gaps detected in this run.</p>`;
+  }
+
+  document.getElementById('gap-list').innerHTML = html;
+}
+
+async function init() {
+  renderNav('opportunities.html');
+  const data = await loadData();
+  setMetaLine(data);
+  renderContentGaps(data.competitors, data.runs);
+}
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Tracker — Categories</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Share of voice by category</h1>
+    <p id="meta-line">Loading results...</p>
+  </header>
+
+  <div class="panel">
+    <h2>Share of voice by category</h2>
+    <p class="panel-sub">How often each brand came up, broken down by prompt category</p>
+    <div class="platform-grid" id="category-grid"></div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script>
+async function init() {
+  renderNav('categories.html');
+  const data = await loadData();
+  const { competitors, runs } = data;
+  setMetaLine(data);
+
+  if (!runs.length) {
+    document.getElementById('category-grid').innerHTML = '<p class="empty-state">No data yet.</p>';
+    return;
+  }
+
+  const categories = [...new Set(runs.map(r => r.category).filter(Boolean))].sort();
+
+  document.getElementById('category-grid').innerHTML = categories.map(cat => {
+    const catRuns = runs.filter(r => r.category === cat);
+    const counts = {};
+    competitors.forEach(c => counts[c] = 0);
+    catRuns.forEach(r => r.mentions.forEach(m => { if (counts[m] !== undefined) counts[m]++; }));
+    const sorted = competitors.map(c => ({ name: c, count: counts[c] })).sort((a,b) => b.count - a.count);
+    const max = Math.max(1, ...sorted.map(d => d.count));
+    return `
+      <div class="platform-card">
+        <h3>${esc(cat)} <span style="color:var(--text-muted); font-weight:400;">(${catRuns.length} responses)</span></h3>
+        ${sorted.map(d => `
+          <div class="mini-bar-row">
+            <div class="name">${esc(d.name)}</div>
+            <div class="mini-track"><div class="mini-fill" style="width:${(d.count/max)*100}%; background:${colorForBrand(d.name, competitors)};"></div></div>
+            <div class="count">${d.count}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+}
+init();
+</script>
+</body>
+</html>

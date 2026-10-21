@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Tracker — Content Plan</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Content plan from cited sources</h1>
+    <p id="meta-line">Loading results...</p>
+  </header>
+
+  <div class="panel">
+    <h2>Most-cited sources across AI answers</h2>
+    <p class="panel-sub">Every URL the tracked AI platforms linked to or named in their answers, ranked by how often it was cited</p>
+    <div id="source-list"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Content plan</h2>
+    <p class="panel-sub">One brief per topic where a competing source is getting cited — write something that earns the citation instead</p>
+    <div id="plan-list"></div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script>
+function domainIsBrand(domain, competitors) {
+  const d = domain.toLowerCase();
+  return competitors.some(c => d.includes(c.toLowerCase().replace(/\s+/g, '')));
+}
+
+function titleCase(s) {
+  return s.replace(/\w\S*/g, t => t[0].toUpperCase() + t.slice(1));
+}
+
+async function init() {
+  renderNav('content-plan.html');
+  const data = await loadData();
+  const { competitors, runs } = data;
+  setMetaLine(data);
+
+  const sources = aggregateCitations(runs);
+  const sourceListEl = document.getElementById('source-list');
+  const planListEl = document.getElementById('plan-list');
+
+  if (!runs.length) {
+    sourceListEl.innerHTML = '<p class="empty-state">No data yet.</p>';
+    planListEl.innerHTML = '';
+    return;
+  }
+
+  if (!sources.length) {
+    sourceListEl.innerHTML = `
+      <p class="empty-state">No cited URLs detected in the captured responses yet.
+      track.py now extracts links from every AI answer going forward — re-run it to start
+      building this list (platforms like Perplexity and Google AI Overview tend to cite the most).</p>`;
+    planListEl.innerHTML = '';
+    return;
+  }
+
+  sourceListEl.innerHTML = sources.slice(0, 30).map((s, i) => `
+    <div class="source-row">
+      <div class="source-rank">${i + 1}</div>
+      <div class="source-main">
+        <div class="source-domain">${esc(s.domain)}${domainIsBrand(s.domain, competitors) ? ' <span style="font-weight:400;color:var(--text-muted);">(tracked brand)</span>' : ''}</div>
+        <a class="source-url" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.url)}</a>
+      </div>
+      <div class="source-count">${s.count} citation${s.count === 1 ? '' : 's'}</div>
+    </div>
+  `).join('');
+
+  // Build a content plan: one brief per category where a non-brand source is being cited.
+  const byCategory = {};
+  sources.forEach(s => {
+    if (domainIsBrand(s.domain, competitors)) return;
+    s.categories.forEach(cat => {
+      const key = cat || 'Uncategorized';
+      if (!byCategory[key]) byCategory[key] = [];
+      byCategory[key].push(s);
+    });
+  });
+
+  const planEntries = Object.entries(byCategory)
+    .map(([cat, srcs]) => [cat, srcs.sort((a, b) => b.count - a.count)])
+    .sort((a, b) => b[1].reduce((n, s) => n + s.count, 0) - a[1].reduce((n, s) => n + s.count, 0));
+
+  if (!planEntries.length) {
+    planListEl.innerHTML = '<p class="panel-sub">No external sources are being cited over a tracked brand right now.</p>';
+    return;
+  }
+
+  planListEl.innerHTML = planEntries.map(([cat, srcs]) => {
+    const top = srcs.slice(0, 5);
+    const domains = [...new Set(top.map(s => s.domain))];
+    const totalCitations = srcs.reduce((n, s) => n + s.count, 0);
+    return `
+      <div class="plan-card">
+        <div class="plan-head">
+          <div class="plan-title">${esc(titleCase(cat))}: publish the page AI should cite instead</div>
+          <span class="idea-badge ${totalCitations >= 3 ? 'high' : 'medium'}">${totalCitations} citation${totalCitations === 1 ? '' : 's'}</span>
+        </div>
+        <p class="idea-why">
+          AI answers in "${esc(titleCase(cat))}" currently cite ${domains.map(esc).join(', ')}.
+          Build a page that covers the same question more directly — clear structure, a direct answer in
+          the first 2–3 sentences, and data or specifics these sources lack — so AI engines have a
+          reason to cite it instead.
+        </p>
+        <div class="plan-meta">Outrank these ${top.length} source${top.length === 1 ? '' : 's'}:</div>
+        <div class="plan-sources">
+          ${top.map(s => `<a class="plan-source-chip" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.domain)} · ${s.count}×</a>`).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+init();
+</script>
+</body>
+</html>

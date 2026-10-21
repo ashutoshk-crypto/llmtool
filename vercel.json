@@ -1,6 +1,3 @@
 {
-  "buildCommand": null,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/dashboard.html" }
-  ]
+  "buildCommand": null
 }

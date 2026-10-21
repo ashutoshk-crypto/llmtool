@@ -47,14 +47,36 @@ def find_mentions(text, competitors):
             found.append(name)
     return found
 
+URL_RE = re.compile(r"\(?(https?://[^\s<>\")\]]+)\)?")
+TRACKING_PARAMS_RE = re.compile(r"[?&](utm_[^=&]+|ref|fbclid|gclid)=[^&]*")
+
+def extract_citations(text):
+    if not text:
+        return []
+    seen = {}
+    for match in URL_RE.finditer(text):
+        url = match.group(1).rstrip(".,;:!?'\"")
+        url = TRACKING_PARAMS_RE.sub("", url)
+        try:
+            domain = re.sub(r"^www\.", "", url.split("/")[2])
+        except IndexError:
+            continue
+        if url not in seen:
+            seen[url] = domain
+    return [{"url": u, "domain": d} for u, d in seen.items()]
+
 def query_openai(prompt):
-    from openai import OpenAI
-    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-    resp = client.chat.completions.create(
-        model=OPENAI_MODEL,
-        messages=[{"role": "user", "content": prompt}],
+    resp = requests.get(
+        "https://app.scrapingbee.com/api/v1/chatgpt",
+        params={
+            "prompt": prompt,
+        },
+        headers={"authorization": f"Bearer {os.environ['SCRAPINGBEE_API_KEY']}"},
+        timeout=60,
     )
-    return resp.choices[0].message.content
+    resp.raise_for_status()
+    data = resp.json()
+    return data.get("results_text") or data.get("results_markdown") or json.dumps(data)
 
 def query_claude(prompt):
     import anthropic
@@ -67,10 +89,18 @@ def query_claude(prompt):
     return "".join(b.text for b in resp.content if b.type == "text")
 
 def query_gemini(prompt):
-    from google import genai
-    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
-    resp = client.models.generate_content(model=GEMINI_MODEL, contents=prompt)
-    return resp.text
+    resp = requests.get(
+        "https://app.scrapingbee.com/api/v1/gemini",
+        params={
+            "prompt": prompt,
+            "country_code": "us",
+        },
+        headers={"authorization": f"Bearer {os.environ['SCRAPINGBEE_API_KEY']}"},
+        timeout=60,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    return data.get("results_text") or data.get("results_markdown") or json.dumps(data)
 
 def _scrapingbee_get(target_url, render_js=True, extra_params=None):
     params = {
@@ -86,7 +116,7 @@ def _scrapingbee_get(target_url, render_js=True, extra_params=None):
 
 def query_google_ai_overview(prompt):
     url = f"https://www.google.com/search?q={quote_plus(prompt)}"
-    html = _scrapingbee_get(url, render_js=True, extra_params={"wait": "3000"})
+    html = _scrapingbee_get(url, render_js=True, extra_params={"wait": "3000", "custom_google": "True"})
     match = re.search(r'id="m-x-content"[^>]*>(.*?)</div>\s*</div>\s*</div>', html, re.DOTALL)
     if not match:
         text = re.sub(r"<[^>]+>", " ", html)
@@ -102,9 +132,9 @@ def query_perplexity_web(prompt):
     return re.sub(r"\s+", " ", text).strip()[:5000]
 
 PLATFORMS = {
-    "ChatGPT": (query_openai, "OPENAI_API_KEY"),
+    "ChatGPT": (query_openai, "SCRAPINGBEE_API_KEY"),
     "Claude": (query_claude, "ANTHROPIC_API_KEY"),
-    "Gemini": (query_gemini, "GEMINI_API_KEY"),
+    "Gemini": (query_gemini, "SCRAPINGBEE_API_KEY"),
     "Google AI Overview": (query_google_ai_overview, "SCRAPINGBEE_API_KEY"),
     "Perplexity": (query_perplexity_web, "SCRAPINGBEE_API_KEY"),
 }
@@ -154,6 +184,7 @@ def main():
                 error = str(e)
                 print(f"   error: {error}")
             mentions = find_mentions(response_text, competitors) if response_text else []
+            citations = extract_citations(response_text)
             runs.append({
                 "prompt": prompt,
                 "intent": intent,
@@ -161,6 +192,7 @@ def main():
                 "platform": platform_name,
                 "response": response_text,
                 "mentions": mentions,
+                "citations": citations,
                 "error": error,
             })
             save()
