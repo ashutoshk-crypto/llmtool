@@ -14,13 +14,19 @@
   </header>
 
   <div class="panel">
+    <h2>Content plan for <span id="gap-plan-brand">your brand</span></h2>
+    <p class="panel-sub" id="gap-plan-sub">One brief per content opportunity — built from where rivals win or no brand shows up at all</p>
+    <div id="gap-plan-list"></div>
+  </div>
+
+  <div class="panel">
     <h2>Most-cited sources across AI answers</h2>
     <p class="panel-sub">Every URL the tracked AI platforms linked to or named in their answers, ranked by how often it was cited</p>
     <div id="source-list"></div>
   </div>
 
   <div class="panel">
-    <h2>Content plan</h2>
+    <h2>Content plan from cited sources</h2>
     <p class="panel-sub">One brief per topic where a competing source is getting cited — write something that earns the citation instead</p>
     <div id="plan-list"></div>
   </div>
@@ -37,11 +43,122 @@ function titleCase(s) {
   return s.replace(/\w\S*/g, t => t[0].toUpperCase() + t.slice(1));
 }
 
+function renderGapContentPlan(competitors, runs) {
+  const listEl = document.getElementById('gap-plan-list');
+  const TARGET = competitors.includes('CoinSwitch') ? 'CoinSwitch' : competitors[0];
+  if (!TARGET || !runs.length) {
+    document.getElementById('gap-plan-brand').textContent = TARGET || 'your brand';
+    listEl.innerHTML = '<p class="empty-state">No data yet.</p>';
+    return;
+  }
+  document.getElementById('gap-plan-brand').textContent = TARGET;
+
+  const byPrompt = {};
+  runs.forEach(r => {
+    if (!byPrompt[r.prompt]) byPrompt[r.prompt] = { category: r.category, mentions: new Set() };
+    r.mentions.forEach(m => byPrompt[r.prompt].mentions.add(m));
+  });
+
+  const rivalWon = Object.entries(byPrompt).filter(([, v]) => !v.mentions.has(TARGET) && v.mentions.size > 0);
+  const whitespace = Object.entries(byPrompt).filter(([, v]) => v.mentions.size === 0);
+
+  function groupByCategory(entries) {
+    const groups = {};
+    entries.forEach(([prompt, v]) => {
+      const cat = v.category || 'Uncategorized';
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push({ prompt, mentions: [...v.mentions] });
+    });
+    return groups;
+  }
+
+  function topRivals(items, limit) {
+    const counts = {};
+    items.forEach(it => it.mentions.forEach(m => { counts[m] = (counts[m] || 0) + 1; }));
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, limit).map(([name]) => name);
+  }
+
+  const rivalGroups = groupByCategory(rivalWon);
+  const whitespaceGroups = groupByCategory(whitespace);
+
+  function buildBrief(cat, items, forWhitespace) {
+    const catTitle = titleCase(cat);
+    const rivals = forWhitespace ? [] : topRivals(items, 3);
+    const prompts = items.map(it => it.prompt);
+    const title = forWhitespace
+      ? `"${catTitle}" guide — own the answer before a competitor does`
+      : `${catTitle}: why ${TARGET} belongs in the answer`;
+    const angle = forWhitespace
+      ? `No tracked brand is being named for these prompts yet. Publish a direct, well-structured answer so AI engines have a clear, citable source — first mover usually keeps the slot.`
+      : `AI answers for these prompts currently name ${rivals.map(esc).join(', ') || 'competitors'} instead of ${esc(TARGET)}. Publish content that answers the same question more directly, with specifics (pricing, features, data) rivals omit.`;
+    const outline = forWhitespace
+      ? [
+          `Answer the core question in the first 2–3 sentences — no preamble`,
+          `Cover the exact sub-questions these prompts ask`,
+          `Add specifics (numbers, steps, comparisons) generic answers skip`,
+          `Mention ${esc(TARGET)} naturally as the relevant option`,
+        ]
+      : [
+          `Open with a direct answer, then a ${esc(TARGET)} vs. ${rivals[0] ? esc(rivals[0]) : 'competitor'} comparison`,
+          `Cover criteria the source prompts actually ask about`,
+          `Back claims with specifics rivals' pages lack`,
+          `Close with why ${esc(TARGET)} fits the use case in the prompts below`,
+        ];
+    return { title, angle, outline, prompts, rivals, count: items.length };
+  }
+
+  function renderGroup(groups, forWhitespace) {
+    return Object.entries(groups)
+      .sort((a, b) => b[1].length - a[1].length)
+      .map(([cat, items]) => {
+        const brief = buildBrief(cat, items, forWhitespace);
+        const badge = forWhitespace ? 'opportunity' : (items.length >= 3 ? 'high' : 'medium');
+        const badgeLabel = forWhitespace ? 'Opportunity' : (items.length >= 3 ? 'High priority' : 'Medium priority');
+        return `
+          <div class="plan-card">
+            <div class="plan-head">
+              <div class="plan-title">${esc(brief.title)}</div>
+              <span class="idea-badge ${badge}">${badgeLabel}</span>
+            </div>
+            <p class="idea-why">${brief.angle}</p>
+            <div class="plan-meta">Suggested outline:</div>
+            <ul class="gap-prompt-list">
+              ${brief.outline.map(o => `<li>${o}</li>`).join('')}
+            </ul>
+            <details>
+              <summary>${brief.count} source prompt${brief.count === 1 ? '' : 's'}</summary>
+              <ul class="gap-prompt-list">
+                ${brief.prompts.map(p => `<li>${esc(p)}</li>`).join('')}
+              </ul>
+            </details>
+          </div>
+        `;
+      }).join('');
+  }
+
+  let html = '';
+  if (Object.keys(rivalGroups).length) {
+    html += `<div class="gap-group">
+      <h4>Where competitors are being recommended instead</h4>
+      ${renderGroup(rivalGroups, false)}
+    </div>`;
+  }
+  if (Object.keys(whitespaceGroups).length) {
+    html += `<div class="gap-group">
+      <h4>Open territory (no brand mentioned by any AI)</h4>
+      ${renderGroup(whitespaceGroups, true)}
+    </div>`;
+  }
+  listEl.innerHTML = html || `<p class="panel-sub">${esc(TARGET)} already appears across all tracked prompts — no gaps detected in this run.</p>`;
+}
+
 async function init() {
   renderNav('content-plan.html');
   const data = await loadData();
   const { competitors, runs } = data;
   setMetaLine(data);
+
+  renderGapContentPlan(competitors, runs);
 
   const sources = aggregateCitations(runs);
   const sourceListEl = document.getElementById('source-list');
