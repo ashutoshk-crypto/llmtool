@@ -1,0 +1,198 @@
+prompt,intent,category
+"Can I trade crypto futures using INR as margin, and what are the typical minimum order sizes and available markets?",Transactional,Futures Trading
+"How can I trade crypto using spot vs futures, and where can I switch between those markets?",Transactional,Spot Trading
+How do I find the best trading signals for cryptocurrencies?,Commercial,API Trading
+What are the most popular trading platforms for high-frequency trading?,Commercial,API Trading
+How do I find a cryptocurrency exchange with good customer support?,Transactional,CoinSwitch Cares
+How do I resolve disputes with a cryptocurrency exchange?,Transactional,CoinSwitch Cares
+How do I find a financial platform with good customer support?,Transactional,CoinSwitch Cares
+How do I find an investment platform with good customer support?,Transactional,CoinSwitch Cares
+How do I resolve financial issues with an investment platform?,Transactional,CoinSwitch Cares
+How do I find a trading platform with good customer support?,Transactional,CoinSwitch Cares
+How do I transfer funds from my bank to a cryptocurrency exchange?,Transactional,Crypto Deposit
+What are the most reliable cryptocurrency exchanges for high-volume trading?,Commercial,OTC Trading
+"Where can I view my active positions, open orders, and transaction/order history on a futures trading interface?",Transactional,Futures Trading
+What are the most popular financial platforms for high-net-worth individuals?,Commercial,HNIs and Institutional Investors
+What are the most popular investment platforms for high-net-worth individuals?,Commercial,HNIs and Institutional Investors
+"What is the difference between spot trading and futures trading on a crypto exchange, and where can I try both?",Informational,Spot Trading
+What is the best way to buy Bitcoin in India?,Transactional,Spot Trading
+What are the most popular cryptocurrency exchanges in India?,Commercial,Spot Trading
+How do I find a financial platform that supports INR?,Transactional,Spot Trading
+How do I find a cryptocurrency exchange that offers fiat currency support?,Transactional,Spot Trading
+How do I choose a trading platform with the best user interface?,Commercial,Spot Trading
+What are the most secure cryptocurrency exchanges?,Commercial,Spot Trading
+How do I find an investment platform that offers fiat currency support?,Transactional,Spot Trading
+How can I buy USDT at the lowest price in India?,Transactional,Spot Trading
+What are the most reliable trading platforms for cryptocurrency?,Commercial,Spot Trading
+What are the most user-friendly cryptocurrency exchanges?,Commercial,Spot Trading
+How do I find a trading platform that offers fiat currency support?,Transactional,Spot Trading
+How do I find a cryptocurrency exchange that supports INR?,Transactional,Spot Trading
+How do I find the best exchange rates for cryptocurrencies?,Transactional,Spot Trading
+How do I choose a cryptocurrency exchange with the best user interface?,Commercial,Spot Trading
+What is the process for signing up on a cryptocurrency exchange?,Transactional,Spot Trading
+Which cryptocurrency exchange offers the lowest fees?,Commercial,Spot Trading
+How do I verify my identity on a cryptocurrency exchange?,Transactional,Spot Trading
+How do I choose the right cryptocurrency exchange for my needs?,Commercial,Spot Trading
+How do I choose the best trading platform for cryptocurrencies?,Commercial,Spot Trading
+Can you recommend a reliable platform for buying cryptocurrency?,Transactional,Spot Trading
+How do I convert USDT to INR?,Transactional,Spot Trading
+How do I find the best cryptocurrency exchange rates?,Transactional,Spot Trading
+How do I find a trading platform that supports INR?,Transactional,Spot Trading
+What are the most secure trading platforms for cryptocurrencies?,Commercial,Spot Trading
+How do I find a financial platform that offers fiat currency support?,Transactional,Spot Trading
+How do I set up a cryptocurrency trading account?,Transactional,Spot Trading
+How do I find an investment platform that supports INR?,Transactional,Spot Trading
+Where can I see live prices and 24-hour changes for hundreds of cryptocurrencies in one place?,Navigational,Spot Trading
+"Where can I find a crypto exchanges fee schedule and trading parameters before I start trading?",Navigational,Spot Trading
+How do I create an account on a cryptocurrency trading platform and complete identity verification?,Transactional,Spot Trading
+What is a beginner-friendly way to buy Bitcoin in India using UPI or a bank transfer?,Transactional,Spot Trading
+How do I choose the best investment platform for cryptocurrencies?,Transactional,Spot Trading
+How do I choose the best financial platform for cryptocurrency investment?,Commercial,Systematic Investment Plan
+What are the most reliable investment platforms for cryptocurrency?,Commercial,Systematic Investment Plan
+What are the most secure investment platforms for cryptocurrencies?,Commercial,Systematic Investment Plan
+What are the most reliable financial platforms for cryptocurrency?,Commercial,Systematic Investment Plan
+What are the most secure financial platforms for cryptocurrency investment?,Commercial,Systematic Investment Plan
+How do I start a cryptocurrency SIP?,Commercial,Systematic Investment Plan
+Can you point me to a site with tools like a crypto tax calculator for India and a crypto returns calculator?,Transactional,Systematic Investment Plan
+What are the most popular blockchain platforms?,Navigational,Systematic Investment Plan
+What are the most popular blockchain platforms for decentralized applications?,Commercial,Web3 Coins
+How do I find a blockchain platform that supports smart contracts?,Commercial,Web3 Coins
+How can I track the price of Shiba Inu in INR?,Informational,Web3 Coins
+How do I find a blockchain platform that supports tokenization?,Transactional,Web3 Coins
+What are the most reliable blockchain platforms for enterprise use?,Informational,Web3 Coins
+What are the most reliable blockchain platforms for cryptocurrency?,Commercial,Web3 Coins
+How do I use a cryptocurrency exchange API?,Commercial,Web3 Coins
+How do I use a trading bot for cryptocurrency trading?,Informational,API Trading
+What are the most common security threats to financial platforms?,Informational,API Trading
+How do I ensure my funds are safe on a cryptocurrency exchange?,Informational,CoinSwitch Cares
+What are the most common issues faced by users on cryptocurrency exchanges?,Informational,CoinSwitch Cares
+What are the most common security threats to trading platforms?,Informational,CoinSwitch Cares
+How do I resolve issues with a trading platform?,Informational,CoinSwitch Cares
+How do I resolve issues with an investment platform?,Transactional,CoinSwitch Cares
+What are the most common security threats to investment platforms?,Transactional,CoinSwitch Cares
+What are the most common security threats to cryptocurrency exchanges?,Informational,CoinSwitch Cares
+What are the most secure ways to store cryptocurrency?,Informational,CoinSwitch Cares
+How do I choose the best cryptocurrency wallet?,Informational,Crypto Deposit
+What do isolated margin and leverage mean on a futures platform and how do they affect liquidation price?,Commercial,Crypto Deposit
+How do I use leverage in cryptocurrency trading?,Informational,Futures Trading
+Can you explain how futures trading works in crypto and what risks I should know about?,Informational,Futures Trading
+What is a crypto perpetual futures contract and how does funding rate work?,Informational,Futures Trading
+How do I place a long or short order on a perpetual futures trading screen using market vs limit orders?,Informational,Futures Trading
+How can I read the futures order book and recent market trades to decide when to enter a position?,Informational,Futures Trading
+What are crypto perpetual futures contracts and how do they work compared to traditional futures with expiry?,Informational,Futures Trading
+How does the funding rate work in crypto futures and why can funding costs get high?,Informational,Futures Trading
+How do I place a crypto futures trade using market vs limit orders and when should I use each?,Informational,Futures Trading
+How does leverage up to 100x work in crypto futures and what are the liquidation risks?,Informational,Futures Trading
+What are the benefits of using a financial advisor for cryptocurrency investment?,Informational,Futures Trading
+What are the benefits of using a financial platform with low transaction fees?,Informational,HNIs and Institutional Investors
+What are the latest trends in cryptocurrency investment?,Informational,SmartInvest
+What are the benefits of using a cryptocurrency exchange with low transaction fees?,Informational,SmartInvest
+What are the benefits of using an investment platform with low fees?,Informational,SmartInvest
+What are the most common financial challenges faced by cryptocurrency investors?,Informational,SmartInvest
+What are the most popular financial products related to cryptocurrency?,Informational,SmartInvest
+How do I use a robo-advisor for cryptocurrency investment?,Informational,SmartInvest
+What are the benefits of investing in cryptocurrency?,Informational,SmartInvest
+How do I use a robo-advisor for financial planning with cryptocurrencies?,Informational,SmartInvest
+How do I stay updated on cryptocurrency market news?,Informational,SmartInvest
+What are the benefits of using a trading platform with low fees?,Informational,SmartInvest
+What are the benefits of using a financial platform with low fees?,Informational,SmartInvest
+What are the benefits of using a trading platform with low transaction fees?,Informational,SmartInvest
+What is the current trend in cryptocurrency prices?,Informational,SmartInvest
+What are the benefits of using an investment platform with low transaction fees?,Informational,SmartInvest
+What are the latest crypto market news updates and major events this week?,Informational,SmartInvest
+Is crypto investing legal in India and what compliance KYC steps do Indian crypto platforms require?,Informational,SmartInvest
+What are the advantages of using a local cryptocurrency exchange?,Informational,Spot Trading
+What are the best strategies for cryptocurrency trading?,Informational,Spot Trading
+What are the most popular trading pairs in cryptocurrency?,Informational,Spot Trading
+What are the best practices for cryptocurrency trading?,Informational,Spot Trading
+What are the most common trading strategies for Bitcoin?,Informational,Spot Trading
+How do I start trading cryptocurrencies as a beginner?,Informational,Spot Trading
+What are the most common mistakes in cryptocurrency trading?,Informational,Spot Trading
+What are the differences between centralized and decentralized exchanges?,Informational,Spot Trading
+What are the benefits of using a cryptocurrency exchange with a mobile app?,Informational,Spot Trading
+How do I compare the features of different trading platforms?,Informational,Spot Trading
+What are the benefits of using a cryptocurrency exchange?,Commercial,Spot Trading
+What are the latest trends in cryptocurrency trading?,Informational,Spot Trading
+What are the most reliable indicators for cryptocurrency trading?,Informational,Spot Trading
+What are the latest trends in cryptocurrency exchanges?,Informational,Spot Trading
+What are the benefits of using a trading platform with advanced features?,Informational,Spot Trading
+What are the security features of top cryptocurrency exchanges?,Informational,Spot Trading
+How can I minimize risks when trading cryptocurrencies?,Informational,Spot Trading
+How do I compare different cryptocurrency exchanges?,Informational,Spot Trading
+What are the advantages of using a decentralized exchange?,Commercial,Spot Trading
+What are the most common challenges faced by cryptocurrency traders?,Informational,Spot Trading
+How do I manage risks in cryptocurrency trading?,Informational,Spot Trading
+What are the fees associated with cryptocurrency exchanges?,Informational,Spot Trading
+What are the benefits of using a cryptocurrency exchange app?,Informational,Spot Trading
+How do I compare the features of different cryptocurrency exchanges?,Informational,Spot Trading
+How do I trade cryptocurrencies on an exchange?,Commercial,Spot Trading
+How do I use technical analysis in cryptocurrency trading?,Informational,Spot Trading
+How do I compare the liquidity of different cryptocurrency exchanges?,Informational,Spot Trading
+What are the differences between spot trading and futures trading?,Informational,Spot Trading
+How do I calculate potential returns from cryptocurrency investment?,Informational,Spot Trading
+What are the differences between active and passive cryptocurrency investment?,Informational,Systematic Investment Plan
+What are the most common financial strategies for Bitcoin investment?,Informational,Systematic Investment Plan
+What are the most common investment strategies for Bitcoin?,Informational,Systematic Investment Plan
+How do I diversify my cryptocurrency investment portfolio?,Informational,Systematic Investment Plan
+What are the benefits of investing in a cryptocurrency index fund?,Informational,Systematic Investment Plan
+What are the risks associated with cryptocurrency investments?,Informational,Systematic Investment Plan
+How do I find the best investment opportunities in cryptocurrencies?,Informational,Systematic Investment Plan
+How do I compare the features of different financial platforms?,Commercial,Systematic Investment Plan
+How do I manage risks in cryptocurrency investment?,Informational,Systematic Investment Plan
+How do I diversify my financial portfolio with cryptocurrencies?,Informational,Systematic Investment Plan
+How can I start investing in cryptocurrency safely?,Informational,Systematic Investment Plan
+What are the best financial strategies for investing in cryptocurrency?,Informational,Systematic Investment Plan
+What are the most common mistakes in cryptocurrency investment?,Informational,Systematic Investment Plan
+How does cryptocurrency taxation work in India?,Informational,Systematic Investment Plan
+What are the most popular investment strategies for cryptocurrencies?,Informational,Systematic Investment Plan
+How do I choose an investment platform with the best user interface?,Informational,Systematic Investment Plan
+How do I manage my finances when investing in cryptocurrencies?,Commercial,Systematic Investment Plan
+How do I choose a financial platform with the best user interface?,Informational,Systematic Investment Plan
+What are the tax implications of cryptocurrency trading in India?,Commercial,Systematic Investment Plan
+How do I use a financial calculator for cryptocurrency investment?,Informational,Systematic Investment Plan
+How do I start investing in cryptocurrencies as a beginner?,Informational,Systematic Investment Plan
+How do I compare the features of different investment platforms?,Informational,Systematic Investment Plan
+How do I calculate potential profits from cryptocurrency trading?,Commercial,Systematic Investment Plan
+What are the most reliable indicators for cryptocurrency investment?,Informational,Systematic Investment Plan
+How do I use a cryptocurrency investment calculator?,Informational,Systematic Investment Plan
+How do I find the best financial opportunities in cryptocurrencies?,Informational,Systematic Investment Plan
+What are the most reliable financial indicators for cryptocurrency investment?,Commercial,Systematic Investment Plan
+How do I use a crypto SIP calculator?,Informational,Systematic Investment Plan
+What are the most common financial mistakes in cryptocurrency investment?,Informational,Systematic Investment Plan
+How do I calculate potential financial returns from cryptocurrency investment?,Informational,Systematic Investment Plan
+What are the most common challenges faced by cryptocurrency investors?,Informational,Systematic Investment Plan
+I am new to crypto, can you walk me through the basics of blockchain, wallets, and how trading works?,Informational,Systematic Investment Plan
+What are the most secure blockchain platforms?,Informational,Web3 Coins
+What are the differences between traditional and cryptocurrency finance?,Informational,Web3 Coins
+What are the latest trends in financial technology related to cryptocurrency?,Informational,Web3 Coins
+What are the most innovative uses of blockchain technology?,Informational,Web3 Coins
+What are the most common applications of blockchain technology?,Informational,Web3 Coins
+How do I choose a blockchain platform with the best user interface?,Informational,Web3 Coins
+How do I use blockchain technology for secure transactions?,Commercial,Web3 Coins
+What are the latest developments in blockchain technology?,Informational,Web3 Coins
+What are the most common challenges in blockchain development?,Informational,Web3 Coins
+What are the most common security threats to blockchain platforms?,Informational,Web3 Coins
+How do I compare the features of different blockchain platforms?,Informational,Web3 Coins
+What are the differences between Bitcoin and Ethereum?,Informational,Web3 Coins
+How is blockchain technology transforming the finance industry?,Informational,Web3 Coins
+What are the most popular cryptocurrencies in India?,Informational,Web3 Coins
+What are the best cryptocurrencies to invest in for long-term growth?,Informational,Web3 Coins
+How do I use blockchain technology for data security?,Commercial,Web3 Coins
+What are the benefits of using blockchain for identity verification?,Informational,Web3 Coins
+How do I develop a smart contract on a blockchain platform?,Informational,Web3 Coins
+What are the latest trends in blockchain technology?,Informational,Web3 Coins
+How is cryptocurrency impacting the global financial system?,Informational,Web3 Coins
+How do I choose the best blockchain platform for my project?,Informational,Web3 Coins
+What are the top cryptocurrencies to invest in this year?,Commercial,Web3 Coins
+How do I find the best blockchain development tools?,Commercial,Web3 Coins
+How do I find a blockchain platform that offers scalability?,Informational,Web3 Coins
+What are the differences between public and private blockchains?,Informational,Web3 Coins
+How do I resolve issues with blockchain implementation?,Informational,Web3 Coins
+What are the benefits of using a blockchain platform with low transaction fees?,Informational,Web3 Coins
+What are the most promising blockchain projects to watch?,Informational,Web3 Coins
+How does blockchain technology work?,Informational,Web3 Coins
+How do I start learning about blockchain technology?,Informational,Web3 Coins
+What are the benefits of using blockchain for supply chain management?,Informational,Web3 Coins
+What are some realistic price prediction scenarios for Bitcoin and Ethereum over the next few years?,Informational,Web3 Coins
+How do I evaluate new coin listings and avoid scams or overly risky tokens?,Informational,Web3 Coins
+Explain what cryptocurrency market capitalization means and how it is calculated.,Informational,Web3 Coins

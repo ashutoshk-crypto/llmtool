@@ -1,0 +1,8 @@
+# One competitor/brand name per line. Lines starting with # are ignored.
+CoinSwitch
+CoinDCX
+Binance
+WazirX
+Zebpay
+Delta Exchange
+Mudrex

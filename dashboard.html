@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Tracker</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1: #fcfcfb;
+    --page: #f9f9f7;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --gridline: #e1e0d9;
+    --baseline: #c3c2b7;
+    --border: rgba(11,11,11,0.10);
+    --series-1: #2a78d6;
+    --series-2: #eb6834;
+    --series-3: #1baf7a;
+    --series-4: #eda100;
+    --series-5: #e87ba4;
+    --series-6: #4a3aa7;
+    --series-7: #e34948;
+    --series-other: #c3c2b7;
+    --chip-bg: #f0efec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --surface-1: #1a1a19;
+      --page: #0d0d0d;
+      --text-primary: #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted: #898781;
+      --gridline: #2c2c2a;
+      --baseline: #383835;
+      --border: rgba(255,255,255,0.10);
+      --series-1: #3987e5;
+      --series-2: #d95926;
+      --series-3: #199e70;
+      --series-4: #c98500;
+      --series-5: #d55181;
+      --series-6: #9085e9;
+      --series-7: #e66767;
+      --series-other: #383835;
+      --chip-bg: #242422;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1: #1a1a19;
+    --page: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --gridline: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.10);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --series-6: #9085e9;
+    --series-7: #e66767;
+    --series-other: #383835;
+    --chip-bg: #242422;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  header h1 { font-size: 22px; margin: 0 0 4px; }
+  header p { margin: 0; color: var(--text-secondary); font-size: 14px; }
+  header { margin-bottom: 24px; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .stat-tile {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .stat-tile .label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+  .stat-tile .value { font-size: 26px; font-weight: 600; }
+  .stat-tile .sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+  .panel {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+  }
+  .panel h2 { font-size: 15px; margin: 0 0 2px; }
+  .panel .panel-sub { font-size: 12.5px; color: var(--text-muted); margin: 0 0 16px; }
+
+  .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .bar-row .name { width: 130px; flex-shrink: 0; font-size: 13px; color: var(--text-secondary); text-align: right; }
+  .bar-track { flex: 1; background: var(--gridline); border-radius: 4px; height: 20px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px 0 0 4px; display: flex; align-items: center; }
+  .bar-row .count { width: 90px; flex-shrink: 0; font-size: 12.5px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-secondary); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  .platform-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .platform-card { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .platform-card h3 { margin: 0 0 10px; font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+  .mini-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .mini-bar-row .name { width: 90px; font-size: 11.5px; color: var(--text-muted); text-align: right; flex-shrink: 0; }
+  .mini-track { flex: 1; background: var(--gridline); border-radius: 3px; height: 12px; }
+  .mini-fill { height: 100%; border-radius: 3px; }
+  .mini-bar-row .count { width: 20px; font-size: 11px; color: var(--text-muted); }
+
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .filters select {
+    background: var(--page);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--baseline);
+    padding: 8px 10px;
+    white-space: nowrap;
+  }
+  tbody td { padding: 10px 10px; border-bottom: 1px solid var(--gridline); vertical-align: top; }
+  tbody tr:hover { background: var(--chip-bg); }
+  .platform-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    background: var(--chip-bg);
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .mention-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    color: white;
+    margin: 2px 4px 2px 0;
+    white-space: nowrap;
+  }
+  .no-mentions { color: var(--text-muted); font-style: italic; font-size: 12.5px; }
+  .response-cell { max-width: 360px; color: var(--text-secondary); font-size: 12.5px; }
+  .table-scroll { overflow-x: auto; }
+
+  .table-wrap { max-height: 520px; overflow-y: auto; border: 1px solid var(--gridline); border-radius: 8px; }
+  .table-wrap table { margin: 0; }
+  .table-wrap thead th { position: sticky; top: 0; background: var(--surface-1); z-index: 1; }
+
+  .empty-state { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 13px; }
+
+  .gap-group { margin-bottom: 18px; }
+  .gap-group h4 { margin: 0 0 8px; font-size: 13px; color: var(--text-primary); }
+  .gap-group .gap-note { font-size: 12px; color: var(--text-muted); margin: 0 0 8px; }
+  .gap-prompt-list { list-style: none; margin: 0; padding: 0; }
+  .gap-prompt-list li {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--gridline);
+  }
+  .gap-prompt-list li:last-child { border-bottom: none; }
+  .gap-rival-chip {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 11px;
+    color: white;
+    margin-left: 6px;
+  }
+
+  .idea-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .idea-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+  .idea-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+  .idea-badge {
+    flex-shrink: 0;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .idea-badge.high { background: rgba(227,73,72,0.15); color: var(--series-7); }
+  .idea-badge.medium { background: rgba(237,161,0,0.18); color: var(--series-4); }
+  .idea-badge.opportunity { background: rgba(27,175,122,0.15); color: var(--series-3); }
+  .idea-why { font-size: 12px; color: var(--text-secondary); margin: 2px 0 8px; }
+  .idea-card summary { font-size: 11.5px; color: var(--text-muted); cursor: pointer; user-select: none; }
+  .idea-card summary:hover { color: var(--text-secondary); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>AI Visibility Tracker</h1>
+    <p id="meta-line">Loading results...</p>
+  </header>
+
+  <div class="stat-row" id="stat-row"></div>
+
+  <div class="panel">
+    <h2>Share of voice by competitor</h2>
+    <p class="panel-sub">Percent of AI responses that mentioned each brand, across all platforms and prompts</p>
+    <div id="sov-chart"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Mentions by platform</h2>
+    <p class="panel-sub">How often each brand came up, broken down by ChatGPT, Claude, and Gemini</p>
+    <div class="legend" id="legend"></div>
+    <div class="platform-grid" id="platform-grid"></div>
+  </div>
+
+  <div class="panel" id="content-gap-panel" style="display:none;">
+    <h2>Content opportunities for <span id="gap-brand-name">CoinSwitch</span></h2>
+    <p class="panel-sub" id="gap-sub"></p>
+    <div id="gap-list"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Prompt-level detail</h2>
+    <p class="panel-sub">Every prompt and platform run, with detected brand mentions</p>
+    <div class="filters">
+      <select id="filter-platform"><option value="">All platforms</option></select>
+      <select id="filter-category"><option value="">All categories</option></select>
+      <select id="filter-brand"><option value="">All brands</option></select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Prompt</th>
+            <th>Category</th>
+            <th>Platform</th>
+            <th>Mentions</th>
+            <th>Response</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const SERIES_COLORS = ['--series-1','--series-2','--series-3','--series-4','--series-5','--series-6','--series-7'];
+
+function cssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function colorForBrand(brand, competitors) {
+  const idx = competitors.indexOf(brand);
+  if (idx === -1 || idx >= SERIES_COLORS.length) return cssVar('--series-other');
+  return cssVar(SERIES_COLORS[idx]);
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+const EMBEDDED_DATA = {
+  "generated_at": "2026-10-21T07:52:49.959854+00:00",
+  "competitors": [
+    "CoinSwitch",
+    "CoinDCX",
+    "Binance",
+    "WazirX",
+    "Zebpay",
+    "Delta Exchange",
+    "Mudrex"
+  ],
+  "platforms": [
+    "ChatGPT"
+  ],
+  "runs": [
+    {
+      "prompt": "Can I trade crypto futures using INR as margin, and what are the typical minimum order sizes and available markets?",
+      "intent": "Transactional",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "Yes, you can trade crypto futures using INR as margin, but only on certain exchanges and typically only for crypto‑settled (not INR‑settled) contracts. Details vary a lot by platform and regulation, so you should check what’s currently allowed in your jurisdiction and by your bank.\n\nBelow is a concise overview as of late 2024.\n\n---\n\n## 1. Using INR as Margin: Where and How\n\n### A. Global Crypto Derivatives Exchanges (Indirect INR use)\nMost major futures platforms don’t hold INR directly as margin, but let you:\n\n1. **Deposit INR → Convert to USDT/USDC/BTC/ETH → Use as margin**\n   - Exchanges: Binance, Bybit, OKX, Bitget, KuCoin, etc.\n   - Funding methods:\n     - P2P (INR → USDT via another user)\n     - On‑ramp partners (local payment processors / UPI / bank transfer) where available\n\n2. **Margin currency**\n   - Once converted, margin is held in:\n     - **USDT/USDC** (coin‑margined or USDT‑margined futures)\n     - Or **BTC/ETH** for coin‑margined contracts\n   - So you’re *economically* using INR, but technically the margin is in crypto or stablecoins.\n\n> Direct INR‑margined perpetual futures on big global exchanges are essentially non‑existent today.\n\n---\n\n### B. Indian Exchanges with “Futures‑Style” Products (Crypto / Crypto)\nIndian, INR‑regulated exchanges (e.g., CoinDCX, WazirX, etc.) mainly offer:\n\n- **Spot, margin trading, and sometimes simplified derivative or leverage products**\n- Deposits and withdrawals in **INR**, but derivatives margin is usually:\n  - The crypto itself, or\n  - Internal “USD” units or stablecoin equivalents\n\nTrue high‑leverage perpetual futures with INR as direct margin are generally not offered due to regulatory constraints from RBI/SEBI.\n\n---\n\n## 2. Typical Minimum Order Sizes\n\nThese vary by exchange and by product; below are common ranges.\n\n### On Major Global Futures Platforms\n\n**USDT‑margined perpetuals (e.g. BTCUSDT, ETHUSDT):**\n- Minimum notional: often **$5–$10 equivalent**\n- For top markets:\n  - BTCUSDT: min size often around **0.001 BTC** or a notional ≥ $5–10\n  - ETHUSDT: min size often around **0.01 ETH** or a notional ≥ $5–10\n- For altcoins: minimums can be even smaller (0.1–10 units depending on price)\n\n**Coin‑margined contracts (e.g. BTCUSD Perp):**\n- Minimum contract size: often **1 contract**\n- Each contract represents a fixed USD value in BTC (e.g., 100 USD per contract), so min notional is typically around **$5–$10** as well.\n\nIn INR, that’s usually **₹400–₹1,000+** depending on USD/INR.\n\n### On Indian Spot/Margin Platforms\n\n- Spot minimum trade: often as low as **₹10–₹100** per order for liquid pairs.\n- Margin/leveraged products (if available): usually somewhat higher (e.g., **₹500–₹1,000+** notional per order).\n\nAlways check:\n- “Contract specifications” or\n- “Trading rules / Minimum notional” section of your specific exchange.\n\n---\n\n## 3. Commonly Available Crypto Futures Markets\n\nOn major derivatives exchanges (USDT‑margined or coin‑margined):\n\n### Highly Liquid Perpetuals (Almost Universal)\n- **BTC**: BTCUSDT, BTCUSD perpetuals\n- **ETH**: ETHUSDT, ETHUSD perpetuals\n\n### Large‑cap Altcoins (Very Common)\n- BNB, SOL, XRP, ADA, DOGE, TON, LINK, LTC, AVAX, MATIC, OP, ARB, etc. as:\n  - USDT or USDC‑margined perpetuals\n  - Some also have coin‑margined versions\n\n### Smaller‑cap Altcoins (Varies by Exchange)\n- Many exchanges list **100–300+** perpetual markets:\n  - MEME coins, DeFi tokens, L2s, AI tokens, etc.\n- Liquidity and slippage can be poor in smaller pairs.\n\n---\n\n## 4. Practical Steps if You Hold INR\n\n1. **Pick an exchange that accepts Indian users** and has deep derivatives liquidity.\n2. **Deposit INR** via:\n   - P2P: Buy USDT/USDC with INR from a local seller\n   - Or a fiat on‑ramp if available\n3. **Move USDT/USDC to the Futures/Derivatives wallet.**\n4. **Open trades** in USDT‑margined or coin‑margined perpetuals:\n   - Choose leverage, set order type, mind minimum notional and maintenance margin.\n\n---\n\n## 5. Compliance Warning\n\n- In India, regulation of crypto derivatives is **uncertain and evolving**.\n- You must check:\n  - RBI/SEBI guidance\n  - Your tax obligations for futures PnL\n  - Whether using offshore exchanges is allowed by local law and by your bank’s LRS/forex rules.\n\nIf you tell me:\n- Which exchange(s) you’re considering, and\n- Whether you prefer web/mobile and P2P or bank transfer,\n\nI can outline the specific minimum sizes and key contract specs for that platform.",
+      "mentions": [
+        "CoinDCX",
+        "Binance",
+        "WazirX"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "How can I trade crypto using spot vs futures, and where can I switch between those markets?",
+      "intent": "Transactional",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "You trade spot and futures in different “sections” of an exchange, and they work quite differently.\n\n### 1. Spot trading: what it is and how to use it\n- **What it is:** You buy and sell the actual asset (e.g., BTC, ETH).  \n- **You own the coins** and can withdraw them to a wallet.\n- **No expiry, no funding fees, no liquidation** (unless you add margin/leverage, which some exchanges allow on spot).\n\n**Example:**\n- BTC is $60,000.\n- You buy 0.1 BTC using USDT.\n- Now you own 0.1 BTC. If BTC goes to $66,000 (+10%), your position is +10% in value.\n\n**Where to trade spot (and how to switch to it):**\nOn most centralized exchanges:\n- **Binance:** “Trade” → “Spot” (or “Convert” for simple swaps).\n- **Bybit:** “Spot”.\n- **OKX / KuCoin / Kraken / Coinbase:** Look for “Spot”, “Markets”, or “Trade” → “Spot”.\n- Usually there’s a tab/bar at the top like: `Spot | Margin | Futures | Earn`.\n\nOn decentralized exchanges (DEXs):\n- **Uniswap, SushiSwap, PancakeSwap, etc.**\n- These are *only* spot: swapping tokens directly from your wallet (MetaMask, etc.).\n\n---\n\n### 2. Futures trading: what it is and how to use it\n- **What it is:** You trade a contract that tracks the price of a crypto asset.\n- You **don’t own the underlying coin** unless you close into spot.\n- You can go **long or short** and use **leverage**.\n- Futures can be:\n  - **Perpetual** (no expiry; use funding payments).\n  - **Dated** (expire on a certain date).\n\n**Key features:**\n- **Leverage:** e.g., 5x, 10x, 20x, etc. Small price moves can mean big % PnL – and also big risk.\n- **Liquidation:** If price moves too far against you, your margin is wiped out and position is closed.\n- **Funding rates (for perpetuals):** Periodic payments between longs and shorts to keep futures price near spot.\n\n**Example (perpetual future):**\n- BTC is $60,000.\n- You open a **long** of 0.1 BTC with 10x leverage.\n- You commit $600 margin (instead of $6,000).\n- If BTC goes to $66,000 (+10%), you gain about +100% on your $600 margin (minus fees).\n- If BTC drops -10% to $54,000, you can be near liquidation, losing most/all of your margin.\n\n**Where to trade futures (and how to switch to it):**\nOn centralized exchanges, futures is a separate section:\n- **Binance:** Top menu: “Derivatives” → “USD‑M Futures” / “COIN‑M Futures”.\n- **Bybit:** “Derivatives” → “USDT Perpetual”, “Inverse Perpetual”, etc.\n- **OKX / KuCoin / Bitget:** Look for “Derivatives”, “Futures”, or “Perpetual”.\n\nUsually you’ll see a mode switch or tabs like:\n- `Spot | Margin | Futures | Options`\nor\n- `Spot | Derivatives`  \nClick **Futures/Derivatives** to switch.\n\nYou also often need to:\n- Transfer funds from **Spot Wallet → Futures Wallet** inside the exchange before trading futures.\n\nDecentralized futures:\n- **dYdX, GMX, Gains Network, Aevo, Perpetual Protocol** etc.\n- These are on-chain; you connect a wallet, then select “Perpetuals” / “Futures” in the UI.\n\n---\n\n### 3. When to use spot vs futures\n\n**Use spot if you:**\n- Want to **own** the crypto, hold long-term, or move it to your own wallet.\n- Prefer **simpler risk** (no liquidations/funding).\n- Are just starting out.\n\n**Use futures if you:**\n- Want to **short** or hedge: e.g., you hold BTC but want to protect against downside.\n- Need **leverage** (with full understanding of the risk).\n- Are active/short-term trading.\n\n---\n\n### 4. Quick checklist to “switch markets” on a typical CEX\n\n1. Log in.\n2. At the top navigation bar:\n   - Click **Spot** (or “Trade → Spot”) for regular buying/selling.\n   - Click **Derivatives/Futures** for contracts.\n3. If using futures:\n   - Go to **Wallet** → Transfer from **Spot** to **Futures**.\n   - Pick your contract (e.g., BTCUSDT Perpetual).\n   - Choose cross/isolated margin and leverage.\n4. Place order (limit/market) and confirm.\n\n---\n\nIf you tell me which exchange(s) you use, I can give step‑by‑step instructions with screenshots-style guidance specific to that platform.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "How do I find the best trading signals for cryptocurrencies?",
+      "intent": "Commercial",
+      "category": "API Trading",
+      "platform": "ChatGPT",
+      "response": "To find good crypto trading signals and actually use them safely, break it into three parts: **source**, **evaluation**, and **risk control**.\n\n---\n\n## 1. Understand what “trading signals” are\n\nA signal is just a rule-based suggestion: *buy/sell X at Y price, target Z, stop-loss W*, based on:\n- Technical analysis (indicators, price patterns)\n- On-chain data (whale flows, addresses, staking)\n- Market structure (order books, funding rates, open interest)\n- Quant models or bots (trend following, mean reversion, arbitrage)\n- News/social sentiment\n\nIf a provider doesn’t clearly explain **what their signals are based on**, treat that as a red flag.\n\n---\n\n## 2. Types of signal sources\n\n### A. Do-it-yourself (build your own signals)\nBest for long-term reliability; no dependence on others.\n\nTools:\n- **Charting platforms**: TradingView, TrendSpider\n- **Data**: Binance, Bybit, Coinbase Pro, CoinGlass, Santiment, CryptoQuant\n- **On-chain**: Glassnode, Nansen (paid), free dashboards on Dune\n\nBasic starting point:\n- Trend filter: 50/200 EMA or MA\n- Momentum: RSI, MACD\n- Volatility: ATR (for stops) or Bollinger Bands\n- Volume: OBV or simple volume spikes\n\nExample simple rule:\n- Only look for longs when price > 200 EMA on 4h chart\n- Enter long when:\n  - Price pulls back to 50 EMA\n  - RSI 4h between 40–60\n  - Volume on the bounce is above average\n- Stop: below recent swing low\n- Target: 2–3× your stop distance\n\nYou then backtest this on historical data.\n\n---\n\n### B. Automated / algorithmic platforms\n\nThey provide “strategy-based” signals instead of human calls.\n\nLook at:\n- **Built-in strategies** on TradingView (with track record)\n- **Signal marketplaces**:\n  - Cryptohopper marketplace\n  - 3Commas signals\n  - Zignaly “profit sharing” accounts\n- Copy-trading features on big exchanges (Bybit, OKX, Binance)\n\nChecklist:\n- Verified performance (not just screenshots)\n- Max drawdown\n- Number of trades, win rate, average R:R\n- Performance across different market regimes (bull, chop, bear)\n\nAvoid:\n- “Set and forget” with no stop-loss\n- Strategies that did amazing only during a massive bull trend and nowhere else\n\n---\n\n### C. Social/media signal groups (Telegram, Discord, Twitter)\n\nThis is where most scams/high noise are.\n\nIf you explore these:\n- Never pay high subscription fees up front\n- Prefer providers that:\n  - Show **public, timestamped track records** (e.g., via Myfxbook-like tools, or at least a spreadsheet with all closed trades)\n  - Post **invalidations / stop-losses** with every signal\n  - Don’t constantly change rules or “explain away” losses\n\nSigns to **avoid**:\n- Guaranteed profit, “0 risk”\n- Signals based on “insider info”\n- No stop-loss mentioned\n- Cherry-picked winners, no mention of losers\n- Pressure to increase leverage or deposit via their “partner link”\n\nUse them, at most, as **ideas to analyze yourself**, not blind entries.\n\n---\n\n## 3. How to evaluate if a signal is “good”\n\nYou want a **robust edge**, not a winning streak.\n\nKey metrics:\n- **R-multiple**: Risk-to-reward per trade\n- **Win rate**: % of trades that win\n- **Expectancy**:  \n  `E = (Win% × Avg win) – (Loss% × Avg loss)`  \n  You want E > 0 over a decent sample size (ideally 100+ trades).\n- **Max drawdown**: Largest equity drop from peak to trough\n- **Volatility of returns**: How wild the swings are\n\nExample:\n- Win rate: 45%\n- Avg win: +3R\n- Avg loss: –1R\n\n`E = 0.45×3 – 0.55×1 = 1.35 – 0.55 = +0.8R per trade` → good, even with <50% wins.\n\nBacktest steps (simple way):\n1. Pick 1–2 pairs (e.g., BTC/USDT, ETH/USDT) on 1–4h timeframes.\n2. Scroll back 6–12 months on the chart.\n3. Apply the rules bar by bar; log entries, exits, stop hits, and targets in a sheet.\n4. Calculate win%, avg R, max drawdown.\n\nDo this for **multiple market phases** (uptrend, range, downtrend).\n\n---\n\n## 4. Risk and money management (non-optional)\n\nThe same “signal quality” can produce very different results depending on risk control.\n\nBasic principles:\n- Risk per trade: typically **0.25–1%** of account; rarely more than 2%.\n- Use **position sizing** formula:  \n  `Position size = (Account × %risk) / (Entry – Stop distance)`\n- Always set a **hard stop-loss** (not just mental).\n- Avoid high leverage; it narrows your error margin.\n\nExample:\n- Account: $2,000\n- Risk: 1% = $20\n- Entry: $2.00, Stop: $1.80 → $0.20 risk per token  \n  Position size = $20 / 0.20 = 100 tokens ($200 position, 10× not required)\n\nIf a signal provider doesn’t talk about risk size and drawdown, they are not managing risk—**they are gambling for you.**\n\n---\n\n## 5. Avoid common traps\n\n- **Overfitting/backtest bias**: Strategy works perfectly on history, fails live.  \n  Solution: test on out-of-sample data; keep rules simple.\n- **Survivorship bias**: You only see the providers who got lucky and went viral.\n- **Emotional following**: Enter late, exit early. Use pre-planned entries/exits.\n\n---\n\n## 6. A practical step-by-step path\n\n1. **Pick a style**: Intra-day, swing, or position trading.\n2. **Learn basic TA**: Support/resistance, trends, RSI, moving averages.\n3. **Build 1–2 simple rules-based setups** and backtest on BTC/ETH first.\n4. Optional: **Add one or two data sources**:\n   - Funding rates + open interest (CoinGlass)  \n   - On-chain flows for BTC/ETH (CryptoQuant, Glassnode free tier)\n5. **Paper trade** for 1–2 months or use very small size.\n6. Once profitable and consistent, **consider algorithmic/marketplace signals** to diversify—but always size small and test.\n7. Treat any paid social/group signals as **idea flows**, never as “truth.”\n\n---\n\nIf you tell me:\n- Your experience level\n- Timeframe you want to trade (scalp/day/swing)\n- Whether you’re okay paying for tools\n\nI can outline 1–2 specific signal methods and the exact indicators/settings to start with.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "What are the most popular trading platforms for high-frequency trading?",
+      "intent": "Commercial",
+      "category": "API Trading",
+      "platform": "ChatGPT",
+      "response": "Among firms and individuals involved in high‑frequency or ultra‑low‑latency trading, you usually see a mix of:\n\n1. **Colocation + Direct Market Access (DMA)**  \n   Not a “platform” in the retail sense, but the core of HFT:\n   - Servers colocated in exchange data centers (e.g., NYSE/Members, CME Aurora, ICE, NASDAQ Carteret).\n   - Native exchange gateways and binary protocols (OUCH, ITCH, FIX variants, CME iLink, etc.).\n   - Custom C++/FPGA code for order entry, risk checks, and market data handling.\n   - Used by major prop shops, HFT firms, and banks’ internal desks.\n\n2. **Exchange‑Provided Low‑Latency APIs / Gateways**  \n   Popular among serious HFT participants on those venues:\n   - **CME Globex** (iLink, MDP 3.0)\n   - **NASDAQ** (OUCH, ITCH)\n   - **NYSE/ICE** native gateways\n   - **Eurex/EEX** (ETI/FAST, FIX so on)\n   Participants typically build their own trading engines on top of these.\n\n3. **Specialized Low‑Latency Infrastructure/Frameworks**  \n   Tools and frameworks used to build HFT systems:\n   - **Kx kdb+ / q** – time‑series database and language for tick data and research.\n   - **OneTick**, **Vela (Exegy)**, **Redline Trading Solutions**, **Activ Financial**, **NovaSparks**, **FGPA-based feed handlers** – for market data and execution infrastructure.\n   - **Chronicle**, **LMAX Disruptor**, **Aeron**, **Solarflare/Xilinx Onload** – ultra‑low latency messaging and networking.\n\n4. **Brokers / Venues Catering to Low‑Latency Clients**  \n   For smaller prop firms and advanced shops that don’t go fully direct on day one:\n   - **Interactive Brokers (IBKR)** – not true HFT‑grade latency, but widely used by “higher frequency” retail and small prop; FIX and proprietary APIs.\n   - **TradeStation, Lightspeed, Sterling Trader, TT (Trading Technologies)** – more professional but still not pure HFT-level latencies; often used as stepping stones.\n   - Some prime brokers and clearing firms provide DMA + colocation bundles for equities, futures, and FX.\n\n5. **FX and Crypto Low‑Latency Venues**  \n   - **Hotspot (Cboe FX)**, **EBS**, **LMAX Exchange**, **Currenex** – for FX HFT.\n   - **Binance, OKX, Coinbase, Deribit, Bybit** with colocated/hosted solutions and WebSocket/REST/UDP feeds for crypto HFT; serious firms typically use direct/colocated connections and private APIs when available.\n\n6. **Research / Backtesting Platforms (Not Execution Engines)**  \n   Popular for strategy research, but not the production “trading platform” itself:\n   - **Python + pandas/NumPy**, **Zipline**, **Backtrader**, **QuantConnect/Lean**, **PySpark**, **Matlab**, **R**, plus C++ frameworks in‑house.\n\nSummary:\n- True HFT almost always runs on **custom in‑house C++/FPGA engines** with **direct exchange connectivity and colocation**, not off‑the‑shelf trading platforms.\n- Commercial solutions like **kdb+**, **OneTick**, **Vela/Exegy**, and some DMA brokers/venues are the most commonly seen “products” in that ecosystem.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "How do I find a cryptocurrency exchange with good customer support?",
+      "intent": "Transactional",
+      "category": "CoinSwitch Cares",
+      "platform": "ChatGPT",
+      "response": "To find a crypto exchange with genuinely good customer support, focus on verifying (not just trusting marketing claims). Here’s a practical process:\n\n---\n\n## 1. Check Support Channels and Hours\n\nLook for:\n\n- Multiple channels:\n  - Live chat (preferable 24/7)\n  - Email / ticket system\n  - In‑app help\n  - Phone support (rare, but a plus)\n- Clear support page:\n  - “Contact us” should be easy to find\n  - Response-time promises (e.g., “within 24 hours”)\n\nRed flags:\n- Only a web form with no stated response time\n- No visible support email or chat before you sign up\n\n---\n\n## 2. Test the Support Yourself\n\nBefore committing a lot of money:\n\n1. Create an account (without depositing much yet).\n2. Send a simple question:\n   - For example: “If my account is locked, how long does re‑verification take?”\n3. Time their response:\n   - Under 1 hour (chat) or same day (email) is good.\n   - Multi-day silence for basic questions is a bad sign.\n4. Evaluate quality:\n   - Do they give a specific, relevant answer, or just paste generic text?\n\nDo the same after you’ve completed KYC (ID verification); some issues only appear then.\n\n---\n\n## 3. Use Independent Review Sources\n\nLook for patterns, not single reviews:\n\n- Sites:\n  - Trustpilot\n  - Reddit (e.g., r/CryptoCurrency, r/Bitcoin, r/CryptoExchanges)\n  - Twitter/X mentions\n- What to scan for:\n  - “Locked out and can’t reach support”\n  - “No response for X days”\n  - “Account frozen, no explanation”\n  - “Resolved quickly” and “support was helpful” (positive patterns)\n- Focus on:\n  - Recent reviews (last 3–6 months)\n  - How the company replies to complaints (professional vs defensive/silent)\n\nBeware of:\n- All 5-star reviews with generic wording (often fake)\n- Obvious referral/affiliate posts pretending to be neutral reviews\n\n---\n\n## 4. Evaluate Reputation and Regulation\n\nGenerally, better-regulated exchanges have more to lose from bad support:\n\n- Look for:\n  - Licensing or registration with financial authorities in your region, e.g.:\n    - US: FinCEN registration, state licenses, sometimes NYDFS BitLicense\n    - EU: VASP registrations, MiCA preparation\n    - UK: FCA registration for cryptoasset activities\n  - Proof of compliance and audits on their website\n- Check if they’ve had:\n  - Major outages with no communication\n  - History of ignoring users when withdrawals fail\n\nSupport quality is often better at large, long‑running, regulated platforms.\n\n---\n\n## 5. Review Help Center / Documentation\n\nStrong self‑help resources are part of good support:\n\n- Look for:\n  - Clear guides on:\n    - Deposits/withdrawals\n    - 2FA and account recovery\n    - KYC/verification\n    - Tax statements (if applicable)\n  - Status page (e.g., “status.exchange.com”) for outages\n- Good sign:\n  - Detailed, up‑to‑date articles; easy to search\n- Bad sign:\n  - Empty FAQ, outdated screenshots, broken links\n\n---\n\n## 6. Check How They Handle Common Pain Points\n\nSearch “[Exchange Name] + issue” for these specific topics:\n\n- “locked account”\n- “KYC problem”\n- “withdrawal pending”\n- “2FA lost / phone lost”\n\nRead user stories:\n- How long did resolution take?\n- Did staff explain clearly what to do?\n- Did issues actually get fixed, or threads just die?\n\n---\n\n## 7. Start With Low Risk and Scale Up\n\nWhen you’ve shortlisted an exchange:\n\n1. Deposit a small amount.\n2. Make:\n   - One trade\n   - One withdrawal to your own wallet or bank\n3. If anything goes wrong, open a ticket and see how support behaves.\n4. Only increase usage if you’re satisfied with responses.\n\nThis way you “test” support before you depend on it.\n\n---\n\n## 8. Ask Your Local Community\n\nIf possible:\n\n- Ask local / regional crypto communities (Telegram, Discord, forums):\n  - “Which exchanges have actually helped you when something went wrong?”\n- People in your country:\n  - Know which exchanges handle local banks and ID documents smoothly\n  - Can warn you about specific local issues (e.g., frequent bank transfer delays)\n\n---\n\n## 9. Warning Signs to Avoid\n\nBe very cautious if you see:\n\n- Lots of recent complaints about:\n  - Frozen withdrawals\n  - Auto‑closure of accounts\n  - Months‑long verification delays\n- No human response:\n  - Only bots, no escalation options\n- Aggressive marketing or unrealistic promotions, but no transparent support info\n- Exchange located in a very opaque jurisdiction with no contact details besides a form\n\n---\n\nIf you tell me your country/region and whether you care more about spot trading, derivatives, or just buying and holding, I can suggest what to check for in exchanges that serve your jurisdiction.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I resolve disputes with a cryptocurrency exchange?",
+      "intent": "Transactional",
+      "category": "CoinSwitch Cares",
+      "platform": "ChatGPT",
+      "response": "Resolving a dispute with a crypto exchange usually involves moving through several escalating steps. Here’s a practical sequence you can follow:\n\n---\n\n## 1. Gather Evidence First\n\nBefore contacting anyone:\n\n- Take screenshots of:\n  - Balances before/after the issue\n  - Error messages\n  - Transaction IDs (TXIDs) on-chain\n  - Order history / trade history\n- Download:\n  - Account statements / CSV exports\n  - Email or in-app notifications\n- Note:\n  - Exact timestamps (with timezone)\n  - Devices and apps used (web, iOS, Android)\n  - Any steps you took just before the issue\n\nThis makes your case much stronger later.\n\n---\n\n## 2. Check Exchange Status and Policies\n\n- Look at:\n  - Exchange status page (for outages or maintenance)\n  - Their support / help center for:\n    - Deposit/withdrawal delays\n    - Stuck transactions\n    - Liquidations / margin rules\n    - KYC/AML and account-freeze policies\n- Read:\n  - Terms of Service\n  - User agreement\n  - Risk disclosure\n\nSometimes what feels like a “dispute” is actually a documented (if unpleasant) policy.\n\n---\n\n## 3. Use Official Support Channels\n\nStart with the least confrontational route:\n\n- In-app or website support ticket system\n- Official support email\n- Live chat (if available)\n\nWhen you open the ticket:\n\n- Include:\n  - Account email/ID (never share passwords or 2FA)\n  - Clear summary: “Issue: USDT withdrawal of 500 USDT on 2026‑10‑15 not credited”\n  - Relevant TXID(s), addresses, order IDs\n  - Screenshots and timestamps\n- Be specific in what you want:\n  - “I am requesting: credit of missing funds / explanation of liquidation / reversal of duplicate charge / account unlock.”\n\nKeep all correspondence; don’t delete tickets or emails.\n\n---\n\n## 4. Escalate Within the Exchange\n\nIf first-line support is unhelpful:\n\n- Ask for:\n  - A supervisor or “Level 2/Level 3” support\n  - A written explanation citing the specific policy/section relevant to your case\n- Provide a concise timeline of events in a single message to avoid confusion.\n- Stay factual, avoid threats or insults; those often backfire.\n\n---\n\n## 5. Confirm On-Chain vs Exchange Issue\n\nFor deposit/withdrawal disputes:\n\n- Use a blockchain explorer (e.g., Etherscan, Blockchain.com, Solscan) to:\n  - Confirm transaction status (success, pending, failed)\n  - Confirm correct network (ERC‑20 vs BEP‑20 vs TRC‑20, etc.)\n- If you:\n  - Sent to the wrong network or address (especially a non‑custodial or contract address with no recovery policy), the exchange may not be able to help.\n  - Sent correctly and TX is confirmed but not credited: this is squarely the exchange’s responsibility.\n\nShare the explorer link in your support ticket.\n\n---\n\n## 6. Use Public but Cautious Pressure\n\nIf internal support stalls or ignores you:\n\n- Post (factually, no doxxing) on:\n  - X/Twitter\n  - Reddit (e.g., r/CryptoCurrency, r/your_exchange)\n  - Trustpilot / Google Reviews\n- Tag the official exchange account/support handles.\n- Include:\n  - Ticket number\n  - Short, neutral summary\n  - Ask for “help resolving ticket #123456”\n\nExchanges often respond faster to public visibility, but keep everything accurate—false accusations can hurt your position.\n\n---\n\n## 7. Involve Regulators or Ombuds Services (If Available)\n\nWhat you can do depends on where *you* and the *exchange* are located and whether it’s licensed.\n\nExamples (non-exhaustive; check your jurisdiction):\n\n- **US:**\n  - If the exchange is a registered Money Services Business (MSB) or has a state license:\n    - File a complaint with your state financial regulator\n    - File with CFPB (for some products), FTC, or SEC/CFTC if securities/derivatives are involved.\n- **EU/UK:**\n  - Check if the entity is authorized by your national financial regulator (e.g., BaFin, AMF, FCA).\n  - Use their complaint channels or ombudsman services.\n- **Other regions:**\n  - Look for central bank or financial-services regulators’ consumer complaint processes.\n\nProvide:\n\n- Account details\n- Timeline\n- Copies of all communication\n- Clear statement of loss and what you seek\n\n---\n\n## 8. Consider Legal Action (Cost–Benefit Check)\n\nLegal steps make most sense if:\n\n- The amount at stake is significant relative to legal costs.\n- The exchange has a known legal entity and presence in a country with enforceable laws.\n\nPossible paths:\n\n- **Small claims court** (for moderate sums; process is often simpler).\n- **Lawyer / class action**:\n  - Especially if many users are affected (e.g., improper liquidations or systemic failures).\n\nBefore doing this:\n\n- Re-read the Terms of Service:\n  - Mandatory arbitration?\n  - Jurisdiction/venue?\n  - Liability limits?\n- Consult a lawyer familiar with crypto and fintech, ideally in the exchange’s jurisdiction.\n\n---\n\n## 9. Fraud, Hacks, or Outright Scams\n\nIf you suspect:\n\n- Exchange is insolvent, running a rug pull, or refusing mass withdrawals:\n  - Stop depositing immediately.\n  - Document everything (screenshots, balances).\n  - Join or monitor communities of other affected users.\n  - Report to law enforcement and regulators promptly.\n- If your individual account was hacked:\n  - Immediately change passwords, revoke API keys, contact support to freeze account.\n  - File a police report (often needed for further action).\n\n---\n\n## 10. Prevention for the Future\n\nTo avoid or limit similar issues next time:\n\n- Use reputable, regulated exchanges where possible.\n- Avoid keeping large balances on exchanges; use self‑custody for long-term holdings.\n- Enable:\n  - 2FA (authenticator app, not SMS)\n  - Withdrawal whitelists\n  - Withdrawal confirmation emails\n- Test new exchanges with small amounts first.\n\n---\n\nIf you describe your specific situation (e.g., “withdrawal missing,” “liquidation dispute,” “account frozen after KYC”), I can suggest a targeted step‑by‑step plan and draft text you can send to support or regulators.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I find a financial platform with good customer support?",
+      "intent": "Transactional",
+      "category": "CoinSwitch Cares",
+      "platform": "ChatGPT",
+      "response": "To find a financial platform (bank, broker, robo-advisor, app) with good customer support, focus on **evidence**, not just marketing claims. Here’s a practical checklist:\n\n---\n\n### 1. Check real user reviews (but read them critically)\n\n- Look at:\n  - Trustpilot\n  - Google Reviews\n  - Apple App Store / Google Play Store\n  - BBB (Better Business Bureau, if in North America)\n- Filters to use:\n  - Sort by **Most recent**.\n  - Read **3–4 star reviews** (they’re often the most nuanced).\n- What to look for:\n  - Do people mention:\n    - “fast response,” “resolved,” “called me back,” “live agent”?\n    - or “no reply,” “ticket closed,” “bot,” “couldn’t reach anyone”?\n\n---\n\n### 2. Test contact options before you sign up\n\nCheck their website/app for:\n\n- **Contact channels:**\n  - Phone (is it easy to find? hours listed?)\n  - Live chat (bot only or humans too?)\n  - Email / support tickets\n  - In-app messaging\n- **Availability:**\n  - 24/7 or business hours only?\n  - Time zone (important if you’re not local).\n\nIf you can, **test it**:\n- Call once and see:\n  - How long on hold?\n  - Are they knowledgeable and clear?\n- Try chat/email with a simple pre-sales question:\n  - How quickly do they reply?\n  - Is the answer specific or just copy-paste?\n\n---\n\n### 3. Look for clear escalation paths\n\nGood platforms show:\n\n- A way to **escalate** complaints (supervisor, dedicated email).\n- A visible **complaints/feedback** process page.\n- Regulatory info:\n  - For brokers/banks: membership in regulators or ombudsman schemes (e.g., FINRA, SEC, FCA, ASIC, local equivalent).\n  - This doesn’t guarantee “nice” support, but it supports **accountability** if things go wrong.\n\n---\n\n### 4. Evaluate their help center / knowledge base\n\nGo to their FAQ/help section:\n\n- Is it:\n  - Up-to-date and detailed?\n  - Searchable?\n  - Specific to the platform (with screenshots, steps), not generic finance tips?\n- Good self-help docs usually correlate with:\n  - Better-trained support staff\n  - Fewer “we don’t know” answers\n\n---\n\n### 5. Ask in independent communities\n\nSearch or post in:\n\n- Reddit (e.g., r/personalfinance, r/investing, region-specific subreddits)\n- Local finance forums or Facebook groups\n- Specialized forums (e.g., Bogleheads)\n\nQuestions to ask:\n- “How has [Platform X] handled problems, like locked accounts, transfer issues, or tax forms?”\n- “How long did it take to get a human and a resolution?”\n\nLook for *stories of problems*, not just “I like the app.” You’ll see which platforms stand out when things go wrong.\n\n---\n\n### 6. Red flags to avoid\n\nBe cautious if you see:\n\n- Lots of **recent** reviews saying:\n  - “Account frozen, no response”\n  - “Money missing and can’t reach support”\n  - “Only bots, no humans”\n- No phone number or only a generic contact form.\n- Social media accounts full of unresolved complaints.\n- Very low staffing during market hours (for brokers/trading apps).\n\n---\n\n### 7. Make a short comparison list\n\nFor 2–4 platforms you’re considering, write down:\n\n- Support channels: phone / chat / email / in-app\n- Hours: 24/7? Weekends?\n- Average review score and main complaints\n- Your own test experience (response time & quality)\n\nPick the one that scores highest **on actual responsiveness and clarity**, not just features or low fees.\n\n---\n\nIf you tell me:\n- What country you’re in\n- What kind of platform you need (bank, stock broker, crypto exchange, budgeting app, etc.)\nI can help you narrow down to concrete options and what to look for specifically in that market.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I find an investment platform with good customer support?",
+      "intent": "Transactional",
+      "category": "CoinSwitch Cares",
+      "platform": "ChatGPT",
+      "response": "To find an investment platform with genuinely good customer support, use a mix of research, testing, and filters:\n\n1. **Decide what “good support” means for you**  \n   Prioritize what you actually need:\n   - **Speed:** 24/7 or business hours only? Typical response time?\n   - **Channels:** Phone, live chat, email, in-app messaging, local branch.\n   - **Quality:** Do they explain things clearly, or just send canned replies?\n   - **Specialization:** Do you need tax help, options support, retirement accounts, international investing, small-business accounts?\n\n2. **Check independent review sources (not just app stores)**  \n   Look for comments about support, not just star ratings:\n   - **Better Business Bureau (BBB), Trustpilot, Google Reviews**  \n     Filter/sort reviews by “customer service” or search within reviews using terms like “support,” “helpful,” “rude,” “response time.”\n   - **Reddit & forums (e.g., r/personalfinance, r/investing)**  \n     Search “PlatformName customer service” or “PlatformName support issue.”  \n     Watch for:\n       - Repeated complaints about **funds being frozen** or **slow withdrawals**\n       - Reports of **no response for days/weeks**\n       - Patterns of “great platform, terrible support”\n   - **Local/regional forums** if you’re outside the U.S.\n\n3. **Read the platform’s own support info (and be skeptical)**  \n   Go to the broker’s website and check:\n   - **Support hours:** 24/7 vs “9–5 Eastern only”  \n   - **Contact options:** Is there a real phone number? Live chat? Or only a form?\n   - **Response claims:** “We respond in 1–2 business days” vs “within 24 hours.”\n   - **Help center quality:**  \n     - Are FAQs detailed and current?  \n     - Clear guides for deposit/withdrawals, tax forms, account closure, margin calls, etc.?\n\n   If they hide contact info behind multiple clicks or don’t list a phone number at all, treat that as a warning sign.\n\n4. **Look at support-sensitive situations in reviews**  \n   Focus on how they handle real problems:\n   - Account lockouts / password resets  \n   - Fraud or unauthorized transactions  \n   - Transfer of assets from/to another broker  \n   - Dividend or tax-reporting errors  \n   - System outages on volatile trading days  \n   You want evidence that support is reachable and empowered to fix things promptly.\n\n5. **Test support before committing real money**  \n   Do this with 2–3 candidate platforms:\n   - **Open a small account** (or even just start the sign-up).\n   - **Contact support with basic, realistic questions**, for example:\n     - “What’s your typical wait time if I call during market hours?”\n     - “How do you handle a hacked account or unauthorized trade?”\n     - “How long do withdrawals to my bank usually take?”\n   - **Time the responses** and judge quality:\n     - Did a human answer?  \n     - Was the answer specific to your question or a generic paste?  \n     - Did they follow up if it wasn’t fully resolved?\n\n6. **Check regulatory and security stance**  \n   Not strictly “support,” but related:\n   - Are they registered with your local regulator (e.g., SEC/FINRA in the U.S., FCA in the UK, etc.)?  \n   - Do they clearly explain account protections (e.g., SIPC, FSCS)?  \n   A serious, regulated firm is more likely to have robust support when something goes wrong.\n\n7. **Compare business model vs support quality**  \n   - **Ultra-low-cost / “free” apps** may cut support to save money.  \n   - **Traditional brokers** (often with slightly higher fees) tend to:\n     - Offer phone support with trained reps  \n     - Provide more help with complex issues (transfers, options, corporate actions)  \n   Decide if you’d rather pay a bit more for better help when something breaks.\n\n8. **Make a short checklist for each platform**  \n   For each candidate, score from 1–5 on:\n   - Availability (hours & channels)  \n   - Speed (your test experience + others’ reviews)  \n   - Clarity & helpfulness (your test questions)  \n   - Problem handling (what you saw in independent reviews)  \n   - Transparency (clear contact info, clear policies)\n   Then pick the one that scores best *on the factors you care about most*, not just the average.\n\n9. **Start small and escalate only if you’re satisfied**  \n   - Begin with a small deposit.  \n   - Do a **test withdrawal** to confirm speed and support responsiveness.  \n   - If that experience is smooth, gradually move more assets.\n\nIf you tell me your country and roughly what you invest in (e.g., index funds vs active trading, long-term retirement vs frequent trades), I can suggest specific types of platforms and concrete questions to use when you test their support.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I resolve financial issues with an investment platform?",
+      "intent": "Transactional",
+      "category": "CoinSwitch Cares",
+      "platform": "ChatGPT",
+      "response": "Resolving financial issues with an investment platform usually involves three tracks in parallel: (1) working with the platform, (2) documenting and protecting yourself, and (3) escalating to regulators or legal help if needed. Here’s a step‑by‑step framework you can adapt.\n\n---\n\n## 1. Clarify the Problem and Your Goal\n\nIdentify exactly what’s wrong and what outcome you want. Common issues:\n\n- Missing or delayed withdrawals or deposits  \n- Unauthorized trades or transfers  \n- Incorrect balances, fees, or margin interest  \n- Platform outages causing losses  \n- Account restrictions or sudden closures  \n- Disputes over promotions, bonuses, or promised features\n\nWrite down:\n- Dates, times, amounts, and affected securities/accounts  \n- What should have happened vs. what actually happened  \n- The specific resolution you’re seeking (refund, trade adjustment, removal of fee, explanation, etc.)\n\n---\n\n## 2. Gather Evidence\n\nBefore contacting them, collect:\n\n- Screenshots of balances, error messages, and trade confirmations  \n- Account statements and transaction history (download PDFs)  \n- Email/app messages, chat logs, and any phone call reference numbers  \n- Copies of terms & conditions, fee schedules, and promotional offers that apply to you\n\nStore these outside the platform (locally or cloud backup).\n\n---\n\n## 3. Use Official Support Channels (in Writing When Possible)\n\n1. **Start with in‑app or web support**  \n   - Use “support,” “help,” or “contact us” sections.  \n   - Open a ticket; ask for a ticket or case number.\n\n2. **Describe the issue clearly**  \n   Use a short, factual message:\n   - Who you are (full name, account ID—if safe).  \n   - What happened (dates, amounts, order numbers).  \n   - Why it’s wrong (reference terms, statements, or standard practice).  \n   - What you want (e.g., “I request reversal of the $X fee” / “credit for erroneous trade” / “release of withdrawal”).\n\n3. **Ask for a timeline and escalation path**  \n   - “When can I expect a response?”  \n   - “If we can’t resolve this, what is your formal complaint or escalation process?”\n\nPrefer email or secure message center over phone so you have a record. After calls, send a short summary email: “As discussed on [date] with [name], you stated that…”\n\n---\n\n## 4. Protect Yourself While It’s Being Sorted Out\n\n- **Change passwords and enable 2FA** if there’s any sign of unauthorized activity.  \n- **Stop adding new money** until the issue is resolved.  \n- **Avoid panic selling** solely because of platform issues—evaluate separately whether you would move/close the account for broader reasons.  \n- If large sums are involved, consider **spreading assets across more than one institution** for risk diversification.\n\n---\n\n## 5. Use the Platform’s Formal Complaint Process\n\nMost regulated platforms have a defined complaint procedure:\n\n- Look for “Complaints,” “Grievances,” or “Dispute Resolution” on their site.  \n- Follow it exactly (forms, email addresses, required info).  \n- Mark communications as “formal complaint” in the subject line.\n\nInclude:\n- A concise timeline  \n- Evidence attachments  \n- The precise remedy requested  \n- Reasonable deadline (e.g., 14–30 days) for response\n\n---\n\n## 6. Check How the Platform Is Regulated\n\nYour escalation route depends heavily on your country and the type of firm:\n\nCommon examples (verify current links and your jurisdiction):\n\n- **United States**\n  - Broker‑dealers: typically FINRA/SEC oversight  \n  - Complaints:  \n    - FINRA: file an investor complaint  \n    - SEC: investor complaint center  \n  - Check registration (BrokerCheck, IAPD).\n\n- **UK**\n  - FCA‑regulated platforms  \n  - Complaints process → if unresolved after 8 weeks, escalate to **Financial Ombudsman Service (FOS)**.\n\n- **EU**\n  - National regulator (e.g., BaFin, AMF, CNMV, CONSOB) and sometimes an ombudsman scheme.\n\n- **Australia**\n  - ASIC oversight; disputes often through **AFCA (Australian Financial Complaints Authority)**.\n\nLook up:\n- Is the platform licensed/registered?  \n- Which regulator or ombudsman handles disputes for that type of firm in your country?\n\n---\n\n## 7. Escalate Externally if the Platform Doesn’t Fix It\n\nIf you’ve tried their complaint process and the response is unsatisfactory or overdue:\n\n1. **Regulator / Ombudsman**\n   - File a complaint with full documentation.  \n   - Attach your prior written correspondence and responses.  \n   - Follow their format closely; be factual, not emotional.\n\n2. **Payment Provider or Bank (for deposits/withdrawals issues)**\n   - If a card or transfer was misused or failed:\n     - Ask your bank about chargeback or dispute options (especially for fraudulent/unauthorized transactions).  \n   - For ACH/wire issues, ask how they can investigate or trace the funds.\n\n3. **Arbitration / Legal Advice**\n   - Some investment accounts require arbitration rather than court (check your agreement).  \n   - For large losses, consult a lawyer specializing in securities or financial disputes.  \n   - Bring:\n     - Account agreements and disclosures  \n     - All communication and statements  \n     - Regulator or ombudsman filings/outcomes, if any\n\n---\n\n## 8. Recognize Red Flags for Scams\n\nIf any of these apply, act urgently and differently (it may be a scam, not a dispute):\n\n- “Investment platform” contacted you unsolicited (cold calls, DMs).  \n- Promises of guaranteed or extremely high returns.  \n- Pressure to act quickly; threats if you hesitate.  \n- Inability or refusal to process withdrawals; constant “taxes,” “unlock fees,” or “security deposits” before you can withdraw.  \n- No clear regulation, no physical address, only crypto payment options.\n\nIn suspected scam situations:\n- **Stop sending money immediately.**  \n- **Document everything.**  \n- **Report quickly** to your bank, card issuer, and relevant fraud authorities/police.  \n- File with national fraud agencies and financial regulators.\n\n---\n\n## 9. Prepare a Clear Written Summary\n\nHaving a 1–2 page summary helps with support, regulators, or lawyers:\n\n- Your details and account ID  \n- Platform name and registration numbers (if any)  \n- Timeline with dates and amounts  \n- Steps already taken and responses received  \n- What resolution you want  \n- Attachments list (statements, emails, screenshots)\n\n---\n\n## 10. If You’d Like Tailored Help\n\nIf you want more specific guidance, share (without any sensitive personal data):\n\n- Your country  \n- The type of platform (stock broker, crypto exchange, robo‑advisor, P2P, etc.)  \n- A brief description of the exact issue (amounts can be approximate)  \n- How long it’s been going on and what the platform has said so far\n\nI can then help you:\n- Draft a message to the platform or regulator.  \n- Identify the correct regulator/ombudsman for your jurisdiction.  \n- Structure your timeline and evidence clearly.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I find a trading platform with good customer support?",
+      "intent": "Transactional",
+      "category": "CoinSwitch Cares",
+      "platform": "ChatGPT",
+      "response": "To find a trading platform with genuinely good customer support, focus on evidence you can verify *before* funding an account:\n\n1. **Test the support yourself (before depositing)**\n   - Open a demo account or start signup, then:\n     - Use **live chat**: note response time and how specific/helpful the answers are.\n     - Call their **phone support** (if available): see how long it takes to reach a human.\n     - Send an **email or ticket** with a slightly complex question and see:\n       - Response time.\n       - Whether they give a copy‑paste answer or something tailored.\n\n2. **Check support hours and channels**\n   Look for:\n   - **24/5 or 24/7** support (24/7 preferred for crypto; 24/5 often standard for stock/FX).\n   - Multiple channels:\n     - Live chat\n     - Phone\n     - Email/ticket\n     - In‑app support\n   - Clear information on:\n     - Typical response times\n     - Dedicated support for account issues vs. technical/platform issues\n\n3. **Use independent review sources (but read them critically)**\n   - Sources: Trustpilot, Google Reviews, Reddit (r/stocks, r/investing, r/Forex, r/Daytrading, r/cryptocurrency, etc.), specialized forums.\n   - What to look for:\n     - Themes: repeated complaints about withdrawals, frozen accounts, or being ignored.\n     - Recent reviews (last 6–12 months).\n     - How the company replies to complaints (professional and specific or generic?).\n   - Watch for red flags:\n     - Many 5‑star reviews with very generic language and no detail.\n     - Sudden spikes in positive reviews after bad press.\n\n4. **Check how they handle known issues**\n   - Search: `\"[platform name] outage\"`, `\"[platform name] withdrawal problems\"`, `\"[platform name] account locked\"`.\n   - Evaluate:\n     - Did they acknowledge the problem publicly?\n     - Was communication clear and timely?\n     - Did they offer compensation (fee refunds, etc.) when appropriate?\n\n5. **Look at regulation and company transparency**\n   While this is more about safety than “friendliness,” good regulation often correlates with more accountable support:\n   - Is the broker/platform regulated by a **reputable authority**? (SEC/FINRA in the US, FCA in the UK, etc.)\n   - Do they list:\n     - Physical office addresses\n     - Real company name and registration\n     - Clear complaint and escalation process\n\n6. **Evaluate self‑service support quality**\n   Platforms with strong service usually also have:\n   - Detailed **help center / knowledge base** with:\n     - Step‑by‑step guides\n     - Screenshots\n     - Up‑to‑date FAQs\n   - Searchable **status page** (e.g., “System Status”) showing:\n     - Whether services are operational\n     - History of incidents and explanations\n\n7. **Ask real users**\n   - Join online communities:\n     - Reddit subs, local investing Facebook groups, Discords, or country‑specific forums.\n   - Ask specifically:\n     - “How fast did they resolve a **serious** issue (withdrawal delay, margin error, tax form problem)?”\n     - “Have you ever not gotten a response?”\n   - Give weight to:\n     - People who’ve used the platform for **1+ years**\n     - Users with multiple platforms to compare\n\n8. **Compare a shortlist side‑by‑side**\n   For each platform you’re considering, create a simple table:\n\n   | Platform | Support hours | Channels | Avg. real response time (your test) | User complaints (themes) | Regulator |\n   |----------|---------------|---------|--------------------------------------|--------------------------|-----------|\n\n   This makes differences obvious and less emotional (“I heard X is bad”).\n\n9. **Do a small real‑money test**\n   Once you narrow it down:\n   - Deposit a **small amount**.\n   - Execute:\n     - A small trade\n     - A withdrawal request\n   - Then ask support a real account question (e.g., about that withdrawal or a statement).\n   - Judge them on:\n     - Speed\n     - Accuracy\n     - Professionalism and courtesy\n\n---\n\nIf you tell me:\n- Your country/region\n- What you want to trade (stocks, options, forex, crypto, etc.)\n- Whether you need phone support or if chat/email is fine\n\nI can suggest specific platforms known for better support in your situation and how to “test” each one.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I transfer funds from my bank to a cryptocurrency exchange?",
+      "intent": "Transactional",
+      "category": "Crypto Deposit",
+      "platform": "ChatGPT",
+      "response": "Here’s the general process, plus a few important safety tips:\n\n---\n\n## 1. Choose and verify your exchange\n\n1. Pick a reputable exchange that works in your country (e.g., Coinbase, Kraken, Binance, Bitstamp, etc.).\n2. Create an account.\n3. Complete identity verification (KYC): usually ID, selfie, and sometimes proof of address.\n4. Enable security:\n   - Turn on two‑factor authentication (2FA) with an authenticator app.\n   - Set strong, unique passwords.\n\n---\n\n## 2. Link your bank account / payment method\n\nIn the exchange app or website:\n\n1. Go to: **“Wallet” / “Funding” / “Deposit”**.\n2. Select **“Deposit Fiat”** (e.g., USD, EUR, GBP).\n3. Choose **bank transfer method**, which might be:\n   - **ACH** (US, slow but often free)\n   - **Wire transfer** (domestic/international, faster, usually a fee)\n   - **SEPA** (EU)\n   - **Faster Payments** (UK)\n4. Add your bank account if required:\n   - Some exchanges use **open banking / Plaid** to link instantly.\n   - Others give you their **bank details** and a **reference code** you must use.\n\nFollow the instructions exactly—especially the **reference/memo** so the funds are credited to your account correctly.\n\n---\n\n## 3. Initiate the transfer from your bank\n\nDepending on the method:\n\n### If using in‑app bank linking (e.g., Plaid, open banking)\n- You log into your bank **through the exchange’s approved partner**.\n- Authorize the amount to transfer.\n- Funds are often credited instantly or within 1–3 business days.\n\n### If doing a manual bank transfer\n1. Log in to your **online banking** or banking app.\n2. Create a new payee using the **exchange’s bank details**:\n   - Beneficiary name\n   - IBAN / account number\n   - SWIFT / routing number\n   - Bank name and address (if required)\n   - **Reference / memo** provided by the exchange (critical).\n3. Enter the **amount** you want to send.\n4. Double‑check:\n   - Payee details\n   - Reference code\n5. Confirm the transfer.\n\n---\n\n## 4. Wait for the deposit\n\n- **ACH/SEPA/FPS**: usually same day to 2 business days.\n- **Domestic wire**: same day or next.\n- **International wire**: 1–3 business days.\n\nCheck the **“History” or “Deposits”** section on the exchange. Funds will show as available once processed.\n\n---\n\n## 5. Use the funds to buy crypto\n\nOnce your fiat balance shows up:\n\n1. Go to **Buy/Trade** on the exchange.\n2. Select the cryptocurrency (e.g., BTC, ETH, USDC).\n3. Choose **your fiat balance** as the payment source.\n4. Review fees and the final amount.\n5. Confirm the purchase.\n\n---\n\n## Important safety tips\n\n- **Never** send money to an address or bank account given by:\n  - Random DMs, Telegram groups, or “support” that contacted you first.\n- Only use payment instructions **shown inside your logged‑in exchange account**.\n- Start with a **small test transfer** to confirm everything works.\n- Be aware of **fees**:\n  - Your bank may charge for wires.\n  - The exchange may charge deposit or trading fees.\n- Understand your **local tax rules**; many countries treat crypto trades as taxable events.\n\n---\n\nIf you tell me:\n- Your country, and\n- The specific exchange you’re using,\n\nI can walk you through the exact steps and best/cheapest transfer method in your situation.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "What are the most reliable cryptocurrency exchanges for high-volume trading?",
+      "intent": "Commercial",
+      "category": "OTC Trading",
+      "platform": "ChatGPT",
+      "response": "For high‑volume trading, you want: deep liquidity, strong security record, robust APIs, and regulatory seriousness. As of 2024, these are generally regarded as the most reliable, depending on your jurisdiction:\n\n---\n\n## 1. Binance\n**Best for:** Global liquidity and breadth of markets (where allowed)\n\n- Very deep order books for BTC, ETH, and major altcoins.\n- High derivatives volume (perpetuals, options).\n- Advanced order types, powerful APIs, low fees with high volume.\n- Strong infrastructure (good uptime, matching engine performance).\n- **Caveat:** Regulatory restrictions in the US, UK, some EU states; must confirm legality in your country.\n\n---\n\n## 2. Coinbase (and Coinbase Advanced / Coinbase International)\n**Best for:** Regulated spot trading, especially for institutions\n\n- Highly regulated (US‑listed company), strong compliance and security record.\n- Solid liquidity on majors; less so on small caps compared to Binance/OKX.\n- Coinbase Advanced offers lower fees and better tools than basic Coinbase.\n- Coinbase International Exchange provides derivatives for non‑US users.\n- Excellent custody solutions and reputation with institutions.\n\n---\n\n## 3. Kraken\n**Best for:** Security and regulatory seriousness, especially for EUR pairs\n\n- One of the longest‑running major exchanges with a strong security record.\n- Good liquidity on majors, particularly BTC/EUR and ETH/EUR.\n- Margin and futures available for non‑US users; conservative risk limits.\n- API and matching engine good for professional traders; somewhat slower listing pace.\n\n---\n\n## 4. OKX\n**Best for:** Derivatives and quant trading outside the US\n\n- Among the top in derivatives volume (perps, futures, options).\n- Deep liquidity, competitive fees for market makers/takers.\n- Solid API, algo/quant tooling, grid bots, etc.\n- **Caveat:** Like Binance, regulatory landscape varies; often not available in the US.\n\n---\n\n## 5. Bybit\n**Best for:** Perpetual futures and active derivatives trading\n\n- Very large perp and futures volume.\n- Popular with professional and retail derivatives traders.\n- Range of advanced order types, good API, competitive fee tiers.\n- **Caveat:** Less regulated than Coinbase/Kraken; not available in some regions.\n\n---\n\n## 6. Bitstamp\n**Best for:** Conservative, fiat‑on‑ramp spot trading\n\n- One of the oldest exchanges, strong reputation for security and compliance.\n- Very reliable for major pairs (BTC, ETH, XRP vs USD/EUR).\n- Lower coin selection and derivatives compared to others.\n- Good for institutions that value conservatism over breadth.\n\n---\n\n## 7. Deribit (for options)\n**Best for:** BTC/ETH options and futures (non‑US)\n\n- Market leader in crypto options liquidity (mainly BTC and ETH).\n- Institutional‑grade options/futures platform with strong risk engine.\n- Very robust for volatility and options strategies.\n- **Caveat:** Not a broad spot exchange; derivatives‑only and not for US persons.\n\n---\n\n## How to choose among them\n\n1. **Jurisdiction & regulation**\n   - If you need strong regulatory cover (funds, corporates), prioritize **Coinbase**, **Kraken**, **Bitstamp**.\n   - For non‑US, more aggressive trading (perps, options), consider **Binance**, **OKX**, **Bybit**, **Deribit**.\n\n2. **Products you need**\n   - **Spot only:** Coinbase, Kraken, Bitstamp, Binance.\n   - **Spot + perps/futures:** Binance, OKX, Bybit, Kraken (limited), Coinbase International.\n   - **Options:** Deribit (primary), OKX, Binance (secondary liquidity).\n\n3. **Volume & liquidity**\n   - Top tier (majors & perps): **Binance**, **OKX**, **Bybit**, **Coinbase**, **Kraken**.\n   - Best options liquidity: **Deribit**.\n\n4. **APIs & infra**\n   - All of Binance, OKX, Bybit, Deribit, Coinbase Advanced, and Kraken have strong APIs; you may want to test:\n     - Order throughput and latency\n     - Websocket stability\n     - Historical data access and rate limits\n\n---\n\n## Practical risk‑management tips\n\n- **Use more than one exchange** for high volume so you’re not dependent on a single venue.\n- Keep only necessary working capital on exchanges; use cold storage for surplus.\n- Verify **proof‑of‑reserves reports**, past security incidents, and how they handled outages or liquidations.\n- Carefully review **fee tiers, maker/taker rebates**, and funding rates if you trade perps.\n\nIf you specify your **country, whether you need derivatives, and your approximate monthly volume**, I can narrow this down to 2–3 best choices and suggest a concrete setup (primary + backup exchanges).",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "Where can I view my active positions, open orders, and transaction/order history on a futures trading interface?",
+      "intent": "Transactional",
+      "category": "Futures Trading",
+      "platform": "ChatGPT",
+      "response": "On most crypto or derivatives futures platforms, you’ll typically find them in these places:\n\n1. **Active Positions**\n   - Labeled as **“Positions”**, **“Open Positions”**, or **“Current Positions”**.\n   - Usually located:\n     - In a panel at the **bottom of the trading screen**, often in a tabbed section.\n     - Or in a **“Derivatives / Futures → Positions”** page in the main menu.\n\n2. **Open Orders**\n   - Labeled as **“Open Orders”** or **“Orders”**.\n   - Often right next to “Positions” as another tab in the **bottom panel** of the trading interface.\n   - Sometimes also accessible via **“Orders → Open Orders”** in the account or trading menu.\n\n3. **Transaction / Order History**\n   - Labeled as **“Order History”**, **“Trade History”**, **“Transaction History”**, or **“Futures History”**.\n   - Typically found:\n     - Under an **“Orders / History”** tab near the bottom of the trading screen, in the same area as Open Orders.\n     - Or in your account section under **“History”**, **“Reports”**, or **“Orders & Trades”**.\n   - Some platforms separate:\n     - **Order History** (all placed/canceled/filled orders)\n     - **Trade/Fill History** (actual executed trades)\n     - **Funding / PnL History** (funding payments, realized PnL, etc.)\n\nIf you tell me the exact platform (e.g., Binance, Bybit, OKX, CME broker, etc.), I can give step‑by‑step navigation with the exact menu names.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "What are the most popular financial platforms for high-net-worth individuals?",
+      "intent": "Commercial",
+      "category": "HNIs and Institutional Investors",
+      "platform": "ChatGPT",
+      "response": "For high‑net‑worth individuals (HNWIs and UHNWIs), the “platform” is usually a mix of:\n\n- Private banks / wealth managers  \n- Brokerages and trading platforms  \n- Alternative investment platforms (VC, PE, hedge funds, real estate)  \n- Family-office and reporting tools  \n\nBelow is a concise landscape overview (mostly focused on U.S./global names; availability varies by country and minimum account size).\n\n---\n\n## 1. Private Banks & Full-Service Wealth Managers\n\nUsed as primary hubs for investing, lending, and estate planning.\n\n**Global / U.S.-centric:**\n- J.P. Morgan Private Bank / J.P. Morgan Wealth Management  \n- Goldman Sachs Private Wealth Management  \n- Morgan Stanley Private Wealth Management  \n- Merrill Private Wealth Management (Bank of America)  \n- UBS Global Wealth Management  \n- Credit Suisse (now integrated into UBS)  \n- Citi Private Bank  \n- Northern Trust Wealth Management  \n- Wells Fargo Private Bank (Abbot Downing historically for UHNW)\n\n**Boutique / independent RIAs (U.S. examples):**\n- Rockefeller Capital Management  \n- Bessemer Trust  \n- Evercore Wealth Management  \n- Brown Advisory  \n- Aspiriant  \n- Creative Planning  \n- Fisher Investments Private Client Group  \n\n---\n\n## 2. Premium Offerings from Retail Brokers & Banks\n\nUsed for liquid portfolios, self-directed trading, and sometimes advisory overlays.\n\n- Charles Schwab (Schwab Private Client, Schwab Advisor Network)  \n- Fidelity (Fidelity Private Wealth Management)  \n- Vanguard Personal Advisor / Private Advisor services  \n- Raymond James Private Client Group  \n- RBC Wealth Management  \n- LPL Financial (via affiliated advisors)\n\nThese integrate brokerage accounts, managed portfolios, and financial planning.\n\n---\n\n## 3. Digital / Hybrid Wealth Platforms\n\nAppeal to tech‑comfortable HNWIs who want lower fees or more control, often used alongside private banks.\n\n- **Personal Capital** (now Empower) – planning + investment management  \n- **Betterment Premium**, **Wealthfront** – automated portfolios with tax‑loss harvesting (more mass‑affluent but used as satellite accounts)  \n- **Facet**, **Facet Wealth** – subscription planning plus investment management  \n\nNot traditionally “private banking,” but increasingly part of an HNWI stack.\n\n---\n\n## 4. Alternative Investment & Private Market Platforms\n\nFor private equity, venture, hedge funds, secondary interests, and private credit/real estate—key for HNW/UHNW portfolios.\n\n- **iCapital** – feeder funds to PE/VC/hedge funds; widely used by private banks/RIAs  \n- **CAIS** – alternative investments platform for advisors  \n- **Moonfare**, **Private Equity funds’ own feeder platforms** – for direct PE access (mainly Europe/Asia and accredited U.S. investors)  \n- **Yieldstreet**, **Percent** – private credit, structured notes  \n- **CrowdStreet**, **RealtyMogul**, **Fundrise** – real estate deals/funds (often as smaller satellite allocations)\n\nAccess usually requires accredited or qualified purchaser status and significant minimums.\n\n---\n\n## 5. Hedge Fund / PE / VC Gateways\n\nBeyond bank-curated platforms, some HNWIs access funds via:\n\n- **Prime broker platforms** (via private banks or full‑service brokers)  \n- **Fund-of-funds** from big asset managers (Blackstone, KKR, Carlyle, BlackRock, etc.)  \n- **Angel/VC platforms** like AngelList, Carta, or direct LP commitments to VC/PE funds (for UHNW, family offices)\n\n---\n\n## 6. Family Office & Consolidated Reporting Tools\n\nUsed to manage multiple custodians, entities, and asset classes.\n\n- **Addepar**, **Black Diamond**, **eMoney**, **Tamarac** – performance reporting/portfolio accounting  \n- **Arch**, **Mirador**, **SEI**, **Snowden Lane** (and similar platforms) – outsourced family office services and reporting  \n- **Juniper Square**, **Carta**, **Burgiss** – for private fund and direct investment tracking\n\nThese are often used by multi‑family offices, single‑family offices, and RIAs serving UHNW clients.\n\n---\n\n## 7. Banking, Credit & Lifestyle Services\n\nWhile not “investment platforms” per se, HNWIs often rely heavily on:\n\n- **Private banking divisions** of large banks (J.P. Morgan, Citi, UBS, Goldman, etc.) for:\n  - Structured lending (securities-based loans, art/aircraft/real estate finance)  \n  - Specialty cash management and multicurrency accounts  \n  - Trust and estate administration  \n- **Global concierge / lifestyle services** embedded in private bank relationships or premium cards (e.g., Amex Centurion, J.P. Morgan Reserve).\n\n---\n\nIf you tell me:\n- Your region (US, EU, UK, Asia, Middle East, etc.)\n- Your approximate investable asset range\n- Whether you prefer full-service advice, DIY, or hybrid\n\nI can narrow this to a short, concrete list of platforms that are most relevant to your situation.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "What are the most popular investment platforms for high-net-worth individuals?",
+      "intent": "Commercial",
+      "category": "HNIs and Institutional Investors",
+      "platform": "ChatGPT",
+      "response": "For high‑net‑worth individuals (HNWIs), “platforms” usually means a mix of:\n\n- Private banks / wealth managers  \n- Full‑service brokerage firms  \n- Independent RIAs and family offices  \n- Specialized alternative‑investment platforms  \n\nBelow are the categories and leading names in each, mainly focused on U.S./global options.\n\n---\n\n## 1. Private Banks & Wealth Management Arms of Large Banks\n\nUsed for: Overall wealth strategy, investment management, lending, estate planning, access to exclusive funds/IPO allocations.\n\nCommon minimums: Often $1–$10M+ investable assets.\n\nMajor players:\n- **J.P. Morgan Private Bank**\n- **Morgan Stanley Private Wealth Management**\n- **Goldman Sachs Private Wealth Management**\n- **UBS Global Wealth Management**\n- **Credit Suisse (now integrated into UBS)**\n- **Citi Private Bank**\n- **Bank of America Private Bank (formerly U.S. Trust)**\n- **Wells Fargo Private Bank**\n- **HSBC Global Private Banking**\n- **BNP Paribas Wealth Management**, **Deutsche Bank Wealth Management**, **Barclays Private Bank** (Europe/UK focused)\n\n---\n\n## 2. Full‑Service & “Hybrid” Brokerages / RIAs\n\nUsed for: Personalized portfolios, financial planning, trading, and sometimes alternatives; often a bit more flexible on minimums.\n\n- **Charles Schwab Private Client / Schwab Advisor Network**\n- **Fidelity Private Wealth Management**\n- **Vanguard Personal Advisor / Flagship services**\n- **Merrill Lynch Wealth Management (Merrill Private Wealth for higher tiers)**\n- **Raymond James Private Client Group**\n- **UBS, Morgan Stanley, etc.** also operate large advisor networks beyond pure “private bank” offerings.\n\nIndependent RIA brands (examples, U.S.-centric):\n- **Creative Planning**\n- **Fisher Investments**\n- **Mariner Wealth Advisors**\n- Numerous boutique RIAs that specialize in HNW and UHNW families\n\n---\n\n## 3. Dedicated Family Offices & Multi‑Family Offices (MFOs)\n\nUsed for: Very high wealth levels (often $25M+); investment management plus tax, estate, philanthropy, and sometimes concierge services.\n\nNotable MFO brands:\n- **Stonehage Fleming**\n- **Pitcairn**\n- **WE Family Offices**\n- **Aspiriant**\n- **Bessemer Trust**\n- **Northern Trust Wealth Management** (functions similarly in many ways)\n\nMany UHNWIs create **single‑family offices** (own staff and platforms, using custodians like Schwab/Fidelity/J.P. Morgan).\n\n---\n\n## 4. Alternative Investment Platforms (PE, VC, Hedge Funds, Real Assets)\n\nUsed for: Illiquid, higher‑risk/higher‑return, and diversifying strategies.\n\nTraditional access:\n- Direct subscriptions to **private equity/VC funds** (Blackstone, KKR, Carlyle, Apollo, Sequoia, etc.)\n- **Fund of funds** and private bank–curated feeder funds\n- Hedge funds via **prime brokerage/wealth managers**\n\nNewer digital/fintech platforms (accredited/institutional only, usually):\n- **iCapital** – big institutional gateway for PE/VC/hedge funds; often white‑labeled by banks\n- **Moonfare** – private equity funds, often for HNW European and global investors\n- **CAIS** – alternatives marketplace used by financial advisors\n- **YieldStreet**, **Vinovest**, **Collectable**, etc. – niche alternatives (credit, art, collectibles, wine) for accredited investors\n\nReal estate–focused:\n- **CrowdStreet** (commercial real estate)\n- **Fundrise** (more mass‑affluent but used by some HNW for diversification)\n  \n---\n\n## 5. Self‑Directed Trading & Execution Platforms (Supplemental Use)\n\nEven very wealthy investors often maintain self-directed accounts for tactical trading or specific niches.\n\nPopular:\n- **Interactive Brokers** (global markets, margin, options, FX)\n- **Schwab**, **Fidelity**, **TD Ameritrade** (being merged into Schwab) – for U.S. investors\n- **Saxo Bank**, **DEGIRO**, **IG** – common in Europe/Asia\n\nThese are usually **secondary** to a primary private bank or RIA relationship for HNWIs.\n\n---\n\n## 6. Digital Private‑Bank‑Style / Hybrid Platforms\n\nNewer entrants aiming at “emerging HNW” ($1–5M+):\n- **Personal Capital (Empower)** – hybrid digital + human advice\n- **Facet**, **Abbot Downing (Wells Fargo’s UHNW unit, now integrated)** – similar wealth‑planning focus\n- Several regional/private platforms that market as “virtual family offices”\n\n---\n\nIf you share:\n- Your country/region, and  \n- Rough investable asset range (e.g., $1–5M, $5–25M, $25M+)  \n\nI can narrow this down to the platforms and structures that are most relevant and explain typical pros/cons at your level.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "What is the difference between spot trading and futures trading on a crypto exchange, and where can I try both?",
+      "intent": "Informational",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "On a crypto exchange, **spot** and **futures** are two different ways to trade:\n\n---\n\n### 1. Spot trading (the “regular” market)\n\n- **What you trade:** The actual asset (e.g., BTC, ETH, SOL).\n- **Settlement:** Immediate or near‑immediate. If you buy 1 BTC, you now *own* 1 BTC.\n- **Direction:** \n  - You can easily go **long** (buy then sell later).\n  - Shorting is only possible if the exchange offers margin or lending.\n- **Leverage:** Usually low or none by default (e.g., 1× on normal spot; maybe up to 3–10× with margin on some platforms).\n- **Risk profile:** \n  - If price goes to zero, you can lose what you spent, but you generally can’t lose more than your deposited capital (without margin).\n- **Use case:** Investing, simple buy‑and‑hold, converting between coins or to/from fiat or stablecoins.\n\n---\n\n### 2. Futures trading\n\n- **What you trade:** A **contract** that tracks the price of the asset, not the asset itself.\n- **Settlement:** \n  - **Perpetual futures:** No expiry date; you can hold the position indefinitely as long as you meet margin requirements.\n  - **Dated futures:** Have an expiry date when the contract settles.\n- **Direction:**\n  - Easy to go **long** (bet on price going up) or **short** (bet on price going down).\n- **Leverage:** Often high (5×–100×+ on some exchanges).\n- **Funding and fees (perps):** \n  - Perpetual futures use a **funding rate**: periodic payments between longs and shorts to keep futures close to spot price.\n- **Risk profile:** \n  - With leverage, price moves are amplified.\n  - If the market moves against you, you can be **liquidated** and lose your margin.\n- **Use case:** Hedging, speculation with leverage, short‑selling, more advanced strategies.\n\n---\n\n### 3. Main differences in plain terms\n\n- **Ownership:**  \n  - Spot: You get the coin.  \n  - Futures: You get a contract whose value tracks the coin.\n- **Leverage & risk:**  \n  - Spot: Lower leverage, lower liquidation risk.  \n  - Futures: High leverage available, higher liquidation risk.\n- **Shorting:**  \n  - Spot: Harder, often requires margin and borrowing.  \n  - Futures: Built‑in, straightforward.\n- **Complexity:**  \n  - Spot: Simpler.  \n  - Futures: More complex (margin, funding, liquidation).\n\n---\n\n### 4. Where you can try both\n\nAvailability depends on your **country/region and regulations**. Always check what’s legal where you live.\n\nSome large exchanges that commonly offer **both spot and futures**:\n\n- **Binance** – Spot, margin, and a large set of perpetual and dated futures. Has testnet for futures.\n- **Bybit** – Strong derivatives platform, plus spot markets.\n- **OKX** – Spot, margin, perps, dated futures, options.\n- **KuCoin** – Spot and futures (various perps).\n- **Bitget**, **MEXC** – Known for derivatives, also have spot.\n\nIf you are in jurisdictions with stricter rules (e.g., U.S., some EU countries), you may see:\n\n- **Kraken** – Spot everywhere; futures for some non‑US users.\n- **Coinbase** – Spot globally; regulated futures through specific entities in supported regions.\n- **Bitstamp** – Mostly spot; derivatives limited.\n\nFor **practice without risking money**:\n\n- Many derivatives‑focused exchanges provide **futures testnets** or demo trading:\n  - Binance Futures Testnet\n  - Bybit demo trading\n  - OKX demo trading\n\nThese let you try both spot‑like interfaces and futures mechanics with paper funds.\n\n---\n\nIf you tell me your country/region, I can narrow this down to exchanges and products you’re more likely allowed to use.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "What is the best way to buy Bitcoin in India?",
+      "intent": "Transactional",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "In India, the “best” way depends on your priorities: simplicity, low fees, security, or privacy. Here’s a concise breakdown.\n\n## 1. Use a Reputable Indian Exchange (most common/easiest)\n\nThese are regulated entities following RBI/SEBI-related norms and full KYC:\n\nPopular Indian exchanges:\n- **CoinDCX**\n- **WazirX**\n- **ZebPay**\n- **Bitbns**\n- **CoinSwitch** (aggregator model)\n\nTypical process:\n1. **Sign up & KYC**\n   - Create an account with email/phone.\n   - Complete KYC: PAN, Aadhaar, selfie, sometimes bank proof.\n2. **Deposit INR**\n   - Via **UPI**, IMPS/NEFT/RTGS, or net banking (depends on your bank and the exchange).\n3. **Buy BTC**\n   - Either:\n     - **Spot market**: Place a “Market” or “Limit” order on BTC/INR.\n     - **Instant buy**: One-click buy (usually slightly higher spread/fees).\n4. **Withdraw to your own wallet**\n   - For long-term holding, move BTC to a **self-custody wallet** (e.g., hardware wallet like Ledger/Trezor, or software wallet like BlueWallet, Sparrow, Muun).\n\nPros:\n- Easy, familiar UI, customer support.\n- INR on-ramps via UPI/banking.\n- Higher liquidity, tighter spreads than P2P.\n\nCons:\n- Full KYC, less privacy.\n- You rely on the exchange’s solvency and security while funds stay there.\n- Regulatory changes can affect INR deposits/withdrawals suddenly.\n\n**When to choose this**: You want convenience, you’re new to crypto, and you’re okay with KYC.\n\n---\n\n## 2. Use P2P Marketplaces (for more control/when banks are restrictive)\n\nPlatforms:\n- **Binance P2P** (supports INR through UPI/bank transfers between users)\n- **OKX P2P**, **Bybit P2P**, LocalBitcoins-style platforms (where available)\n\nHow it works:\n1. Register on the platform (usually still requires some KYC).\n2. Use the **P2P section** → filter for INR, “Buy BTC”.\n3. Choose an advertiser with:\n   - High completion rate, many trades, good rating.\n   - Payment method you’re comfortable with (UPI/bank).\n4. You pay the seller **directly** via UPI/bank transfer.\n5. The platform holds the BTC in **escrow** until the seller confirms payment; then BTC is released to your wallet on the platform.\n6. Withdraw BTC to your own wallet.\n\nPros:\n- Often better INR liquidity when local exchanges face payment issues.\n- You control bank transfer; sometimes better prices.\n- Useful when direct INR deposits to foreign exchanges are restricted.\n\nCons:\n- Scams if you don’t follow rules; you must use platform escrow strictly.\n- KYC often still required.\n- Slightly more complex process than Indian spot exchanges.\n\n**When to choose this**: Indian exchanges have deposit issues, or you want access to global liquidity and are comfortable with P2P workflow.\n\n---\n\n## 3. International Exchanges (if your bank allows it)\n\nExamples: **Binance**, **Kraken**, **Coinbase** (limited direct INR options), **Bybit**, **OKX**.\n\nWays Indians typically use them:\n- **P2P (see above)**\n- Sometimes funding via **cards/wire** (many Indian banks block these or treat as high risk).\n\nPros:\n- Deep liquidity, narrow spreads.\n- More trading pairs and instruments (derivatives, etc.).\n\nCons:\n- Regulatory uncertainty for Indians.\n- Banking channels may be blocked; card deposits often expensive.\n- Compliance and tax tracking become more complex.\n\n**When to choose this**: You need advanced trading options and are comfortable with extra complexity and regulatory ambiguity.\n\n---\n\n## 4. Self‑Custody and Security (very important)\n\nNo matter how you buy:\n\n1. **Do not leave large amounts on exchanges.**\n2. Use:\n   - **Hardware wallet** (Ledger, Trezor, Coldcard) for significant holdings.\n   - Or open‑source mobile/desktop wallets with good reputations.\n3. Back up your **seed phrase** offline, never share it, never type it into websites or screenshots.\n\n---\n\n## 5. Tax and Legal Points in India (as of recent policy)\n\n- **Flat 30% tax** on crypto profits (no slab benefit).\n- **1% TDS** on many crypto transactions (usually handled by Indian exchanges).\n- No set-off of crypto losses against other income categories.\n- Keep records: exchange statements, P2P logs, bank proofs.\n\nAlways verify the latest rules (they change) and consider a CA familiar with crypto.\n\n---\n\n## Practical “Best Way” for Most People\n\n1. Start with a **top Indian exchange** (CoinDCX, WazirX, etc.).\n2. Complete KYC.\n3. Deposit a **small test amount** via UPI/bank.\n4. Buy BTC spot.\n5. Withdraw to a **self-custody wallet** once the amount is meaningful.\n6. Keep **records** for tax filing.\n\nIf you tell me your priorities (e.g., lowest fees, strongest privacy, or pure simplicity), I can suggest a more specific path and a short step‑by‑step checklist.",
+      "mentions": [
+        "CoinSwitch",
+        "CoinDCX",
+        "Binance",
+        "WazirX",
+        "Zebpay"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "What are the most popular cryptocurrency exchanges in India?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "In India, popularity shifts with regulation and market cycles, but as of 2026 the most commonly used cryptocurrency exchanges are:\n\n**1. CoinDCX**  \n- One of the largest by user base.  \n- INR deposits/withdrawals via UPI/IMPS/NEFT/RTGS (subject to bank/UPI partner support).  \n- Wide token selection; spot, margin, simple earn products.  \n- Backed by major VCs; strong brand presence.\n\n**2. WazirX**  \n- Formerly associated with Binance; now operating independently after regulatory scrutiny.  \n- Known for easy INR on-ramping and a large retail base.  \n- P2P options for USDT historically popular when banking access was unstable.  \n\n**3. CoinSwitch (CoinSwitch Kuber)**  \n- App-first, beginner‑friendly interface.  \n- Focus on simple buy/sell, fewer advanced trading features.  \n- Strong marketing presence, large retail adoption.\n\n**4. ZebPay**  \n- One of the oldest Indian exchanges.  \n- Reputation for relatively good security practices.  \n- Spot trading, some earn products, and mobile‑focused experience.\n\n**5. Bitbns**  \n- Wide range of tokens, derivatives, and some lending/earning options.  \n- Known among more active traders, though liquidity on some pairs can be thin.\n\n**6. International exchanges used by Indian traders**  \nDue to liquidity and product variety, many Indian users also trade on:  \n- **Binance**  \n- **Bybit**  \n- **OKX**  \n- **KuCoin**  \n\nHowever, these face ongoing regulatory scrutiny in India, and access (especially for INR deposits/withdrawals and KYC requirements) can change quickly.\n\n**Important notes (India‑specific):**  \n- RBI and government policy on crypto is evolving: check the latest on taxation (30% on “virtual digital asset” gains, 1% TDS) and any new exchange restrictions.  \n- Banking/UPI support for exchanges can appear and disappear with little notice. Always confirm current deposit/withdrawal methods.  \n- Prioritize exchanges with: strong compliance, proof‑of‑reserves or transparent audits, clear KYC/AML policies, and responsive customer support.\n\nIf you tell me your priority (e.g., lowest fees, highest liquidity, beginner‑friendly, or derivatives), I can narrow this down and compare 2–3 that best fit your needs.",
+      "mentions": [
+        "CoinSwitch",
+        "CoinDCX",
+        "Binance",
+        "WazirX",
+        "Zebpay"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "How do I find a financial platform that supports INR?",
+      "intent": "Transactional",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "To find a financial platform that supports INR (Indian Rupees), use this checklist and search strategy:\n\n1. **Decide what you mean by “financial platform”**  \n   The requirements differ a lot by use case:\n   - Payments (UPI, cards, wallets, P2P transfers)\n   - Stock/ETF trading in India\n   - Crypto exchanges/wallets\n   - International money transfer\n   - Neobanks / multi‑currency accounts (e.g., for freelancers)\n   - Budgeting / personal finance apps\n\n   Tell me your exact use case and country of residence, and I can give you a short, specific list.\n\n2. **Use targeted search queries**  \n   On Google, use combinations like:\n   - `\"INR supported\" + \"multi currency account\"`  \n   - `\"supports INR deposits\" + crypto exchange`  \n   - `\"India\" + \"INR\" + \"international money transfer\"`  \n   - `\"INR trading account\" + broker`  \n\n   Then filter out results that:\n   - Explicitly say “supports INR deposits/withdrawals”\n   - Show pricing or balances in INR\n   - Are registered/regulated to operate in India (if relevant)\n\n3. **Check the platform’s currency & country pages**  \n   On any candidate platform:\n   - Look for pages titled: **“Supported currencies”**, **“Supported countries”**, **“Deposit & withdrawal methods”**, or **“Pricing”**.\n   - Confirm:\n     - INR is listed as a **base or settlement currency**, not just for showing prices.\n     - Deposit methods for INR (UPI, IMPS/NEFT/RTGS, local bank transfer, INR cards).\n     - Withdrawal in INR to Indian bank accounts (if you need cash-out, not just holding a balance).\n\n4. **For India‑specific use cases**  \n   - **Domestic payments & banking**:  \n     Most Indian banks + UPI apps (Paytm, PhonePe, Google Pay, BHIM) natively support INR.\n   - **Indian stock market**:  \n     Look for SEBI-registered brokers (Zerodha, Upstox, Groww, Angel One, etc.). They all operate in INR.\n   - **Budgeting/expense tracking**:  \n     Search “expense tracker app India INR”. Check if:\n       - Currency is configurable to INR\n       - Supports Indian banks/UPI SMS parsing (Money Manager, Walnut, etc.)\n\n5. **For international or multi‑currency needs**  \n   - Look for “INR support” on:\n     - **Wise, Revolut, Payoneer**-type services (availability can change).\n     - Global brokers (Interactive Brokers, etc.) if you want to hold or convert INR.\n   - Specifically confirm:\n     - Whether INR is only for sending/receiving vs actually holding as a balance.\n     - FX fees for converting INR ↔ other currencies.\n\n6. **Check compliance and reviews**  \n   Before committing:\n   - For India-facing platforms: verify they’re **RBI/SEBI regulated** (if applicable).\n   - Read recent reviews (last 6–12 months) about:\n     - INR deposit/withdrawal success\n     - Delays or hidden charges\n     - Account freezes or KYC issues\n\nIf you tell me:\n- What you want to do (trade stocks, send money abroad, receive freelance income, invest in crypto, basic payments, etc.)\n- Whether you’re based in India or abroad\n\n…I can give you a short, concrete list of specific platforms and how to check their INR support.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I find a cryptocurrency exchange that offers fiat currency support?",
+      "intent": "Transactional",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "To find a crypto exchange with fiat support, you mainly need to check:\n\n1. **Which fiat currencies you need**\n   - Decide what you want to deposit/withdraw: USD, EUR, GBP, JPY, etc.\n   - Some exchanges support only a few major fiats; others are regional.\n\n2. **Use reliable comparison tools**\n   - Go to sites that list exchanges and add filters for “fiat on-ramp”:\n     - CoinMarketCap → Exchanges → filter by “Fiat Support”\n     - CoinGecko → Exchanges → filter for “Fiat” or “Spot exchanges with fiat”\n     - CryptoCompare → Exchanges → filter by “Fiat pairs”\n   - On each exchange’s profile, look for:\n     - “Fiat supported”\n     - “Deposit methods” (bank transfer, card, etc.)\n     - Countries/regions served\n\n3. **Check directly on exchange websites**\n   On each candidate exchange’s site, look for:\n   - “Payment methods” or “Deposit & Withdrawal” pages\n   - “Supported countries” / “Availability”\n   - Examples of well-known fiat-supporting exchanges (availability varies by country and regulation):\n     - Binance, Coinbase, Kraken, Bitstamp, OKX, Bybit, Gemini\n   These might not all be available or fully functional in your jurisdiction, so confirm.\n\n4. **Confirm your local availability**\n   - Many exchanges restrict fiat services by country or state.\n   - On their website, search: “[exchange name] supported countries” or “[exchange name] fiat deposit countries.”\n   - If they ask for your country during signup and then show supported deposit methods, that usually confirms it.\n\n5. **Check banking/deposit options**\n   For each exchange you’re considering, verify:\n   - Deposit options: bank transfer (SEPA, ACH, SWIFT), credit/debit card, local payment rails.\n   - Withdrawal options: back to bank account, card, or only crypto out.\n   - Fees and limits for fiat deposits/withdrawals.\n\n6. **Regulation and KYC**\n   Exchanges that handle fiat almost always require:\n   - KYC (ID verification, proof of address)\n   - Compliance with local laws\n   Look for:\n   - Licensing info (e.g., registered in EU, US, UK, etc.)\n   - Security practices (cold storage, audits, insurance where applicable)\n\n7. **User reviews and support quality**\n   - Search “[exchange name] fiat withdrawal review” or “bank transfer issues.”\n   - Check for complaints about:\n     - Frozen accounts during KYC\n     - Long withdrawal times\n     - Hidden fees\n\nIf you tell me:\n- Your country/region\n- Which fiat currency you want to use\n- Preferred payment method (bank transfer, card, etc.)\n\nI can suggest a short list of exchanges that are more likely to support fiat for you and what to check for each.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "How do I choose a trading platform with the best user interface?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "Focus on how the platform feels to **you**, not what’s “objectively best.” The right UI makes you faster, calmer, and less error‑prone. Here’s a practical way to evaluate that.\n\n---\n\n## 1. Start from your trading style\n\nYour needs dictate the ideal interface:\n\n- **Long‑term / swing trader**\n  - Clean charts, easy order entry\n  - Simple watchlists, decent mobile app\n  - Basic alerts and portfolio view\n\n- **Active day trader / scalper**\n  - Ultra‑fast order entry (hotkeys, one‑click)\n  - Dockable / multi‑monitor layouts\n  - Level 2, time & sales, depth of market\n  - Customizable keyboard shortcuts\n\n- **Options / derivatives trader**\n  - Easy options chain, greeks visible\n  - Strategy builder (spreads, condors, etc.)\n  - Risk graph / payoff diagrams\n\n- **Multi‑asset / investor**\n  - Simple portfolio dashboard\n  - Good search, screeners, and news\n  - Tax lots and reports clearly presented\n\nKnow your style first; then the UI can be judged against it.\n\n---\n\n## 2. Concrete UI features to check\n\nWhen you test a platform (web, desktop, and mobile), evaluate:\n\n### A. Layout & navigation\n- Can you:\n  - Arrange panels (charts, orders, news, positions) the way you like?\n  - Save and load **workspaces** (e.g., “pre‑market,” “options,” etc.)?\n- Is navigation:\n  - Consistent (same icons and wording across pages)?\n  - Low‑click (no 5 clicks to place a simple order)?\n\nRed flag: Tiny fonts, cluttered screens, or important functions buried in menus.\n\n---\n\n### B. Charting experience\nLook for:\n- Smooth zooming and panning\n- Easy adding/removing of indicators\n- Quick drawing tools (trendlines, Fibs, notes) that don’t lag\n- Ability to save chart templates (e.g., “day trading,” “swing”)\n\nCheck:\n- Does changing symbols keep your drawings/indicators as you expect?\n- Can you detach charts into separate windows or monitors?\n\n---\n\n### C. Order entry & management\nYou’ll use this constantly; UI matters here more than anywhere.\n\nCheck:\n- Are order tickets clear and uncluttered?\n- Can you see:\n  - Order type (market/limit/stop) at a glance?\n  - Size, time‑in‑force, and route easily?\n- Is there:\n  - One‑click or drag‑and‑drop orders from the chart?\n  - OCO / bracket orders easy to set (entry + stop + target)?\n  - Simple modification/cancellation from open orders list?\n\nYou want a design that reduces **fat‑finger risk** (e.g., clear confirmation for size/price, optional confirmations when placing very large orders).\n\n---\n\n### D. Watchlists, alerts, and search\n- Can you create multiple watchlists and reorder columns?\n- Is adding a symbol fast and forgiving of typos?\n- Alerts:\n  - Easy to set from chart and watchlist?\n  - Clear conditions and notifications (push/email/desktop)?\n  - Simple “manage all alerts” view?\n\n---\n\n### E. Performance & visual clarity\n- Low lag when switching symbols or timeframes\n- Fonts readable at a glance\n- Sensible use of color:\n  - Gains vs. losses clearly distinguished\n  - No confusing color schemes for critical info\n\nTry light and dark modes; you may find one far easier on your eyes for long sessions.\n\n---\n\n### F. Mobile vs. desktop consistency\n- Is the mobile app:\n  - Intuitive if you already know the desktop/web version?\n  - Capable enough to manage positions and basic orders safely?\n- Are layouts and menus named similarly?\n\nA great UI keeps the “mental model” the same across devices.\n\n---\n\n## 3. Usability tests you should run\n\nBefore committing:\n\n1. **Set up your full layout**\n   - Create watchlists\n   - Arrange charts and order windows\n   - Save a workspace\n   - Time how long it takes and how many times you get lost or confused.\n\n2. **Simulate your real workflow**\n   - Example for a day trader:\n     - Scan watchlist\n     - Open chart, mark levels\n     - Place bracket order from chart\n     - Move stop to breakeven, scale out\n   - Notice friction: Where do you hesitate?\n\n3. **Try common “stress moments”**\n   - Close all positions quickly\n   - Modify a fast‑moving order\n   - Cancel and replace a wrong order\n   - Check how many clicks each takes, and whether errors are likely.\n\n4. **Use it for at least a full market session**\n   - Annoyances only appear after 2–4 hours of real use.\n\n---\n\n## 4. Compare specific platforms (high‑level, UI‑wise)\n\n(Not exhaustive, and availability depends on your country.)\n\n- **Very polished / beginner‑friendly UI**\n  - Robinhood, Webull, Freetrade, eToro, many bank brokers\n  - Pros: clean, simple; low learning curve\n  - Cons: may hide advanced order types, depth tools\n\n- **Powerful but denser UI**\n  - Thinkorswim, Interactive Brokers TWS, NinjaTrader, TradeStation\n  - Pros: highly customizable, pro features\n  - Cons: steeper learning curve, more clutter\n\n- **Browser‑based with strong charting**\n  - TradingView (for charting; integrate with supported brokers)\n  - Pros: excellent charts, layouts, social/community ideas\n  - Cons: depends on integration for actual order flow\n\nMatch the “complexity level” of the UI to your current and near‑future needs.\n\n---\n\n## 5. Other non‑UI factors you still must consider\n\nA beautiful UI isn’t enough if:\n\n- Fees/spreads are high\n- Execution is slow or unreliable\n- Risk controls and security are weak\n- Regulation/insurance is questionable\n\nNarrow down brokers on safety/cost first, then choose among those with the best UI for you.\n\n---\n\n## 6. A simple selection process\n\n1. List 3–5 reputable brokers available in your country.\n2. For each:\n   - Check platform screenshots / YouTube walkthroughs.\n   - Install demo/paper trading versions where possible.\n3. Spend at least one full session on your top 2 and answer:\n   - Which one lets me do my **typical workflow** with the fewest clicks and least confusion?\n   - In which one do I feel most confident not to misclick?\n\nChoose the platform where:\n- Your core tasks feel intuitive after a day or two, and\n- You feel calm and in control, not constantly checking whether you did something right.\n\n---\n\nIf you tell me:\n- Your country/region\n- What you trade (stocks, forex, crypto, options, futures)\n- Your style (long‑term, swing, day trading, scalping)\n\nI can give a short, tailored shortlist and what to look for UI‑wise on each.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "What are the most secure cryptocurrency exchanges?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "Here are exchanges that are generally regarded as among the most security‑focused as of 2024. This is *not* an endorsement to hold large balances on any exchange—self‑custody is always safer for long‑term storage.\n\n### 1. Kraken\n- Very strong security reputation; no major hacking incident on the core exchange.\n- Heavy emphasis on cold storage (reported 95%+ of funds offline).\n- Independent security audits and public “Proof of Reserves” with verifiable Merkle‑tree.\n- Long track record, strong compliance culture, good incident‑response history.\n\n### 2. Coinbase (and Coinbase Pro/Advanced Trade)\n- U.S. public company with detailed disclosures and regulation.\n- Majority of customer funds in cold storage with geographically distributed vaults.\n- Insurance coverage for some hot‑wallet balances (does not cover user error).\n- Mature internal security practices and bug bounty program.\n\n### 3. Bitstamp\n- One of the oldest exchanges; strong post‑2015‑hack security revamp.\n- High cold‑storage ratio, regular security audits.\n- Very conservative listing and operations approach.\n\n### 4. Gemini\n- Founded by the Winklevoss twins; operates under New York Trust Company regulations.\n- Strong emphasis on institutional‑grade custody.\n- SOC 1 & SOC 2 security certifications, third‑party audits.\n- High operational and legal compliance standards.\n\n### 5. Bitfinex (with caveat)\n- Historically hacked (2016), but significantly overhauled its security since.\n- Advanced features like hardware‑security‑module (HSM) infrastructure, withdrawal protection tools, security keys, and customizable security controls.\n- Considered technically sophisticated, but some users weigh past incidents and Tether/Bitfinex controversies when assessing risk.\n\n### 6. Bybit, OKX, Binance, KuCoin (large but mixed profiles)\nThese are huge, liquid exchanges with substantial security investment (cold storage, multi‑sig, internal monitoring). However:\n- They operate under more complex or less transparent regulatory setups in some jurisdictions.\n- Several have had past security events (e.g., KuCoin 2020; Binance 2019) but reimbursed users and strengthened security.\n- They can be appropriate for trading if you:\n  - Enable strong security (hardware‑key 2FA, withdrawal whitelists).\n  - Avoid holding large idle balances.\n\n---\n\n### What actually matters for security\n\nWhen evaluating any exchange, check:\n\n1. **Cold storage policy**\n   - High percentage of funds in offline, multi‑sig wallets.\n   - Geographically distributed key storage.\n\n2. **Proof of Reserves**\n   - Cryptographically verifiable PoR (Merkle‑tree) is better than unaudited claims.\n   - Look for credible independent auditors and clear explanations.\n\n3. **Regulation and transparency**\n   - Clear legal entity, jurisdiction, leadership team.\n   - Financial statements, security reports, SOC 2 audits where available.\n\n4. **User‑side protections**\n   - FIDO2/WebAuthn (security‑key) support, not just SMS 2FA.\n   - Withdrawal address whitelisting, withdrawal delays, IP/device lock features.\n   - Strong session controls and anti‑phishing options.\n\n5. **Track record and response**\n   - How they handled past incidents (if any).\n   - Reputation among security professionals and long‑time users.\n\n---\n\n### Practical guidance\n\n- Use exchanges mainly for **on/off‑ramping and trading**, not long‑term storage.\n- For long‑term holdings, move to **hardware wallets** or other robust self‑custody.\n- On any exchange you choose:\n  - Enable hardware security keys (YubiKey, Titan, etc.) if supported.\n  - Turn on withdrawal whitelists and email/2FA confirmation for withdrawals.\n  - Avoid SMS‑only 2FA.\n\nIf you tell me your country/region and what coins you care about, I can narrow this down to the more secure options realistically accessible to you.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "How do I find an investment platform that offers fiat currency support?",
+      "intent": "Transactional",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "To find an investment platform with fiat currency support, focus on three steps:\n\n### 1. Clarify what “fiat support” means for you\nDifferent platforms support fiat in different ways:\n- **Funding methods** you want:\n  - Bank transfer (ACH, SEPA, wire, etc.)\n  - Debit/credit card\n  - Local payment systems (e.g., Faster Payments in the UK, Interac in Canada)\n- **Fiat currencies you need**:\n  - Common: USD, EUR, GBP\n  - Others: CAD, AUD, JPY, etc.\n- **Cash-out options**:\n  - Ability to withdraw back to your bank in your local currency\n  - Reasonable withdrawal fees and times\n\nWrite down:\n- Your country of residence\n- Your main currency\n- How you prefer to deposit and withdraw\n- What you want to invest in (stocks, ETFs, crypto, funds, etc.)\n\n### 2. Use targeted search and filters\nUse search phrases that match your needs, e.g.:\n- “Stock trading platform [your country] bank transfer deposit”\n- “Crypto exchange [your country] fiat on-ramp”\n- “Brokerage accept [your currency] deposit and withdrawal”\n- “Investment app SEPA deposit” (EU) / “ACH deposit” (US) / “[local system] deposit”\n\nThen:\n\n**On broker / exchange comparison sites** (e.g., BrokerChooser, NerdWallet, Investopedia, local finance blogs):\n- Filter for:\n  - Available in your country\n  - Supports deposits/withdrawals in your currency\n  - Bank transfers / card deposits\n- Check the “Funding” or “Fees” sections for:\n  - “Deposit methods”\n  - “Withdrawal methods”\n  - “Base currencies” or “Account currencies”\n\n### 3. Verify details on the platform’s own site\nOnce you have 2–4 candidates, go to their official pages:\n\n1. **Support / Help Center**\n   - Search terms: “Deposit,” “Withdrawal,” “Funding,” “Supported currencies,” “[Your country]”\n   - Look for:\n     - Supported deposit methods and minimum amounts\n     - Supported fiat currencies (account base currency)\n     - Processing times and limits\n     - Deposit/withdrawal fees and FX conversion costs\n\n2. **Account base currency**\n   - Check if you can set your account in your local currency.\n   - If not, they may convert every deposit (e.g., from EUR to USD) and charge FX fees.\n\n3. **Regulation and safety**\n   - Confirm they’re regulated in your jurisdiction or a reputable one:\n     - US: SEC / FINRA, SIPC member\n     - EU/UK: local securities regulator (e.g., BaFin, AMF, FCA), FSCS/Investor Compensation schemes\n   - Look for segregated client funds.\n\n4. **Reviews and real-user reports**\n   - Search “[platform] fiat deposit withdrawal review”, “[platform] withdrawal problems”\n   - Platforms that support fiat in theory but have slow/blocked withdrawals are a red flag.\n\n---\n\nIf you tell me:\n- Your country\n- Your main currency\n- What you want to invest in (stocks, ETFs, crypto, etc.)\n- Preferred funding method (bank, card, local system)\n\nI can suggest specific types of platforms and what to look for in your region.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How can I buy USDT at the lowest price in India?",
+      "intent": "Transactional",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "You’re basically fighting three things in India:  \n1) crypto/INR spreads, 2) TDS + tax, and 3) hidden fees (markup + slippage + gas). The trick is to minimize *all* of them, not just find the “cheapest looking” USDT rate.\n\nHere’s a practical step‑by‑step way to get close to the lowest effective price.\n\n---\n\n## 1. Understand the real cost (not just the quote)\n\nYour *effective* USDT price =  \n**(INR you spend + fees + tax impact) ÷ USDT actually received**\n\nCheck all of these:\n- Maker/taker trading fee\n- INR deposit/withdrawal fees\n- Network withdrawal fee (USDT on TRC20 is usually cheapest)\n- Any premium over global USDT price (1 USDT should roughly track INR value of 1 USD)\n- TDS (1% in many P2P/centralized cases – and difficult to claim back if you’re not set up properly)\n\nOften the “best price” on screen is ruined by fee/tax if you don’t calculate the net.\n\n---\n\n## 2. Compare these main options in India\n\n### A. P2P on global exchanges (Binance, Bybit, OKX, etc.)\n\n**Why it’s often cheapest:**\n- You trade directly with another user: INR ↔ USDT via UPI/bank\n- Usually tighter spreads than Indian exchanges\n- No on‑ramp fee if you pay via UPI\n\n**How to minimize price:**\n1. Use **P2P ‘express’ off** and go to **‘Advertise/Order Book’ view**.\n2. Filter:\n   - Currency: INR\n   - Crypto: USDT (TRC20 if you’ll withdraw)\n   - Payment: UPI or your preferred method\n3. Sort by **Price (lowest)**.\n4. Look for:\n   - High completion rate (≥ 95%)\n   - Many orders (≥ 500–1000 trades if possible)\n   - Reasonable limits that match your amount\n\n5. Place orders as a **maker** when possible:\n   - On some platforms, posting your own ad can give you a better price and lower fees.\n\n**Caution:**  \n– TDS rules around P2P are murky and evolving. Platforms sometimes handle this; sometimes they don’t. For large volumes, you should talk to a CA and stay compliant.\n\n---\n\n### B. Indian exchanges with INR order books (WazirX, CoinDCX, ZebPay, etc.)\n\nThese are simpler but usually **more expensive** overall.\n\nTo squeeze the best rate:\n1. Deposit INR via the **cheapest method** (some charge for IMPS/UPI).\n2. On the exchange:\n   - Go to **Spot market: USDT/INR** (or BTC/INR → then BTC/USDT if that route is cheaper after fees).\n   - Use **limit orders**, not market orders.  \n     Place your buy slightly above the highest bid to get filled without paying a massive spread.\n3. Compare total:\n   - (INR deposit fees + trading fee + any withdrawal fee) vs P2P.\n\nSometimes, for small amounts or promotions (zero‑fee USDT pairs), an Indian exchange can be competitive.\n\n---\n\n### C. “Indirect route” via cheaper pairs\n\nSometimes:\n- INR → BTC (or another liquid coin) on an Indian exchange  \n- Transfer BTC to a global exchange  \n- BTC → USDT there\n\nTotal cost can be lower *if*:\n- BTC/INR spread is tighter than USDT/INR\n- Withdrawal fees are low (and network not congested)\n- Global exchange has very low BTC/USDT fees\n\nYou must actually calculate:\n1. INR → BTC price impact + fee\n2. BTC withdraw fee (in BTC, convert to INR)\n3. BTC → USDT fee and slippage\n4. Compare with direct USDT purchase.\n\n---\n\n## 3. Concrete workflow that is often near‑optimal\n\nFor typical amounts (₹10k–₹2L):\n\n1. **Check P2P quotes:**\n   - On Binance/Bybit/etc, note:\n     - Best 3–5 prices for your size\n     - Any platform service fee\n\n2. **Check 1–2 Indian exchanges:**\n   - Look at **order book** for USDT/INR\n   - Calculate:\n     - Deposit fee (if any)\n     - Maker/taker fee\n     - Spread (difference between best bid and ask)\n   - Put into a quick spreadsheet or do mental approx.\n\n3. **Choose the lowest effective rate**:\n   - After including all above costs.\n   - For most people right now, P2P USDT(TRC20) on a big global exchange tends to be cheapest.\n\n4. **Withdraw in the cheapest network (if you need to move it):**\n   - TRC20 (Tron) usually has lowest fixed fee.\n   - Avoid ERC20 unless necessary (high gas).\n\n---\n\n## 4. Ways to shave off a bit more\n\n- **Use maker fee discounts / VIP tiers**:  \n  Keep volume on one platform to reduce fees.\n- **Time your buys**:  \n  Spreads widen during low‑liquidity hours (late night / early morning).\n- **Avoid tiny transactions**:  \n  Fixed network fees hurt small amounts more. Buying ₹500 of USDT and paying ₹80 as network fee is terrible.\n- **Referral/voucher codes**:  \n  Many platforms give fee rebates (5–20%) for using a code or joining via campaigns.\n\n---\n\n## 5. Legal and tax note (very important in India)\n\n- India has **30% flat tax on “virtual digital asset” gains** + surcharge + cess.\n- **TDS up to 1% on certain transactions** (especially on exchanges registered in India; rules are evolving and can extend in practice).\n- Regulatory posture is changing; some banks sometimes restrict direct crypto‑linked transfers.\n\nFor serious amounts or frequent trading, talk to a **chartered accountant** who is up to date on crypto rules so you don’t accidentally save 0.5% on spread and lose much more via non‑compliance.\n\n---\n\nIf you tell me:\n- Your typical amount (e.g., ₹20k vs ₹5L),\n- Whether you want to just hold USDT or actively trade/move it abroad,\n\nI can outline a very specific, low‑cost route for your case.",
+      "mentions": [
+        "CoinDCX",
+        "Binance",
+        "WazirX",
+        "Zebpay"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "What are the most reliable trading platforms for cryptocurrency?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "Here are some of the most widely regarded, relatively reliable crypto trading platforms as of 2024. “Reliable” here means: strong security track record, good liquidity, regulatory engagement, and operational history. Always verify availability and legality in your country.\n\n---\n\n## 1. Coinbase / Coinbase Advanced\n- **Best for:** Beginners, U.S. and EU users, simple UX  \n- **Pros:**\n  - Publicly listed U.S. company (COIN), audited financials\n  - Strong regulatory posture in the U.S. and Europe\n  - Good security and insured custodial arrangements (limits apply)\n  - Coinbase Advanced offers lower fees and better tools than the basic app\n- **Cons:**\n  - Fees higher than some competitors if you use simple “buy/sell”\n  - Limited altcoin selection compared with global exchanges\n\n---\n\n## 2. Kraken\n- **Best for:** Security-focused users, margin/futures (where allowed)  \n- **Pros:**\n  - One of the longest-running exchanges with strong security track record\n  - Good fiat on/off ramps in many regions\n  - Transparent about reserves and operations\n- **Cons:**\n  - Interface can feel less polished than Coinbase for total beginners\n  - Availability and features vary significantly by country\n\n---\n\n## 3. Binance (and regional entities like Binance.US, Binance Europe, etc.)\n- **Best for:** Active traders, wide coin selection, low fees  \n- **Pros:**\n  - Very deep liquidity and tight spreads on major pairs\n  - Very low trading fees, lots of markets (spot, futures, options in some regions)\n  - Advanced order types and tools\n- **Cons:**\n  - Regulatory scrutiny and evolving status in multiple jurisdictions\n  - User experience and offering differ by region; some products restricted\n  - Not ideal if you want maximum regulatory conservatism\n\n---\n\n## 4. Bitstamp\n- **Best for:** Conservative users, EU/UK users, fiat on/off ramps  \n- **Pros:**\n  - One of the oldest Bitcoin exchanges (since 2011), strong reputation\n  - Good compliance and licensing in EU/UK\n  - Solid security record and relatively straightforward fee structure\n- **Cons:**\n  - Smaller coin selection and less leverage/products than Binance/Kraken\n  - Not geared towards high-frequency or derivatives trading\n\n---\n\n## 5. Gemini\n- **Best for:** U.S. users prioritizing regulation and custody  \n- **Pros:**\n  - New York trust company, historically marketed on regulatory compliance\n  - Simple interface, decent security and custody options\n- **Cons:**\n  - Past regulatory issues over Gemini Earn highlight counterparty risk\n  - Smaller market selection and liquidity than top global exchanges\n  - Fees can be higher on the simple interface\n\n---\n\n## 6. OKX and Bybit (for active traders, non‑US regions)\n- **Best for:** Derivatives, advanced traders outside strict jurisdictions  \n- **Pros:**\n  - Deep liquidity in futures/perps, advanced order types\n  - Competitive trading fees and frequent promotions\n- **Cons:**\n  - Not available in some major countries (e.g., U.S.)\n  - Higher regulatory risk profile than conservative U.S./EU exchanges\n\n---\n\n## 7. Regulated Local Exchanges\nDepending on where you live, local platforms can be very reliable due to clear regulation and domestic banking connections, e.g.:\n\n- **Europe:** Bitvavo, Bitpanda, LiteBit  \n- **Canada:** Bitbuy, Newton, Coinsquare  \n- **Australia:** CoinSpot, Swyftx, Independent Reserve  \n- **Japan:** bitFlyer, Coincheck (licensed under Japan’s FSA)  \n- **Singapore / HK:** Coinhako, DBS Digital Exchange, OSL, HashKey  \n\nAlways check their licensing status with local regulators.\n\n---\n\n## How to Evaluate Reliability Yourself\n\nUse these criteria before trusting any platform with serious funds:\n\n1. **Regulation & Licensing**\n   - Are they licensed or registered in your country (or a well-regarded jurisdiction)?\n   - Do they restrict service where they lack approval?\n\n2. **Security Practices**\n   - History of major hacks and how they handled them\n   - Cold storage usage, bug bounty programs, published security info\n\n3. **Proof of Reserves / Transparency**\n   - Do they publish proof of reserves and liabilities (ideally with third‑party audits)?\n   - Clear information on how client assets are stored and segregated\n\n4. **Liquidity & Volume**\n   - Sufficient daily volume for the pairs you care about (check CoinGecko/Kaiko)\n   - Narrow bid‑ask spreads on major pairs (e.g., BTC/USDT, ETH/USDT)\n\n5. **Reputation & History**\n   - Operating for several years with no major unresolved scandals\n   - Clear, responsive support channels and generally positive user feedback\n\n6. **Legal & Counterparty Risk**\n   - Understand: when you hold coins on an exchange, you have counterparty risk\n   - Prefer to use exchanges mainly as on/off ramps and for trading, not long‑term storage\n\n---\n\n## Practical Setup for Most People\n\n- Use **one major regulated exchange** (e.g., Coinbase/Kraken/Bitstamp) for:\n  - Buying/selling with fiat\n  - Occasional trades\n- If you become an active trader, optionally add a **high‑liquidity global exchange** (e.g., Binance, OKX, Bybit – if legal in your region) for tighter spreads and more markets.\n- Store long‑term holdings on a **self‑custody wallet** (e.g., hardware wallet), only keeping what you need for active trading on exchanges.\n\nIf you tell me your country and whether you’re a beginner or active trader, I can narrow this down to 2–3 best options for your situation.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "What are the most user-friendly cryptocurrency exchanges?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "Here are some of the most consistently user‑friendly cryptocurrency exchanges as of 2024, especially for beginners and casual users:\n\n### 1. Coinbase\n- **Best for:** Absolute beginners, US/EU users  \n- **Pros:** Extremely simple interface, easy bank/credit card purchases, strong educational content, high liquidity, good mobile app  \n- **Cons:** Higher fees than many competitors; some advanced features locked to “Advanced Trade”  \n\n### 2. Kraken\n- **Best for:** Users who want both simplicity and more advanced options later  \n- **Pros:** Clean interface, strong reputation for security, good support, reasonable fees, solid fiat on‑ramps  \n- **Cons:** Interface is a bit more “professional” than Coinbase; fewer very-small “meme” coins  \n\n### 3. Binance / Binance.US\n- **Best for:** Users who want a simple mode but room to grow into pro trading  \n- **Pros:** “Convert” feature for one‑click swaps, huge coin selection, low fees, feature‑rich mobile app  \n- **Cons:** Regulatory uncertainty in some regions; interface can become complex if you enable all features  \n\n### 4. Gemini\n- **Best for:** US users focused on compliance and simplicity  \n- **Pros:** Very clean UI, simple “Buy/Sell” experience, strong regulatory posture, good recurring-buy options  \n- **Cons:** Fees on the basic interface are higher; fewer coins than Binance or Coinbase  \n\n### 5. Bitstamp\n- **Best for:** Users who want a straightforward, “no frills” experience  \n- **Pros:** One of the oldest exchanges, simple layout, good reputation, clear fee structure  \n- **Cons:** Smaller selection of coins; interface feels dated compared to some competitors  \n\n### 6. OKX and Bybit (non‑US, more global)\n- **Best for:** Non‑US users who want smooth apps and more features later  \n- **Pros:** Modern, polished mobile apps; easy “buy crypto” flows; competitive fees  \n- **Cons:** More complex offerings (derivatives, copy trading) can confuse beginners if they dive in too quickly  \n\n---\n\nIf you tell me:\n- your country/region  \n- whether you prefer the simplest possible app or don’t mind a bit of complexity for lower fees  \n- payment method (bank, card, PayPal, etc.)\n\n…I can narrow this down to 1–2 exchanges that are best suited to you personally.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "How do I find a trading platform that offers fiat currency support?",
+      "intent": "Transactional",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "To find a trading platform that supports fiat currencies (USD, EUR, GBP, etc.), use this checklist and search process:\n\n1. **Decide what you want to trade**\n   - Crypto (Bitcoin, Ethereum, etc.)\n   - Stocks/ETFs\n   - Forex\n   - A mix of these  \n   Different platform types offer fiat support in different ways.\n\n2. **Filter by region and regulation**\n   - Search phrases like:  \n     - `crypto exchange fiat on-ramp [your country]`  \n     - `stock trading platform [your country] deposit USD/EUR`  \n   - Check they’re regulated where you live (e.g., SEC/FINRA in the US, FCA in the UK, ASIC in Australia, etc.).\n   - Make sure they **legally serve residents** of your country (often listed as “Supported countries” or “Availability”).\n\n3. **Check deposit and withdrawal methods**\n   On each candidate platform’s website, look for pages titled:\n   - “Deposits & Withdrawals”\n   - “Funding”\n   - “Payment methods”\n   Confirm:\n   - Supported **fiat currencies** (USD, EUR, GBP, etc.)\n   - Payment methods: bank transfer, debit/credit card, PayPal, local payment networks\n   - Whether **you can withdraw** in fiat back to a bank account (some only let you deposit fiat, then withdraw crypto).\n\n4. **Verify fees**\n   Specifically look for:\n   - Deposit fees (often free for bank transfer, higher for cards)\n   - Withdrawal fees and minimum amounts\n   - Trading fees (maker/taker or fixed per trade)\n   - FX/conversion fees if your bank currency ≠ platform base currency\n\n5. **Check KYC / identity requirements**\n   Any legitimate fiat-supporting platform will require:\n   - ID verification (passport, ID card, driver’s license)\n   - Sometimes proof of address  \n   If a site claims “full fiat support” with **no verification**, be very cautious.\n\n6. **Evaluate safety and reputation**\n   - How long has it been operating?\n   - Is client money held in **segregated accounts**?\n   - For crypto: any **proof-of-reserves** reports or security audits?\n   - User reviews on Trustpilot, Reddit, or dedicated trading forums (ignore only-5-star or only-1-star outliers).\n\n7. **Test with a small amount**\n   Once you pick a platform:\n   - Open an account, complete KYC.\n   - Deposit a **small fiat amount** via your chosen method.\n   - Place a tiny trade.\n   - Withdraw some fiat back to your bank.  \n   This confirms that deposits, trading, and withdrawals work for you in practice.\n\n8. **Common categories of platforms with fiat support**\n   - **Crypto exchanges with fiat on/off ramps**: e.g., Coinbase, Kraken, Bitstamp, Binance (availability varies by country).\n   - **Stock/ETF brokers**: e.g., Interactive Brokers, Fidelity, Charles Schwab, eToro, Trading 212 (again, region-specific).\n   - **Neobrokers / apps**: e.g., Robinhood, Revolut, Webull (check product list and fiat options).\n\nIf you tell me:\n- Your country/region\n- What you want to trade (crypto, stocks, forex, etc.)\n- Your base currency\n\nI can suggest specific platforms to investigate and what to look for on each.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "How do I find a cryptocurrency exchange that supports INR?",
+      "intent": "Transactional",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "To find a cryptocurrency exchange that supports INR (Indian Rupee), you can follow this process:\n\n1. **Start with reputable listing sites**  \n   Use these to filter by “INR” or “India”:\n   - CoinMarketCap – Exchanges → filter by “Fiat supported”\n   - CoinGecko – Exchanges → filter for “INR”\n   - Nomics or CoinPaprika – similar filters\n\n2. **Common exchange types that support INR**\n   You’ll typically find INR on:\n   - **India-based CEXs (centralized exchanges)** – easier for direct INR deposits/withdrawals via UPI/IMPS/NEFT/RTGS.\n   - **Global CEXs with INR on-ramps** – may offer INR via bank transfer/card or through partners.\n   - **P2P platforms** – no direct INR balance, but buyers/sellers transact in INR off-platform.\n\n3. **Check these specific INR-supporting options**  \n   (Regulatory status and features change often; verify in real time.)\n   - India-focused CEXs: search for “crypto exchange INR UPI IMPS” and you’ll see the current major players.\n   - Global exchanges: search “[exchange name] INR deposit withdrawal” to confirm up-to-date support.\n   - P2P: many large global exchanges have a “P2P” section where INR is a supported fiat currency.\n\n4. **Verify INR deposit/withdrawal methods on each site**\n   On the official website (not via ads; type the URL yourself):\n   - Look for pages named “Fees,” “Payment Methods,” “Fiat Currencies,” or “Help Center.”\n   - Confirm:\n     - INR **deposit methods** (UPI, IMPS, NEFT, RTGS, cards, third‑party gateways).\n     - INR **withdrawal options** and limits.\n     - **Fees** for deposits/withdrawals and trading.\n     - **KYC requirements** (PAN, Aadhaar, bank verification, etc.).\n\n5. **Check Indian regulatory and tax context**\n   - Confirm that the exchange:\n     - Performs KYC and (ideally) complies with Indian AML norms.\n     - Explains how it handles **TDS on crypto trades** and **1% TDS reporting**, if applicable.\n   - Search: “Is [exchange name] legal in India” and read recent (≤3 months) articles and community posts.\n\n6. **Evaluate safety and usability**\n   Before depositing:\n   - **Reputation**: Look for independent reviews, Reddit/Telegram/Discord feedback.\n   - **Security**: 2FA, withdrawal whitelist, cold storage info, history of hacks.\n   - **Support quality**: test a support ticket or read reviews about withdrawals and dispute resolution.\n   - **Liquidity**: check order book depth and 24h volume for the pairs you care about (e.g., BTC/INR, USDT/INR).\n\n7. **Start small and test**\n   - Make a **small INR deposit** and a small trade.\n   - Then test a **small withdrawal back to your bank**.\n   - Only scale up once you’re satisfied everything works reliably.\n\nIf you tell me your priorities (e.g., lowest fees, strongest compliance, best mobile app, heavy futures trading, etc.), I can help you narrow to a short list and show you how to evaluate each choice step by step.",
+      "mentions": [],
+      "error": null
+    },
+    {
+      "prompt": "How do I find the best exchange rates for cryptocurrencies?",
+      "intent": "Transactional",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "You find the best crypto exchange rate the same way you’d find the best flight price: by comparing multiple sources in real time and understanding the hidden costs.\n\nHere’s a concise, practical approach:\n\n---\n\n## 1. Use Aggregator/Comparison Sites\n\nThese scan many exchanges at once and show you the best rate:\n\n- **For swapping between coins (DEXs):**\n  - 1inch, Matcha, Paraswap (Ethereum and EVM chains)\n  - Jupiter (Solana)\n  - OpenOcean, Odos, Rango (multi-chain)\n\n- **For centralized exchanges (CEXs):**\n  - CoinMarketCap / CoinGecko “Markets” tab for a token → see prices, volume, spread per exchange.\n  - Coinpaprika, Cryptowatch, or TradingView (for price comparisons).\n\nCheck:\n- Price\n- 24h volume (higher volume = usually better execution, less slippage)\n- Spread (tight spread = better rate)\n\n---\n\n## 2. Always Include Fees in Your Calculation\n\nThe “best rate” is the one that gives you **most net crypto after all costs**:\n\n1. **Trading fee**  \n   - ~0.1% on many CEXs; can be lower with higher volume or native tokens (e.g., BNB on Binance).\n   - DEXs have pool fees (e.g., 0.05–0.3%).\n\n2. **Spread & Slippage**\n   - Spread = difference between best bid and ask.\n   - Slippage = how much the actual execution price moves from your quoted price, usually worse for large trades or illiquid pairs.\n\n3. **Network fees (gas)**\n   - High on Ethereum L1, lower on L2s (Arbitrum, Optimism, Base) and other chains (Solana, BSC, etc.).\n\n4. **Deposit / Withdrawal fees**\n   - Some CEXs offer good rates but high withdrawal fees or only support expensive networks.\n\nTo compare, you can do a quick example calc:\n- “If I send X USD/USDT, how much target crypto do I receive after:\n  - Entering the exchange / bridge\n  - The trade\n  - Withdrawing to my wallet?”\n\n---\n\n## 3. Compare CEX vs DEX for Your Trade\n\n- **Small trades / fiat on-ramps:**  \n  Often better on **CEXs** (Binance, Coinbase, Kraken, OKX, Bybit, etc.), then withdraw.\n- **Token-to-token swaps on-chain:**  \n  Often better on **DEX aggregators** (1inch, Matcha, Jupiter, etc.), especially for long-tail tokens.\n\nPractical method:\n1. Check a major CEX pair: e.g., BTC/USDT or ETH/USDT.\n2. Check a main DEX aggregator on the relevant chain.\n3. Factor in:\n   - CEX trading + withdrawal fee vs.\n   - DEX gas + swap fee.\n\n---\n\n## 4. Consider the Fiat Side (On-Ramp / Off-Ramp)\n\nBest crypto rate is useless if fiat fees kill you:\n\n- Compare:\n  - Bank transfer vs. card vs. local payment methods (SEPA, ACH, PIX, UPI, etc.).\n  - Local exchanges vs global ones in your country.\n- Specialist fiat on/off-ramps (vary by region): MoonPay, Ramp, Transak, Paybis, etc.\n- Some P2P platforms (Binance P2P, Bybit P2P, LocalCryptos-style sites) can give better FX rates but require more care with counterparty risk.\n\n---\n\n## 5. Check Different Networks for the Same Token\n\nThe same stablecoin (USDT, USDC) or token can exist on several chains:\n\n- Price is usually close, but:\n  - Network fees differ significantly.\n  - Withdrawal fees from CEXs often differ by network.\n\nExample:\n- Withdrawing USDT via Tron or an L2 is usually cheaper than via Ethereum mainnet.\n\nSo “best rate” may mean:\n- Trade on a liquid pair on a CEX\n- Withdraw on the **cheapest network** you can use\n\n---\n\n## 6. Watch for Hidden Gotchas\n\n- **Low-liquidity pairs**: Big slippage, misleading “best price.”\n- **Fixed-rate swap services**: Simple UX, but often worse rates than DEX/CEX.\n- **“Zero fee” promos**: Often compensated by worse spread or FX rates.\n- **KYC & limits**: A super good rate is useless if you cannot move enough volume.\n\n---\n\n## 7. Simple Workflow You Can Use Every Time\n\n1. Decide what you’re trading:\n   - Fiat → crypto, crypto → fiat, or crypto → crypto?\n2. Check 2–3 large CEXs for that pair (price + fee schedule).\n3. Check 1–2 DEX aggregators on the relevant chain.\n4. For each route, calculate:\n   - Net received = (Input – deposit costs) – trading costs – gas – withdrawal costs\n5. Choose the route with the **highest net amount**, not just the best quoted rate.\n\n---\n\nIf you tell me:\n- Your country/region\n- What you’re swapping (e.g., “bank account USD → BTC” or “ETH (Ethereum) → SOL (Solana)”)\n- Rough trade size\n\nI can walk you through a specific, step‑by‑step path to get the best effective rate for your case.",
+      "mentions": [
+        "Binance"
+      ],
+      "error": null
+    },
+    {
+      "prompt": "How do I choose a cryptocurrency exchange with the best user interface?",
+      "intent": "Commercial",
+      "category": "Spot Trading",
+      "platform": "ChatGPT",
+      "response": "To choose a crypto exchange with a great user interface (UI), you’ll want to combine quick hands‑on testing with a few structured checks. Here’s a focused approach:\n\n---\n\n## 1. Start With Safety Filters (Before UI)\n\nOnly compare UI among exchanges that clear basic safety checks:\n\n- Strong reputation: widely used, active since at least a few years, no major unresolved hacks/scandals.\n- Regulatory presence: licensed/registered in your country or a reputable jurisdiction where possible.\n- Transparent company info: real team, physical offices, clear terms and fee schedules.\n- Security basics: 2FA (TOTP, not just SMS), withdrawal whitelist, device management, proof-of-reserves or regular audits.\n\nOnce you have 3–5 safe candidates, then evaluate UI.\n\n---\n\n## 2. Use Demo/Guest Modes and Mobile Apps\n\nMany exchanges offer:\n\n- Web demo/trial: “Preview” or “Explore” mode without KYC.\n- Mobile app: iOS/Android with screenshots and often demo access.\n\nDo this:\n\n1. Install 2–3 apps.\n2. Use them for 10–15 minutes each.\n3. Note what feels intuitive vs confusing, before you get used to them.\n\nYour first 10 minutes are the best test of UI quality.\n\n---\n\n## 3. Concrete UI Criteria to Compare\n\n### A. Onboarding & Navigation\n\n- Account creation: Is signup and KYC clearly explained, with progress indicators?\n- Clear structure: “Home”, “Trade”, “Portfolio”, “Deposit/Withdraw” easy to locate?\n- Consistency: Same terms and icons across web and mobile?\n\nRed flags:\n- Buried deposit/withdraw pages.\n- Many similar-sounding sections (“Spot”, “Convert”, “Simple Trade”, “Instant Buy”) with no explanation.\n\n---\n\n### B. Beginner vs Advanced Views\n\nGood exchanges offer:\n\n- Simple mode:\n  - Buy/sell with one or two fields (amount and asset).\n  - Clear total cost in your currency, including fees.\n- Advanced mode:\n  - Order book, chart, depth, limit/market/stop orders.\n  - Still readable, not cluttered.\n\nCheck:\n- Can you switch modes easily?\n- Do they explain order types in a tooltip or small help popup?\n\n---\n\n### C. Order Placement Flow\n\nTry placing a tiny mock order (or at least walk through up to the final confirmation screen):\n\n- Fields: Price, amount, total, fee, and final amount received all visible?\n- Warnings: Does it warn you if your order is far from the market price or illiquid?\n- Edit & cancel: Open orders easy to find, modify, cancel?\n\nGood UI:\n- Has a clear, unambiguous “Review” step.\n- Shows you “You pay X, you receive Y (fee: Z)” in normal language.\n\n---\n\n### D. Clarity of Balances & Portfolio\n\n- Portfolio page:\n  - Total value in your currency plus per-asset breakdown.\n  - Clear label what’s “Available”, “In orders”, “Staked/Locked”.\n- PnL (profit and loss):\n  - Simple overview: cost basis vs current value, or at least price change over time.\n\nRed flags:\n- Many sub-accounts (Main, Trading, Funding, Margin) with no explanation.\n- Confusing or hidden “frozen” balances.\n\n---\n\n### E. Deposits & Withdrawals UI\n\nWalk through a (small) deposit and withdrawal flow:\n\n- Deposit:\n  - Network shown clearly (e.g., “USDT – choose: Ethereum, Tron, etc.”).\n  - Heavy visual warnings about using correct network and address.\n  - QR code plus copy button.\n\n- Withdrawal:\n  - Strong confirmation step with all key details.\n  - Shows exact fee and final amount you will receive.\n  - 2FA and email/device confirmation nicely integrated—not chaotic popups.\n\nGood UI tries hard to prevent you from using the wrong chain.\n\n---\n\n### F. Mobile Experience\n\nIf you plan to trade on your phone:\n\n- Does the app mirror the website’s structure?\n- Are charts readable, buttons not too small, and no critical actions near the “back” or “home” nav areas?\n- Can you easily:\n  - Check portfolio and recent transactions\n  - Place a simple market/limit order\n  - Initiate a withdrawal\n\nTest on both Wi‑Fi and mobile data; a good UI handles slow connections gracefully (progress indicators, cached balances, clear error messages).\n\n---\n\n## 4. Help, Support & Educational UI\n\nGreat UI is complemented by:\n\n- Inline help:\n  - Tooltips on “Maker/Taker”, “Stop-limit”, “Isolated/Cross margin.”\n- Guided tours:\n  - Short walkthrough when you first open the trading screen.\n- Support:\n  - Searchable help center with screenshots.\n  - Live chat or ticket support easy to find from within the app.\n\nThis drastically reduces frustration when learning.\n\n---\n\n## 5. Performance & Visual Design\n\nUI is not just looks—responsiveness matters:\n\n- Low latency: No multi-second freezes on simple actions.\n- Clear states:\n  - Buttons greyed out while submitting orders.\n  - Obvious success/failure messages.\n\nVisual design:\n- Clean typography, enough contrast and spacing.\n- Dark/light mode options.\n- No distracting banners or constant pop-up promos in trading views.\n\n---\n\n## 6. Try a Simple “Usability Test” Checklist\n\nFor each candidate exchange, answer 1–5 (1 = terrible, 5 = excellent):\n\n1. Signup & identity verification clarity\n2. Ease of finding deposit/withdraw pages\n3. Simplicity of making a basic buy/sell\n4. Clarity of fees on trades and withdrawals\n5. Portfolio display (balances, values, PnL)\n6. Mobile app usability\n7. Quality of error messages and confirmations\n8. Availability of beginner/advanced modes\n\nAdd up the score; anything under ~28/40 probably won’t feel “best UI” long term.\n\n---\n\n## 7. A Note on Personal Fit\n\n- Beginners often prefer:\n  - Very minimal UIs (e.g., “convert” or “instant buy” only).\n  - Clear fiat on-ramps, simple charts or none at all.\n\n- Active traders often prefer:\n  - Dense but well-organized UIs with customizable layouts and advanced order types.\n  - Keyboard shortcuts, hotkeys, and advanced chart integration.\n\nThe “best” UI is the one that reduces your mistakes and cognitive load for your style.\n\n---\n\nIf you tell me:\n- Your country/region\n- Whether you’re a total beginner, casual user, or active trader\n- Desktop vs mobile preference\n\nI can suggest 2–3 specific exchanges to test and what to look at first in each.",
+      "mentions": [],
+      "error": null
+    }
+  ]
+};
+
+function renderContentGaps(competitors, runs) {
+  const TARGET = competitors.includes('CoinSwitch') ? 'CoinSwitch' : competitors[0];
+  if (!TARGET) return;
+
+  const panel = document.getElementById('content-gap-panel');
+  const uniquePrompts = [...new Map(runs.map(r => [r.prompt, r])).values()];
+  const byPrompt = {};
+  runs.forEach(r => {
+    if (!byPrompt[r.prompt]) byPrompt[r.prompt] = { category: r.category, mentions: new Set() };
+    r.mentions.forEach(m => byPrompt[r.prompt].mentions.add(m));
+  });
+
+  const targetMentioned = Object.entries(byPrompt).filter(([, v]) => v.mentions.has(TARGET));
+  const rivalWon = Object.entries(byPrompt).filter(([, v]) => !v.mentions.has(TARGET) && v.mentions.size > 0);
+  const whitespace = Object.entries(byPrompt).filter(([, v]) => v.mentions.size === 0);
+
+  if (!uniquePrompts.length) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
+  document.getElementById('gap-brand-name').textContent = TARGET;
+  const total = Object.keys(byPrompt).length;
+  document.getElementById('gap-sub').textContent =
+    `${TARGET} appears in ${targetMentioned.length} of ${total} prompts analyzed. `
+    + `${rivalWon.length} prompts surface competitors instead, and ${whitespace.length} name no brand at all (open territory).`;
+
+  function groupByCategory(entries) {
+    const groups = {};
+    entries.forEach(([prompt, v]) => {
+      const cat = v.category || 'Uncategorized';
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push({ prompt, mentions: [...v.mentions] });
+    });
+    return groups;
+  }
+
+  function titleCase(s) {
+    return s.replace(/\w\S*/g, t => t[0].toUpperCase() + t.slice(1));
+  }
+
+  function suggestTitle(cat, forWhitespace) {
+    const c = titleCase(cat);
+    if (forWhitespace) return `"${c}" guide — own the answer before a competitor does`;
+    return `${c}: why ${TARGET} should show up here`;
+  }
+
+  function topRivals(items, limit) {
+    const counts = {};
+    items.forEach(it => it.mentions.forEach(m => { counts[m] = (counts[m] || 0) + 1; }));
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, limit).map(([name]) => name);
+  }
+
+  const rivalGroups = groupByCategory(rivalWon);
+  const whitespaceGroups = groupByCategory(whitespace);
+
+  function renderIdeaCards(groups, { forWhitespace }) {
+    return Object.entries(groups)
+      .sort((a, b) => b[1].length - a[1].length)
+      .map(([cat, items]) => {
+        const badge = forWhitespace ? 'opportunity' : (items.length >= 3 ? 'high' : 'medium');
+        const badgeLabel = forWhitespace ? 'Opportunity' : (items.length >= 3 ? 'High priority' : 'Medium priority');
+        const rivals = forWhitespace ? [] : topRivals(items, 3);
+        const why = forWhitespace
+          ? `${items.length} prompt${items.length === 1 ? '' : 's'} in this topic got no brand mention at all — first good answer wins it.`
+          : `${items.length} prompt${items.length === 1 ? '' : 's'} in this topic currently surface ${rivals.map(esc).join(', ') || 'competitors'} instead of ${esc(TARGET)}.`;
+        return `
+          <div class="idea-card">
+            <div class="idea-head">
+              <div class="idea-title">${esc(suggestTitle(cat, forWhitespace))}</div>
+              <span class="idea-badge ${badge}">${badgeLabel}</span>
+            </div>
+            <p class="idea-why">${why}</p>
+            <details>
+              <summary>${items.length} source prompt${items.length === 1 ? '' : 's'}</summary>
+              <ul class="gap-prompt-list">
+                ${items.map(it => `
+                  <li>${esc(it.prompt)}
+                    ${it.mentions.map(m => `<span class="gap-rival-chip" style="background:${colorForBrand(m, competitors)}">${esc(m)}</span>`).join('')}
+                  </li>
+                `).join('')}
+              </ul>
+            </details>
+          </div>
+        `;
+      }).join('');
+  }
+
+  let html = '';
+
+  if (Object.keys(rivalGroups).length) {
+    html += `<div class="gap-group">
+      <h4>Where competitors are being recommended instead</h4>
+      <p class="gap-note">Publish comparison or category content so ${esc(TARGET)} surfaces for these topics.</p>
+      ${renderIdeaCards(rivalGroups, { forWhitespace: false })}
+    </div>`;
+  }
+
+  if (Object.keys(whitespaceGroups).length) {
+    html += `<div class="gap-group">
+      <h4>Open territory (no brand mentioned by any AI)</h4>
+      <p class="gap-note">No competitor owns these queries yet — first-mover content here could capture the answer.</p>
+      ${renderIdeaCards(whitespaceGroups, { forWhitespace: true })}
+    </div>`;
+  }
+
+  if (!html) {
+    html = `<p class="panel-sub">${esc(TARGET)} already appears across all tracked prompts — no gaps detected in this run.</p>`;
+  }
+
+  document.getElementById('gap-list').innerHTML = html;
+}
+
+async function init() {
+  let data;
+  try {
+    const res = await fetch('results.json');
+    data = await res.json();
+    if (!data || !data.runs || !data.runs.length) throw new Error('empty');
+  } catch (e) {
+    data = EMBEDDED_DATA;
+  }
+
+  const { competitors, platforms, runs, generated_at } = data;
+  const genDate = new Date(generated_at);
+  document.getElementById('meta-line').textContent =
+    runs.length + ' responses, ' + platforms.join(', ') + ', generated ' + genDate.toLocaleString();
+
+  const totalRuns = runs.length;
+  const uniquePrompts = new Set(runs.map(r => r.prompt)).size;
+  const runsWithMention = runs.filter(r => r.mentions.length > 0).length;
+  const mentionRate = totalRuns ? Math.round((runsWithMention / totalRuns) * 100) : 0;
+
+  const brandCounts = {};
+  competitors.forEach(c => brandCounts[c] = 0);
+  runs.forEach(r => r.mentions.forEach(m => { if (brandCounts[m] !== undefined) brandCounts[m]++; }));
+  const topBrand = Object.entries(brandCounts).sort((a,b) => b[1]-a[1])[0];
+
+  const statRow = document.getElementById('stat-row');
+  const stats = [
+    { label: 'Prompts analyzed', value: uniquePrompts, sub: totalRuns + ' total responses' },
+    { label: 'Mention rate', value: mentionRate + '%', sub: 'responses naming any tracked brand' },
+    { label: 'Top mentioned brand', value: topBrand ? topBrand[0] : '--', sub: topBrand ? topBrand[1] + ' mentions' : '' },
+    { label: 'Platforms tracked', value: platforms.length, sub: platforms.join(', ') },
+  ];
+  statRow.innerHTML = stats.map(s => `
+    <div class="stat-tile">
+      <div class="label">${esc(s.label)}</div>
+      <div class="value">${esc(String(s.value))}</div>
+      <div class="sub">${esc(s.sub)}</div>
+    </div>
+  `).join('');
+
+  const sovData = competitors.map(c => ({
+    name: c,
+    count: brandCounts[c] || 0,
+    pct: totalRuns ? Math.round(((brandCounts[c] || 0) / totalRuns) * 100) : 0,
+  })).sort((a,b) => b.count - a.count);
+  const maxPct = Math.max(1, ...sovData.map(d => d.pct));
+
+  const sovEl = document.getElementById('sov-chart');
+  sovEl.innerHTML = sovData.map(d => `
+    <div class="bar-row">
+      <div class="name">${esc(d.name)}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${(d.pct / maxPct) * 100}%; background:${colorForBrand(d.name, competitors)};"></div>
+      </div>
+      <div class="count">${d.pct}% - ${d.count}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('legend').innerHTML = competitors.map(c => `
+    <div class="legend-item">
+      <span class="legend-dot" style="background:${colorForBrand(c, competitors)}"></span>
+      ${esc(c)}
+    </div>
+  `).join('');
+
+  const platformGrid = document.getElementById('platform-grid');
+  platformGrid.innerHTML = platforms.map(p => {
+    const platRuns = runs.filter(r => r.platform === p);
+    const counts = {};
+    competitors.forEach(c => counts[c] = 0);
+    platRuns.forEach(r => r.mentions.forEach(m => { if (counts[m] !== undefined) counts[m]++; }));
+    const sorted = competitors.map(c => ({ name: c, count: counts[c] })).sort((a,b) => b.count - a.count);
+    const max = Math.max(1, ...sorted.map(d => d.count));
+    return `
+      <div class="platform-card">
+        <h3>${esc(p)} <span style="color:var(--text-muted); font-weight:400;">(${platRuns.length} responses)</span></h3>
+        ${sorted.map(d => `
+          <div class="mini-bar-row">
+            <div class="name">${esc(d.name)}</div>
+            <div class="mini-track"><div class="mini-fill" style="width:${(d.count/max)*100}%; background:${colorForBrand(d.name, competitors)};"></div></div>
+            <div class="count">${d.count}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+
+  renderContentGaps(competitors, runs);
+
+  const categories = [...new Set(runs.map(r => r.category).filter(Boolean))].sort();
+  const fPlatform = document.getElementById('filter-platform');
+  const fCategory = document.getElementById('filter-category');
+  const fBrand = document.getElementById('filter-brand');
+
+  platforms.forEach(p => fPlatform.insertAdjacentHTML('beforeend', `<option value="${esc(p)}">${esc(p)}</option>`));
+  categories.forEach(c => fCategory.insertAdjacentHTML('beforeend', `<option value="${esc(c)}">${esc(c)}</option>`));
+  competitors.forEach(c => fBrand.insertAdjacentHTML('beforeend', `<option value="${esc(c)}">${esc(c)}</option>`));
+
+  const tbody = document.getElementById('table-body');
+
+  function renderTable() {
+    const pf = fPlatform.value, cf = fCategory.value, bf = fBrand.value;
+    const filtered = runs.filter(r =>
+      (!pf || r.platform === pf) &&
+      (!cf || r.category === cf) &&
+      (!bf || r.mentions.includes(bf))
+    );
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">No responses match these filters.</div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = filtered.map(r => `
+      <tr>
+        <td style="max-width:260px;">${esc(r.prompt)}</td>
+        <td style="color:var(--text-secondary); white-space:nowrap;">${esc(r.category || '--')}</td>
+        <td><span class="platform-chip">${esc(r.platform)}</span></td>
+        <td>${
+          r.mentions.length
+            ? r.mentions.map(m => `<span class="mention-chip" style="background:${colorForBrand(m, competitors)}">${esc(m)}</span>`).join('')
+            : `<span class="no-mentions">none detected</span>`
+        }</td>
+        <td class="response-cell">${esc((r.response || '').slice(0, 220))}${(r.response||'').length > 220 ? '...' : ''}</td>
+      </tr>
+    `).join('');
+  }
+
+  [fPlatform, fCategory, fBrand].forEach(el => el.addEventListener('change', renderTable));
+  renderTable();
+}
+
+init();
+</script>
+</body>
+</html>
