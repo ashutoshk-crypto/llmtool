@@ -466,6 +466,13 @@ function setMetaLine(data, elId) {
   el.textContent = data.runs.length + ' responses, ' + data.platforms.join(', ') + ', generated ' + genDate.toLocaleString();
 }
 
+/** Runs where at least one brand (own or competitor) was named in the AI answer.
+ *  Visibility % should be measured against this, not against every run — a run where
+ *  no brand at all was mentioned isn't a fair "miss", it's just not a brand-relevant answer. */
+function withAnyMention(runs) {
+  return runs.filter(r => r.mentions && r.mentions.length > 0);
+}
+
 function brandCounts(competitors, runs) {
   const counts = {};
   competitors.forEach(c => counts[c] = 0);

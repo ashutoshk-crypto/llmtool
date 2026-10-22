@@ -123,9 +123,10 @@ async function init() {
 
   async function renderAll() {
     const fr = filteredRuns();
-    const totalRuns = fr.length;
+    const anyMentionRuns = withAnyMention(fr);
+    const totalRuns = anyMentionRuns.length;
     const uniquePrompts = new Set(fr.map(r => r.prompt)).size;
-    const ownRuns = fr.filter(r => r.mentions.includes(OWN));
+    const ownRuns = anyMentionRuns.filter(r => r.mentions.includes(OWN));
     const mentionRate = totalRuns ? Math.round((ownRuns.length / totalRuns) * 100) : 0;
 
     // own-domain citation metrics, from citations extracted by track.py
@@ -134,7 +135,7 @@ async function init() {
     const distinctOwnPages = new Set(ownCitations.map(c => c.url)).size;
 
     document.getElementById('metric-strip').innerHTML = [
-      { label: 'Visibility', info: 'Share of filtered responses mentioning CoinSwitch', value: mentionRate + '%' },
+      { label: 'Visibility', info: 'Share of brand-relevant responses (those naming any brand) mentioning CoinSwitch', value: mentionRate + '%' },
       { label: 'Answers mentioning brand', info: 'Responses naming CoinSwitch', value: String(ownRuns.length) },
       { label: 'Answers citing an own page', info: 'Responses that cited at least one coinswitch.co URL', value: String(ownCitedRuns) },
       { label: 'Distinct own pages cited', info: 'Unique coinswitch.co URLs cited across filtered responses', value: String(distinctOwnPages) },
@@ -153,7 +154,7 @@ async function init() {
     renderTrendChart(document.getElementById('trend-chart'), history, competitors, { compareOn, ownBrand: OWN });
 
     // leaderboard
-    const counts = brandCounts(competitors, fr);
+    const counts = brandCounts(competitors, anyMentionRuns);
     const sorted = competitors.map(c => ({ name: c, count: counts[c] || 0, pct: totalRuns ? Math.round(((counts[c] || 0) / totalRuns) * 100) : 0 }))
       .sort((a, b) => b.count - a.count);
     document.getElementById('leaderboard').innerHTML = totalRuns ? sorted.map((d, i) => `
@@ -166,7 +167,7 @@ async function init() {
 
     // topic-wise visibility (own brand mention rate per category)
     const topicRows = categories.map(cat => {
-      const catRuns = fr.filter(r => r.category === cat);
+      const catRuns = withAnyMention(fr.filter(r => r.category === cat));
       const pct = catRuns.length ? Math.round((catRuns.filter(r => r.mentions.includes(OWN)).length / catRuns.length) * 100) : 0;
       return { name: cat, pct, count: catRuns.length };
     }).sort((a, b) => b.pct - a.pct);
@@ -181,7 +182,7 @@ async function init() {
 
     // platform-wise visibility (own brand)
     const platRows = platforms.map(p => {
-      const pRuns = fr.filter(r => r.platform === p);
+      const pRuns = withAnyMention(fr.filter(r => r.platform === p));
       const pct = pRuns.length ? Math.round((pRuns.filter(r => r.mentions.includes(OWN)).length / pRuns.length) * 100) : 0;
       return { name: p, pct, count: pRuns.length };
     });

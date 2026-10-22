@@ -58,7 +58,7 @@ async function init() {
   bar.insertBefore(fCountry.closest('.filter-pill'), spacer);
 
   function render() {
-    const fr = runs.filter(r => !fTopic.value || r.category === fTopic.value);
+    const fr = withAnyMention(runs.filter(r => !fTopic.value || r.category === fTopic.value));
     const total = fr.length;
     const counts = brandCounts(competitors, fr);
     const rivalSorted = rivals.map(c => ({ name: c, count: counts[c] || 0, pct: total ? Math.round(((counts[c] || 0) / total) * 100) : 0 }))
@@ -88,7 +88,7 @@ async function init() {
     });
 
     const heatRows = categories.map(cat => {
-      const catRuns = runs.filter(r => r.category === cat);
+      const catRuns = withAnyMention(runs.filter(r => r.category === cat));
       const cells = {};
       competitors.forEach(c => {
         cells[c] = catRuns.length ? Math.round((catRuns.filter(r => r.mentions.includes(c)).length / catRuns.length) * 100) : null;

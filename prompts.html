@@ -57,12 +57,13 @@ async function init() {
     byPrompt[r.prompt].runs.push(r);
   });
   const allPromptRows = Object.values(byPrompt).map(p => {
-    const mentioned = p.runs.filter(r => r.mentions.includes(OWN)).length;
+    const relevantRuns = withAnyMention(p.runs);
+    const mentioned = relevantRuns.filter(r => r.mentions.includes(OWN)).length;
     return {
       prompt: p.prompt,
       category: p.category || '--',
       platforms: [...p.platforms],
-      visibility: p.runs.length ? Math.round((mentioned / p.runs.length) * 100) : 0,
+      visibility: relevantRuns.length ? Math.round((mentioned / relevantRuns.length) * 100) : 0,
       type: classifyPromptType(p.prompt, competitors),
     };
   });
