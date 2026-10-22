@@ -18,10 +18,58 @@ PROMPTS_FILE = "prompts.csv"
 COMPETITORS_FILE = "competitors.txt"
 RESULTS_FILE = "results.json"
 HISTORY_FILE = "history.json"
+SEARCH_QUERY_CACHE_FILE = "search_queries_cache.json"
 
 OPENAI_MODEL = "gpt-5.1"
 ANTHROPIC_MODEL = "claude-sonnet-5"
 GEMINI_MODEL = "gemini-3.8-flash"
+
+_search_query_cache = None
+_search_query_cache_lock = threading.Lock()
+
+def _load_search_query_cache():
+    global _search_query_cache
+    if _search_query_cache is None:
+        if os.path.exists(SEARCH_QUERY_CACHE_FILE):
+            with open(SEARCH_QUERY_CACHE_FILE, "r", encoding="utf-8") as f:
+                _search_query_cache = json.load(f)
+        else:
+            _search_query_cache = {}
+    return _search_query_cache
+
+QUESTION_LEAD_RE = re.compile(
+    r"^(how (can|do|does|would) i|how to|what('s| is| are| would be)|"
+    r"which|where (can|do) i|can i|do i|is there a way to|"
+    r"i want to know|i'd like to know)\s+",
+    re.IGNORECASE,
+)
+SEARCH_STOP_WORDS = {
+    "a", "an", "the", "my", "to", "for", "of", "on", "in", "and", "or",
+    "is", "are", "using", "use", "with", "that", "this", "those", "these",
+    "i", "me", "your", "you",
+}
+
+def shorten_to_search_query(prompt):
+    """Google's AI Overview only fires on short, natural search queries —
+    these prompts are written as conversational LLM questions, which rarely
+    trigger it. Compress to how a real user would phrase the same intent
+    as a Google search, caching results since prompts don't change."""
+    cache = _load_search_query_cache()
+    if prompt in cache:
+        return cache[prompt]
+
+    text = prompt.strip().rstrip("?").strip()
+    text = QUESTION_LEAD_RE.sub("", text)
+    text = re.split(r",| and | or ", text, maxsplit=1)[0]
+    words = [w for w in re.findall(r"[A-Za-z0-9']+", text) if w.lower() not in SEARCH_STOP_WORDS]
+    query = " ".join(words[:7]).lower().strip() or prompt.lower()
+
+    with _search_query_cache_lock:
+        cache = _load_search_query_cache()
+        cache[prompt] = query
+        with open(SEARCH_QUERY_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(cache, f, indent=2, ensure_ascii=False)
+    return query
 
 LIMIT = int(os.environ.get("PROMPT_LIMIT", "0"))
 SCRAPINGBEE_CONCURRENCY = int(os.environ.get("SCRAPINGBEE_CONCURRENCY", "40"))
@@ -116,12 +164,17 @@ def query_gemini(prompt):
     return data.get("results_text") or data.get("results_markdown") or json.dumps(data)
 
 def query_google_ai_overview(prompt):
+    try:
+        search_query = shorten_to_search_query(prompt) or prompt
+    except Exception:
+        search_query = prompt
+
     with scrapingbee_semaphore:
         resp = requests.get(
             "https://app.scrapingbee.com/api/v1/google",
             params={
                 "api_key": os.environ["SCRAPINGBEE_API_KEY"],
-                "search": prompt,
+                "search": search_query,
                 "country_code": "in",
             },
             timeout=60,
