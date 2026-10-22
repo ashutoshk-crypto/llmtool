@@ -325,10 +325,16 @@ def main():
 
 
 def append_history_snapshot(competitors, runs):
-    """Append a dated share-of-voice snapshot so trends can be tracked over time."""
-    total = len(runs)
+    """Append a dated share-of-voice snapshot so trends can be tracked over time.
+
+    Visibility % is measured against runs that named at least one brand, not every
+    run — a run where no brand at all was mentioned isn't a fair "miss", it's just
+    not a brand-relevant answer.
+    """
+    relevant_runs = [r for r in runs if r.get("mentions")]
+    total = len(relevant_runs)
     counts = {c: 0 for c in competitors}
-    for r in runs:
+    for r in relevant_runs:
         for m in r["mentions"]:
             if m in counts:
                 counts[m] += 1
