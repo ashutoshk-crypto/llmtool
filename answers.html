@@ -97,7 +97,7 @@ async function init() {
       <div class="drawer-section">
         <div class="drawer-label">Competitors mentioned</div>
         <div class="source-chip-list">
-          ${r.mentions.filter(m => m !== OWN).map(m => `<span class="chip chip-competitor">${esc(m)}</span>`).join('') || '<span class="text-muted" style="font-size:12.5px;">None</span>'}
+          ${r.mentions.filter(m => m !== OWN).map(m => `<span class="chip chip-competitor">${brandInitialsHTML(m, competitors)} ${esc(m)}</span>`).join('') || '<span class="text-muted" style="font-size:12.5px;">None</span>'}
         </div>
       </div>
       <div class="drawer-section">
@@ -119,7 +119,7 @@ async function init() {
         { label: 'Platform', render: r => `<span class="brand-pill">${platformIconHTML(r.platform)} ${esc(r.platform)}</span>` },
         { label: 'Mentioned', render: r => yesNoChip(r.mentions.includes(OWN)) },
         { label: 'Rank', render: r => r.mentions.includes(OWN) ? chip('Rank ' + realRank(r, OWN), 'neutral') : '<span class="text-muted">--</span>' },
-        { label: 'Competitors', render: r => r.mentions.filter(m => m !== OWN).map(m => `<span class="mention-chip" style="background:${colorForBrand(m, competitors)}">${esc(m)}</span>`).join('') || '<span class="no-mentions">none</span>' },
+        { label: 'Competitors', render: r => r.mentions.filter(m => m !== OWN).map(m => `<span class="mention-chip" style="background:${colorForBrand(m, competitors)}">${brandInitialsHTML(m, competitors)} ${esc(m)}</span>`).join('') || '<span class="no-mentions">none</span>' },
       ],
     });
   }

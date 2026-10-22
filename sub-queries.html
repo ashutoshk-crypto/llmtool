@@ -36,6 +36,10 @@ async function init() {
   renderNav('sub-queries.html');
   renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Sub-queries', 'Expanded searches AI engines may issue while researching a prompt topic');
 
+  const data = await loadData();
+  const { runs } = data;
+  const rows = runs.filter(r => r.sub_queries && r.sub_queries.length);
+
   let groundingOn = true;
   buildSwitch(document.getElementById('grounding-switch-mount'), 'Search grounding', true, (v) => { groundingOn = v; render(); });
 
@@ -45,7 +49,20 @@ async function init() {
       mount.innerHTML = '<div class="empty-state">Search grounding is off — sub-queries are only shown for grounded (web-search-enabled) runs.</div>';
       return;
     }
-    mount.innerHTML = '<div class="empty-state">Not tracked yet — track.py does not currently capture the intermediate search-grounding queries an engine issues. Hook this up once a platform API exposes them.</div>';
+    if (!rows.length) {
+      mount.innerHTML = '<div class="empty-state">No sub-queries captured yet — run track.py to pull "People also ask" and related searches from grounded runs.</div>';
+      return;
+    }
+    renderPaginatedTable(mount, {
+      rows,
+      pageSize: 25,
+      emptyMessage: 'No sub-queries match these filters.',
+      columns: [
+        { label: 'Prompt', render: r => `<span>${esc(r.prompt)}</span>` },
+        { label: 'Platform', render: r => `<span class="brand-pill">${platformIconHTML(r.platform)} ${esc(r.platform)}</span>` },
+        { label: 'Sub-queries', render: r => r.sub_queries.map(q => `<span class="chip">${esc(q)}</span>`).join(' ') },
+      ],
+    });
   }
   render();
 }

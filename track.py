@@ -128,19 +128,46 @@ def query_google_ai_overview(prompt):
         )
     resp.raise_for_status()
     data = resp.json()
-    ai_overview = data.get("ai_overview") or {}
-    text_blocks = ai_overview.get("text_blocks") or []
+    overviews = data.get("ai_overviews") or []
+    ai_overview = overviews[0] if overviews else {}
+
+    fragments = [
+        fragment
+        for block in (ai_overview.get("answer_text") or [])
+        for fragment in (block.get("fragments") or [])
+    ]
     text = re.sub(r"\s+", " ", " ".join(
-        block.get("snippet", "") for block in text_blocks if isinstance(block, dict)
+        fragment.get("text", "") for fragment in fragments if isinstance(fragment, dict)
     )).strip()
-    if not text:
-        text = re.sub(r"\s+", " ", str(ai_overview.get("text") or "")).strip()
-    references = ai_overview.get("references") or []
+
+    sources = {
+        item.get("url"): item.get("source", "")
+        for item in (ai_overview.get("source_panel") or {}).get("items") or []
+        if isinstance(item, dict) and item.get("url")
+    }
+    references = [
+        ref
+        for fragment in fragments
+        for ref in (fragment.get("references") or [])
+        if isinstance(ref, dict) and ref.get("url")
+    ] or [{"url": url, "source": name} for url, name in sources.items()]
     html = "".join(
-        f'<a href="{ref.get("link", "")}">{ref.get("title", "")}</a>'
-        for ref in references if isinstance(ref, dict) and ref.get("link")
+        f'<a href="{ref.get("url", "")}">{ref.get("source", "")}</a>'
+        for ref in references
     )
-    return text, html
+
+    sub_queries = []
+    seen_sub_queries = set()
+    for q in data.get("questions") or []:
+        if isinstance(q, dict) and q.get("text") and q["text"] not in seen_sub_queries:
+            seen_sub_queries.add(q["text"])
+            sub_queries.append(q["text"])
+    for q in data.get("related_queries") or []:
+        if isinstance(q, dict) and q.get("title") and q["title"] not in seen_sub_queries:
+            seen_sub_queries.add(q["title"])
+            sub_queries.append(q["title"])
+
+    return text, html, sub_queries
 
 PLATFORMS = {
     "ChatGPT": (query_openai, "SCRAPINGBEE_API_KEY"),
@@ -193,9 +220,14 @@ def main():
             done += 1
             print(f"[{done}/{total}] [{platform_name}] {prompt[:60]}")
         response_html = None
+        sub_queries = []
         try:
             result_val = fn(prompt)
-            response_text, response_html = result_val if isinstance(result_val, tuple) else (result_val, None)
+            if isinstance(result_val, tuple):
+                response_text, response_html = result_val[0], result_val[1]
+                sub_queries = result_val[2] if len(result_val) > 2 and result_val[2] else []
+            else:
+                response_text = result_val
             error = None
         except Exception as e:
             response_text = ""
@@ -208,6 +240,7 @@ def main():
             "intent": intent,
             "category": category,
             "platform": platform_name,
+            "sub_queries": sub_queries,
             "response": response_text,
             "mentions": mentions,
             "citations": citations,
