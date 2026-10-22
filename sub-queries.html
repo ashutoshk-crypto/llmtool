@@ -59,7 +59,6 @@ async function init() {
       emptyMessage: 'No sub-queries match these filters.',
       columns: [
         { label: 'Prompt', render: r => `<span>${esc(r.prompt)}</span>` },
-        { label: 'Platform', render: r => `<span class="brand-pill">${platformIconHTML(r.platform)} ${esc(r.platform)}</span>` },
         { label: 'Sub-queries', render: r => r.sub_queries.map(q => `<span class="chip">${esc(q)}</span>`).join(' ') },
       ],
     });
