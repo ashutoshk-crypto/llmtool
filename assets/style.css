@@ -122,6 +122,9 @@ body.has-sidebar .main-area { margin-left: 264px; }
 .brand-logo-circle img { width: 12px; height: 12px; }
 .brand-logo-circle.lg { width: 28px; height: 28px; }
 .brand-logo-circle.lg img { width: 16px; height: 16px; }
+.brand-logo-circle.competitor { background: #fff; }
+.brand-logo-circle.competitor img { width: 14px; height: 14px; object-fit: contain; }
+.brand-logo-circle.competitor.lg img { width: 18px; height: 18px; }
 .workspace-switch .chev { width: 14px; height: 14px; color: var(--muted-fg); }
 .sidebar-collapse {
   display: flex; align-items: center; gap: 8px;

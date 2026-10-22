@@ -75,12 +75,32 @@ function colorForString(str) {
   return cssVar(SERIES_COLORS[h % SERIES_COLORS.length]);
 }
 
+function logoFallback(img, initialsText, color, lg) {
+  const span = document.createElement('span');
+  span.className = 'initial-circle' + lg;
+  span.style.background = color;
+  span.textContent = initialsText;
+  img.parentElement.replaceWith(span);
+}
+const COMPETITOR_LOGOS = {
+  'CoinDCX': 'icons/coindcx.png',
+  'Binance': 'icons/binance.png',
+  'WazirX': 'icons/wazirx.png',
+  'Zebpay': 'icons/zebpay.png',
+  'Delta Exchange': 'icons/delta-exchange.png',
+  'Mudrex': 'icons/mudrex.png',
+};
 function brandInitialsHTML(name, competitors, size) {
+  const lg = size === 'lg' ? ' lg' : '';
   if (name === OWN_BRAND) {
-    return `<span class="brand-logo-circle${size === 'lg' ? ' lg' : ''}"><img src="icons/cs_mark.svg" alt="CoinSwitch" /></span>`;
+    return `<span class="brand-logo-circle${lg}"><img src="icons/cs_mark.svg" alt="CoinSwitch" /></span>`;
   }
   const color = competitors ? colorForBrand(name, competitors) : colorForString(name);
-  return `<span class="initial-circle${size === 'lg' ? ' lg' : ''}" style="background:${color}">${esc(initials(name))}</span>`;
+  const logo = COMPETITOR_LOGOS[name];
+  if (logo) {
+    return `<span class="brand-logo-circle competitor${lg}"><img src="${logo}" alt="${esc(name)}" onerror="logoFallback(this,'${esc(initials(name)).replace(/'/g, "\\'")}','${color}','${lg}')" /></span>`;
+  }
+  return `<span class="initial-circle${lg}" style="background:${color}">${esc(initials(name))}</span>`;
 }
 
 const PLATFORM_COLORS = { ChatGPT: '#3FB950', Gemini: '#5B9BF8' };

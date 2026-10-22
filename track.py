@@ -183,14 +183,27 @@ def main():
     competitors = load_competitors(COMPETITORS_FILE)
 
     active = {n: fn for n, (fn, key) in PLATFORMS.items() if os.environ.get(key)}
+    platform_filter = [p.strip() for p in os.environ.get("PLATFORM_FILTER", "").split(",") if p.strip()]
+    if platform_filter:
+        active = {n: fn for n, fn in active.items() if n in platform_filter}
     skipped = [n for n in PLATFORMS if n not in active]
     if skipped:
-        print(f"Skipping (no API key set): {skipped}")
+        print(f"Skipping (no API key set or filtered out): {skipped}")
     if not active:
         print("No API keys found. Set at least one in .env - see .env.example.")
         sys.exit(1)
 
     print(f"Prompts: {len(rows)} | Competitors: {competitors} | Platforms: {list(active)}")
+
+    existing_runs = []
+    existing_platforms = []
+    if os.path.exists(RESULTS_FILE):
+        with open(RESULTS_FILE, "r", encoding="utf-8") as f:
+            existing = json.load(f)
+        existing_runs = existing.get("runs", [])
+        existing_platforms = existing.get("platforms", [])
+    kept_runs = [r for r in existing_runs if r["platform"] not in active]
+    all_platforms = sorted(set(existing_platforms) | set(active))
 
     runs = []
     runs_lock = threading.Lock()
@@ -201,8 +214,8 @@ def main():
         output = {
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "competitors": competitors,
-            "platforms": list(active),
-            "runs": runs,
+            "platforms": all_platforms,
+            "runs": kept_runs + runs,
         }
         with open(RESULTS_FILE, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)
@@ -255,7 +268,7 @@ def main():
         list(executor.map(run_job, jobs))
 
     print(f"Saved {len(runs)} results to {RESULTS_FILE}")
-    append_history_snapshot(competitors, runs)
+    append_history_snapshot(competitors, kept_runs + runs)
 
 
 def append_history_snapshot(competitors, runs):
