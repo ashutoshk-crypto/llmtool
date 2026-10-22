@@ -133,7 +133,7 @@ async function init() {
 
     document.getElementById('metric-strip').innerHTML = [
       { label: 'Visibility', info: 'Share of brand-relevant responses (those naming any brand) mentioning CoinSwitch', value: mentionRate + '%' },
-      { label: 'Answers mentioning brand', info: 'Responses naming CoinSwitch', value: String(ownRuns.length) },
+      { label: 'Answers mentioning brand', info: 'Responses naming CoinSwitch', value: `${ownRuns.length} / ${totalRuns}` },
       { label: 'Answers citing an own page', info: 'Responses that cited at least one coinswitch.co URL', value: String(ownCitedRuns) },
       { label: 'Distinct own pages cited', info: 'Unique coinswitch.co URLs cited across filtered responses', value: String(distinctOwnPages) },
     ].map(m => `
