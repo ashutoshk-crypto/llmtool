@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Visibility Tracker — Competitors</title>
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2">
 </head>
 <body>
 <div class="app-shell">
@@ -20,7 +20,7 @@
       <div class="content-grid">
         <div class="card" id="top-competitor-card"></div>
         <div class="card">
-          <div class="card-head"><div><h2 class="card-title">Competitor table</h2><p class="card-sub">Visibility % and mention count, excluding CoinSwitch</p></div></div>
+          <div class="card-head"><div><h2 class="card-title">Competitor table</h2><p class="card-sub">Visibility % and mention count, including CoinSwitch</p></div></div>
           <div id="competitor-table"></div>
         </div>
       </div>
@@ -63,6 +63,8 @@ async function init() {
     const counts = brandCounts(competitors, fr);
     const rivalSorted = rivals.map(c => ({ name: c, count: counts[c] || 0, pct: total ? Math.round(((counts[c] || 0) / total) * 100) : 0 }))
       .sort((a, b) => b.count - a.count);
+    const allSorted = competitors.map(c => ({ name: c, count: counts[c] || 0, pct: total ? Math.round(((counts[c] || 0) / total) * 100) : 0 }))
+      .sort((a, b) => b.count - a.count);
 
     const top = rivalSorted[0];
     document.getElementById('top-competitor-card').innerHTML = top ? `
@@ -77,11 +79,11 @@ async function init() {
     ` : '<div class="empty-state">No data yet.</div>';
 
     renderPaginatedTable(document.getElementById('competitor-table'), {
-      rows: rivalSorted,
+      rows: allSorted,
       pageSize: 10,
       emptyMessage: 'No competitor data yet.',
       columns: [
-        { label: 'Brand', render: r => `<span class="brand-pill">${brandInitialsHTML(r.name, competitors)} ${esc(r.name)}</span>` },
+        { label: 'Brand', render: r => `<span class="brand-pill">${brandInitialsHTML(r.name, competitors)} ${esc(r.name)}${r.name === OWN ? ' <span class="text-muted" style="font-size:11px;">(you)</span>' : ''}</span>` },
         { label: 'Visibility', num: true, render: r => r.pct + '%' },
         { label: 'Mentions', num: true, render: r => String(r.count) },
       ],

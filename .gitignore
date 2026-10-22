@@ -2,3 +2,4 @@
 .venv/
 __pycache__/
 *.pyc
+netskope_ca_bundle.pem

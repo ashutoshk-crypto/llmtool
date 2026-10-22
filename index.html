@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Visibility Tracker — Overview</title>
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2">
 </head>
 <body>
 <div class="app-shell">
@@ -23,7 +23,7 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Visibility trend <span class="info" title="Daily share of brand-relevant responses that mention CoinSwitch, tracked over time">i</span></h2>
+              <h2 class="card-title">Visibility trend <span class="info" data-tip="Daily share of brand-relevant responses that mention CoinSwitch, tracked over time">i</span></h2>
               <p class="card-sub">CoinSwitch mention rate across tracker runs, daily</p>
             </div>
             <div class="card-tools">
@@ -40,7 +40,7 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Brand leaderboard <span class="info" title="Every tracked brand ranked by the share of brand-relevant responses that mention it">i</span></h2>
+              <h2 class="card-title">Brand leaderboard <span class="info" data-tip="Every tracked brand ranked by the share of brand-relevant responses that mention it">i</span></h2>
               <p class="card-sub">Share of all tracked AI responses</p>
             </div>
           </div>
@@ -52,7 +52,7 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Visibility by topic <span class="info" title="CoinSwitch mention rate broken down by prompt category/topic">i</span></h2>
+              <h2 class="card-title">Visibility by topic <span class="info" data-tip="CoinSwitch mention rate broken down by prompt category/topic">i</span></h2>
               <p class="card-sub">CoinSwitch mention rate per prompt category</p>
             </div>
           </div>
@@ -61,7 +61,7 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Visibility by platform <span class="info" title="CoinSwitch mention rate broken down by AI platform (ChatGPT, Claude, Gemini, etc.)">i</span></h2>
+              <h2 class="card-title">Visibility by platform <span class="info" data-tip="CoinSwitch mention rate broken down by AI platform (ChatGPT, Claude, Gemini, etc.)">i</span></h2>
               <p class="card-sub">CoinSwitch mention rate per platform</p>
             </div>
           </div>
@@ -72,7 +72,7 @@
       <div class="card">
         <div class="card-head">
           <div>
-            <h2 class="card-title">Rank position distribution <span class="info" title="How many of CoinSwitch's mentions landed at each rank, by the order brands were first named in the response">i</span></h2>
+            <h2 class="card-title">Rank position distribution <span class="info" data-tip="How many of CoinSwitch's mentions landed at each rank, by the order brands were first named in the response">i</span></h2>
             <p class="card-sub">Where CoinSwitch tends to land when mentioned — position among all brands named in the response, by first-mention order</p>
           </div>
         </div>
@@ -138,7 +138,7 @@ async function init() {
       { label: 'Distinct own pages cited', info: 'Unique coinswitch.co URLs cited across filtered responses', value: String(distinctOwnPages) },
     ].map(m => `
       <div class="metric-cell">
-        <div class="metric-label">${esc(m.label)} <span class="info" title="${esc(m.info)}">i</span></div>
+        <div class="metric-label">${esc(m.label)} <span class="info" data-tip="${esc(m.info)}">i</span></div>
         <div class="metric-value mono">${esc(m.value)}</div>
       </div>
     `).join('');

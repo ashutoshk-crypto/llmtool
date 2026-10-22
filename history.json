@@ -24,25 +24,25 @@
   },
   {
     "date": "2026-10-22",
-    "generated_at": "2026-10-22T16:23:41.231472+00:00",
-    "total_runs": 60,
+    "generated_at": "2026-10-22T16:53:25.325481+00:00",
+    "total_runs": 138,
     "counts": {
-      "CoinSwitch": 8,
-      "CoinDCX": 13,
-      "Binance": 55,
-      "WazirX": 12,
-      "Zebpay": 8,
-      "Delta Exchange": 1,
-      "Mudrex": 3
+      "CoinSwitch": 27,
+      "CoinDCX": 36,
+      "Binance": 117,
+      "WazirX": 17,
+      "Zebpay": 21,
+      "Delta Exchange": 2,
+      "Mudrex": 9
     },
     "pct": {
-      "CoinSwitch": 13.3,
-      "CoinDCX": 21.7,
-      "Binance": 91.7,
-      "WazirX": 20.0,
-      "Zebpay": 13.3,
-      "Delta Exchange": 1.7,
-      "Mudrex": 5.0
+      "CoinSwitch": 19.6,
+      "CoinDCX": 26.1,
+      "Binance": 84.8,
+      "WazirX": 12.3,
+      "Zebpay": 15.2,
+      "Delta Exchange": 1.4,
+      "Mudrex": 6.5
     }
   }
 ]
