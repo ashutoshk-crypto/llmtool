@@ -72,7 +72,7 @@
         <div class="card-head">
           <div>
             <h2 class="card-title">Rank position distribution</h2>
-            <p class="card-sub">Where CoinSwitch tends to land when mentioned — rank is simulated for this demo (not tracked by the pipeline yet), derived deterministically per response</p>
+            <p class="card-sub">Where CoinSwitch tends to land when mentioned — position among all brands named in the response, by first-mention order</p>
           </div>
         </div>
         <div id="rank-bars"></div>
@@ -86,7 +86,6 @@
 </div>
 
 <script src="assets/data.js"></script>
-<script src="assets/mock-data.js"></script>
 <script>
 async function init() {
   renderNav('index.html');
@@ -128,16 +127,16 @@ async function init() {
     const ownRuns = fr.filter(r => r.mentions.includes(OWN));
     const mentionRate = totalRuns ? Math.round((ownRuns.length / totalRuns) * 100) : 0;
 
-    // mock-derived metrics the real pipeline doesn't capture
-    const ownPages = mockOwnPages();
-    const ownPagesCited = ownPages.reduce((n, p) => n + p.citations, 0);
-    const pagesWithMentions = ownPages.filter(p => p.mentions > 0).length;
+    // own-domain citation metrics, from citations extracted by track.py
+    const ownCitations = fr.flatMap(r => (r.citations || []).filter(c => isOwnDomain(c.domain)));
+    const ownCitedRuns = fr.filter(r => (r.citations || []).some(c => isOwnDomain(c.domain))).length;
+    const distinctOwnPages = new Set(ownCitations.map(c => c.url)).size;
 
     document.getElementById('metric-strip').innerHTML = [
       { label: 'Visibility', info: 'Share of filtered responses mentioning CoinSwitch', value: mentionRate + '%' },
       { label: 'Answers mentioning brand', info: 'Responses naming CoinSwitch', value: String(ownRuns.length) },
-      { label: 'Own pages cited (mock)', info: 'Simulated — citations.json not yet tracked by the pipeline', value: String(ownPagesCited) },
-      { label: 'Pages mentioning brand (mock)', info: 'Simulated own-page tracking sample', value: String(pagesWithMentions) },
+      { label: 'Answers citing an own page', info: 'Responses that cited at least one coinswitch.co URL', value: String(ownCitedRuns) },
+      { label: 'Distinct own pages cited', info: 'Unique coinswitch.co URLs cited across filtered responses', value: String(distinctOwnPages) },
     ].map(m => `
       <div class="metric-cell">
         <div class="metric-label">${esc(m.label)} <span class="info" title="${esc(m.info)}">i</span></div>
@@ -196,7 +195,7 @@ async function init() {
 
     // rank distribution (simulated — see card subtitle)
     const rankCounts = { '1': 0, '2': 0, '3': 0, '4': 0, '5+': 0 };
-    ownRuns.forEach(r => { const rk = String(mockRank(r, OWN)); if (rankCounts[rk] !== undefined) rankCounts[rk]++; });
+    ownRuns.forEach(r => { const rk = String(realRank(r, OWN)); if (rankCounts[rk] !== undefined) rankCounts[rk]++; });
     const maxRank = Math.max(1, ...Object.values(rankCounts));
     document.getElementById('rank-bars').innerHTML = ownRuns.length ? Object.entries(rankCounts).map(([rk, c]) => `
       <div class="bar-row">

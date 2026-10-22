@@ -109,10 +109,19 @@ body.has-sidebar .main-area { margin-left: 264px; }
 .workspace-mark {
   display: inline-flex; align-items: center; justify-content: center;
   width: 28px; height: 28px; border-radius: 8px;
-  background: var(--foreground); color: #0A0B0D;
-  font-size: 12px; font-weight: 700; flex-shrink: 0;
+  background: var(--muted); flex-shrink: 0;
 }
+.workspace-mark img { width: 16px; height: 16px; }
 .workspace-name { font-size: 13.5px; font-weight: 600; color: var(--title); flex: 1; }
+.workspace-wordmark { height: 15px; width: auto; flex: 1; object-fit: contain; object-position: left; }
+.brand-logo-circle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; border-radius: 999px; flex-shrink: 0;
+  background: #0f2b20;
+}
+.brand-logo-circle img { width: 12px; height: 12px; }
+.brand-logo-circle.lg { width: 28px; height: 28px; }
+.brand-logo-circle.lg img { width: 16px; height: 16px; }
 .workspace-switch .chev { width: 14px; height: 14px; color: var(--muted-fg); }
 .sidebar-collapse {
   display: flex; align-items: center; gap: 8px;

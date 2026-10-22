@@ -87,7 +87,7 @@ async function init() {
         <div class="drawer-label">Status</div>
         <div class="stack-gap" style="flex-direction:row; flex-wrap:wrap;">
           ${mentioned ? chip('Mentioned', 'own') : chip('Not mentioned', 'neutral')}
-          ${mentioned ? chip('Rank ' + mockRank(r, OWN), 'neutral') : ''}
+          ${mentioned ? chip('Rank ' + realRank(r, OWN), 'neutral') : ''}
         </div>
       </div>
       <div class="drawer-section">
@@ -118,7 +118,7 @@ async function init() {
         { label: 'Topic', render: r => esc(r.category || '--') },
         { label: 'Platform', render: r => `<span class="brand-pill">${platformIconHTML(r.platform)} ${esc(r.platform)}</span>` },
         { label: 'Mentioned', render: r => yesNoChip(r.mentions.includes(OWN)) },
-        { label: 'Rank', render: r => r.mentions.includes(OWN) ? chip('Rank ' + mockRank(r, OWN), 'neutral') : '<span class="text-muted">--</span>' },
+        { label: 'Rank', render: r => r.mentions.includes(OWN) ? chip('Rank ' + realRank(r, OWN), 'neutral') : '<span class="text-muted">--</span>' },
         { label: 'Competitors', render: r => r.mentions.filter(m => m !== OWN).map(m => `<span class="mention-chip" style="background:${colorForBrand(m, competitors)}">${esc(m)}</span>`).join('') || '<span class="no-mentions">none</span>' },
       ],
     });

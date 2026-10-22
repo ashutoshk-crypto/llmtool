@@ -11,7 +11,6 @@
   <div class="main-area">
     <div class="content-wrap">
       <div id="title-bar"></div>
-      <p class="page-sub" style="margin:-10px 0 16px; font-size:12px;">Mocked — real citation extraction from AI answers (citations[] in results.json) is currently empty, so this page uses clearly-synthetic sample sources. See <code>assets/mock-data.js</code>.</p>
 
       <div class="filter-bar" id="filter-bar">
         <span class="filter-spacer"></span>
@@ -24,7 +23,7 @@
 
       <div class="content-grid">
         <div class="card">
-          <div class="card-head"><div><h2 class="card-title">Top cited domains</h2><p class="card-sub">Mock sample — ranked by citation count</p></div></div>
+          <div class="card-head"><div><h2 class="card-title">Top cited domains</h2><p class="card-sub">Ranked by citation count, extracted from real AI answers</p></div></div>
           <div id="domain-table"></div>
         </div>
         <div class="card">
@@ -34,7 +33,7 @@
       </div>
 
       <div class="card">
-        <div class="card-head"><div><h2 class="card-title">Cited pages</h2><p class="card-sub">Full list — mock sample, intent/page-type/source classification simulated</p></div></div>
+        <div class="card-head"><div><h2 class="card-title">Cited pages</h2><p class="card-sub">Every URL cited across tracked responses</p></div></div>
         <div id="pages-table"></div>
       </div>
     </div>
@@ -42,7 +41,6 @@
 </div>
 
 <script src="assets/data.js"></script>
-<script src="assets/mock-data.js"></script>
 <script>
 async function init() {
   renderNav('citations.html');
@@ -50,19 +48,29 @@ async function init() {
 
   const data = await loadData();
   const { competitors, runs } = data;
-  const pages = mockCitedPages(runs, competitors);
-  const domains = mockTopCitedDomains(pages);
-  const sourceTypes = [...new Set(MOCK_DOMAINS.map(d => d.type))];
-  const promptsList = [...new Set(pages.map(p => p.prompt))];
+  const sources = aggregateCitations(runs).map(s => ({
+    ...s,
+    sourceType: sourceTypeForDomain(s.domain),
+    intent: [...new Set(runs.filter(r => (r.citations || []).some(c => c.url === s.url)).map(r => r.intent))].join(', '),
+  }));
+  const sourceTypes = [...new Set(sources.map(s => s.sourceType))].sort();
 
   const bar = document.getElementById('filter-bar');
   const spacer = bar.querySelector('.filter-spacer');
   const fSource = buildFilterPill(bar, 'type', 'All source types', sourceTypes);
   bar.insertBefore(fSource.closest('.filter-pill'), spacer);
 
+  const byDomain = {};
+  sources.forEach(s => {
+    if (!byDomain[s.domain]) byDomain[s.domain] = { domain: s.domain, sourceType: s.sourceType, count: 0 };
+    byDomain[s.domain].count += s.count;
+  });
+  const domains = Object.values(byDomain).sort((a, b) => b.count - a.count);
+
   renderPaginatedTable(document.getElementById('domain-table'), {
-    rows: domains.slice(0, 15),
+    rows: domains,
     pageSize: 10,
+    emptyMessage: 'No citations tracked yet — run track.py to extract them from AI answers.',
     columns: [
       { label: 'Domain', render: d => `<span class="brand-pill">${brandInitialsHTML(d.domain, null)} ${esc(d.domain)}</span>` },
       { label: 'Type', render: d => sourceTypeChip(d.sourceType) },
@@ -71,21 +79,21 @@ async function init() {
   });
 
   const typeCounts = {};
-  pages.forEach(p => { typeCounts[p.sourceType] = (typeCounts[p.sourceType] || 0) + 1; });
+  sources.forEach(s => { typeCounts[s.sourceType] = (typeCounts[s.sourceType] || 0) + s.count; });
   const maxType = Math.max(1, ...Object.values(typeCounts));
-  document.getElementById('type-bars').innerHTML = Object.entries(typeCounts).sort((a,b) => b[1]-a[1]).map(([t, c]) => `
+  document.getElementById('type-bars').innerHTML = Object.keys(typeCounts).length ? Object.entries(typeCounts).sort((a,b) => b[1]-a[1]).map(([t, c]) => `
     <div class="bar-row">
       <div class="name">${esc(t)}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${(c/maxType)*100}%; background:var(--series-5);"></div></div>
       <div class="count">${c}</div>
     </div>
-  `).join('');
+  `).join('') : '<div class="empty-state">No citations tracked yet.</div>';
 
   function getFiltered() {
     const q = document.getElementById('search').value.trim().toLowerCase();
-    return pages.filter(p =>
-      (!fSource.value || p.sourceType === fSource.value) &&
-      (!q || p.domain.toLowerCase().includes(q) || p.url.toLowerCase().includes(q))
+    return sources.filter(s =>
+      (!fSource.value || s.sourceType === fSource.value) &&
+      (!q || s.domain.toLowerCase().includes(q) || s.url.toLowerCase().includes(q))
     );
   }
 
@@ -94,12 +102,12 @@ async function init() {
       rows: getFiltered(),
       emptyMessage: 'No cited pages match these filters.',
       columns: [
-        { label: 'Page', render: p => `<a class="cell-link" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.url.replace('https://', ''))}</a>` },
-        { label: 'Intent', render: p => intentChip(p.intent) },
-        { label: 'Page type', render: p => sourceTypeChip(p.pageType) },
-        { label: 'Source', render: p => sourceTypeChip(p.sourceType) },
-        { label: 'Brand mentioned', render: p => p.brandMentioned ? chip(p.brandMentioned, p.brandMentioned === (competitors[0]) ? 'own' : 'competitor') : '<span class="text-muted">--</span>' },
-        { label: 'Platforms', num: true, render: p => String(p.platformCount) },
+        { label: 'Page', render: s => `<a class="cell-link" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.url.replace('https://', ''))}</a>` },
+        { label: 'Intent', render: s => s.intent ? intentChip(s.intent) : '<span class="text-muted">--</span>' },
+        { label: 'Source', render: s => sourceTypeChip(s.sourceType) },
+        { label: 'Prompts', num: true, render: s => String(s.prompts.length) },
+        { label: 'Platforms', num: true, render: s => String(s.platforms.length) },
+        { label: 'Citations', num: true, render: s => String(s.count) },
       ],
     });
   }
@@ -108,10 +116,10 @@ async function init() {
   document.getElementById('export-btn').addEventListener('click', () => {
     exportCSV('citations.csv', getFiltered(), [
       { label: 'URL', key: 'url' },
-      { label: 'Intent', key: 'intent' },
-      { label: 'Page type', key: 'pageType' },
+      { label: 'Domain', key: 'domain' },
       { label: 'Source type', key: 'sourceType' },
-      { label: 'Brand mentioned', key: r => r.brandMentioned || '' },
+      { label: 'Citations', key: 'count' },
+      { label: 'Prompts', key: r => r.prompts.length },
     ]);
   });
   render();

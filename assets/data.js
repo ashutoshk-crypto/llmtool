@@ -1,14 +1,35 @@
 /* ============================================================
    AI Visibility Tracker — shared data + render helpers
-   Real data: results.json / history.json (via track.py — do not fake)
-   Mock data: assets/mock-data.js (clearly synthetic, documented)
+   All data on every page is real, derived from results.json /
+   history.json (produced by track.py). No synthetic/mock data.
+   Pages with no real data source yet (sub-queries, ad monitoring)
+   show an honest empty state instead of fabricating numbers.
    ============================================================ */
 
 const SERIES_COLORS = ['--series-1','--series-2','--series-3','--series-4','--series-5','--series-6','--series-7'];
 const OWN_BRAND = 'CoinSwitch';
+const OWN_DOMAIN = 'coinswitch.co';
+function isOwnDomain(domain) {
+  return !!domain && (domain === OWN_DOMAIN || domain.endsWith('.' + OWN_DOMAIN));
+}
+
+/** Known competitor domains, for classifying a cited source as Own / Competitor / Third party. */
+const COMPETITOR_DOMAINS = {
+  'coindcx.com': 'CoinDCX',
+  'binance.com': 'Binance',
+  'wazirx.com': 'WazirX',
+  'zebpay.com': 'Zebpay',
+  'delta.exchange': 'Delta Exchange',
+  'mudrex.com': 'Mudrex',
+};
+function sourceTypeForDomain(domain) {
+  if (isOwnDomain(domain)) return 'Own';
+  const hit = Object.keys(COMPETITOR_DOMAINS).find(d => domain === d || domain.endsWith('.' + d));
+  if (hit) return 'Competitor';
+  return 'Third party';
+}
 
 const NAV_SECTIONS = [
-  { kind: 'single', href: 'task-board.html', label: 'Task board', icon: 'M4 5h16v14H4zM4 10h16M9 5v14' },
   { kind: 'group', label: 'Analytics', items: [
     { href: 'index.html', label: 'Overview', icon: 'M3 13h4v7H3zm7-6h4v13h-4zm7-4h4v17h-4z' },
     { href: 'prompts.html', label: 'Prompts', icon: 'M4 5h16v11H7l-3 3z' },
@@ -22,6 +43,7 @@ const NAV_SECTIONS = [
   { kind: 'group', label: 'Configuration', items: [
     { href: '#', label: 'Settings & integrations', icon: 'M12 15a3 3 0 100-6 3 3 0 000 6z', disabled: true },
   ]},
+  { kind: 'single', href: 'task-board.html', label: 'Task board', icon: 'M4 5h16v14H4zM4 10h16M9 5v14' },
 ];
 // flat list kept for pages that still reference NAV_LINKS
 const NAV_LINKS = NAV_SECTIONS.flatMap(s => s.kind === 'single' ? [s] : s.items);
@@ -54,6 +76,9 @@ function colorForString(str) {
 }
 
 function brandInitialsHTML(name, competitors, size) {
+  if (name === OWN_BRAND) {
+    return `<span class="brand-logo-circle${size === 'lg' ? ' lg' : ''}"><img src="icons/cs_mark.svg" alt="CoinSwitch" /></span>`;
+  }
   const color = competitors ? colorForBrand(name, competitors) : colorForString(name);
   return `<span class="initial-circle${size === 'lg' ? ' lg' : ''}" style="background:${color}">${esc(initials(name))}</span>`;
 }
@@ -134,8 +159,8 @@ function renderNav(activeHref, opts) {
   nav.className = 'sidebar';
   nav.innerHTML = `
     <div class="workspace-switch">
-      <span class="workspace-mark">CS</span>
-      <span class="workspace-name">CoinSwitch</span>
+      <span class="workspace-mark"><img src="icons/cs_mark.svg" alt="" /></span>
+      <img class="workspace-wordmark" src="icons/cs_logo.svg" alt="CoinSwitch" />
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 10l5 5 5-5"/></svg>
     </div>
     <button class="sidebar-collapse" type="button">
@@ -517,15 +542,19 @@ function seededRandom(str) {
   };
 }
 
-/** Mock rank 1-5+ for a run, only meaningful when the brand was actually mentioned. */
-function mockRank(run, brand) {
-  const rnd = seededRandom(run.prompt + '|' + run.platform + '|' + brand);
-  const bucket = rnd();
-  if (bucket < 0.35) return 1;
-  if (bucket < 0.6) return 2;
-  if (bucket < 0.8) return 3;
-  if (bucket < 0.92) return 4;
-  return '5+';
+/** Real rank 1-5+ for a run: position of `brand`'s first mention among all mentioned
+    brands, ordered by where each brand first appears in the response text. Only
+    meaningful when the brand was actually mentioned. */
+function realRank(run, brand) {
+  if (!run.mentions || !run.mentions.includes(brand)) return null;
+  const text = (run.response || '').toLowerCase();
+  const positions = run.mentions.map(name => {
+    const idx = text.indexOf(name.toLowerCase());
+    return { name, idx: idx === -1 ? Infinity : idx };
+  }).sort((a, b) => a.idx - b.idx);
+  const pos = positions.findIndex(p => p.name === brand) + 1;
+  if (pos <= 0) return null;
+  return pos >= 5 ? '5+' : pos;
 }
 
 /** Classify a prompt as Branded / Non-branded by whether it names any tracked brand. */
@@ -533,4 +562,35 @@ function classifyPromptType(prompt, competitors) {
   const p = prompt.toLowerCase();
   const named = competitors.some(c => p.includes(c.toLowerCase()));
   return named ? 'Branded' : 'Non-branded';
+}
+
+/** Build To-Do task-board cards from real content-opportunity gaps: categories where
+    the own brand loses to a competitor or gets no mention at all (same logic as
+    content-plan.html's gap detection). Real, derived from results.json — not mock. */
+function taskCardsFromContentGaps(competitors, runs) {
+  const TARGET = competitors.includes(OWN_BRAND) ? OWN_BRAND : competitors[0];
+  if (!TARGET || !runs.length) return [];
+  const byPrompt = {};
+  runs.forEach(r => {
+    if (!byPrompt[r.prompt]) byPrompt[r.prompt] = { category: r.category, mentions: new Set() };
+    r.mentions.forEach(m => byPrompt[r.prompt].mentions.add(m));
+  });
+  const groups = {};
+  Object.entries(byPrompt).forEach(([prompt, v]) => {
+    if (v.mentions.has(TARGET)) return;
+    const cat = v.category || 'Uncategorized';
+    if (!groups[cat]) groups[cat] = { count: 0, whitespace: v.mentions.size === 0 };
+    groups[cat].count++;
+  });
+  return Object.entries(groups)
+    .sort((a, b) => b[1].count - a[1].count)
+    .map(([cat, v], i) => ({
+      id: 'gap-' + i,
+      title: v.whitespace
+        ? `"${cat}" guide — own the answer before a competitor does`
+        : `${cat}: comparison piece to win back the AI answer`,
+      category: cat,
+      column: 'todo',
+      source: `${v.count} prompt gap${v.count === 1 ? '' : 's'} in ${cat}`,
+    }));
 }

@@ -18,7 +18,7 @@
       </div>
 
       <div class="card" style="padding:12px 14px;">
-        <p class="page-sub" style="margin:0 0 10px; font-size:12px;">To-do cards are seeded from real content-opportunity gaps (categories where CoinSwitch loses to a competitor or gets no mention at all — the same logic as <a class="cell-link" href="content-plan.html">content-plan.html</a>). Everything else on this board (assignees, weeks, drag targets, performance %) is a mocked demo.</p>
+        <p class="page-sub" style="margin:0; font-size:12px;">Cards are seeded from real content-opportunity gaps — categories where CoinSwitch loses to a competitor or gets no mention at all (same logic as <a class="cell-link" href="content-plan.html">content-plan.html</a>). Drag cards between columns to track progress; column placement is this browser's working state only, not published anywhere.</p>
       </div>
 
       <div class="kanban-board" id="board"></div>
@@ -45,8 +45,8 @@
         </div>
         <div class="editor-surface" id="editor-surface" contenteditable="true">Start drafting this piece here...</div>
         <div style="display:flex; gap:8px; margin-top:12px;">
-          <button class="btn btn-ghost" disabled title="Mock — not wired to a live doc">Open in doc</button>
-          <button class="btn btn-primary" disabled title="Mock — not wired to a publishing pipeline">Publish</button>
+          <button class="btn btn-ghost" disabled title="Not wired to a live doc">Open in doc</button>
+          <button class="btn btn-primary" disabled title="Not wired to a publishing pipeline">Publish</button>
         </div>
       </div>
       <div id="tab-props" style="display:none;"></div>
@@ -55,7 +55,6 @@
 </div>
 
 <script src="assets/data.js"></script>
-<script src="assets/mock-data.js"></script>
 <script>
 const COLUMNS = [
   { key: 'todo', label: 'To Do' },
@@ -69,18 +68,13 @@ async function init() {
   renderTitleBar(document.getElementById('title-bar'), 'Task board', 'Content tasks', 'Kanban view of content tasks moving from gap → agent draft → review → published');
 
   const data = await loadData();
-  const gapCards = taskCardsFromContentGaps(data.competitors, data.runs);
-  let tasks = mockTaskBoard(gapCards);
+  const tasks = taskCardsFromContentGaps(data.competitors, data.runs);
 
   const bar = document.getElementById('filter-bar');
   const spacer = bar.querySelector('.filter-spacer');
-  const weeks = [...new Set(tasks.map(t => t.week))];
-  const fWeek = buildFilterPill(bar, 'date', 'All weeks', weeks);
-  const fChannel = buildFilterPill(bar, 'type', 'All channels', TASK_CHANNELS);
-  const fAssignee = buildFilterPill(bar, 'type', 'All assignees', TASK_ASSIGNEES);
-  bar.insertBefore(fWeek.closest('.filter-pill'), spacer);
-  bar.insertBefore(fChannel.closest('.filter-pill'), spacer);
-  bar.insertBefore(fAssignee.closest('.filter-pill'), spacer);
+  const categories = [...new Set(tasks.map(t => t.category))];
+  const fCategory = buildFilterPill(bar, 'type', 'All topics', categories);
+  bar.insertBefore(fCategory.closest('.filter-pill'), spacer);
 
   function renderProgressRing() {
     const total = tasks.length;
@@ -97,11 +91,7 @@ async function init() {
   }
 
   function filteredTasks() {
-    return tasks.filter(t =>
-      (!fWeek.value || t.week === fWeek.value) &&
-      (!fChannel.value || t.channel === fChannel.value) &&
-      (!fAssignee.value || t.assignee === fAssignee.value)
-    );
+    return tasks.filter(t => !fCategory.value || t.category === fCategory.value);
   }
 
   function taskCardHTML(t) {
@@ -109,9 +99,7 @@ async function init() {
       <div class="kanban-card${t.column === 'completed' ? ' completed' : ''}" draggable="true" data-id="${esc(t.id)}">
         <div class="kc-title">${esc(t.title)}</div>
         <div class="kc-meta">
-          <span class="chip chip-neutral">${esc(t.channel)}</span>
-          <span class="chip chip-neutral">${esc(t.assignee)}</span>
-          ${t.performance != null ? `<span class="chip chip-own">+${t.performance}% lift</span>` : ''}
+          <span class="chip chip-neutral">${esc(t.category)}</span>
         </div>
       </div>
     `;
@@ -123,12 +111,6 @@ async function init() {
     const board = document.getElementById('board');
     board.innerHTML = COLUMNS.map(col => {
       const colTasks = ft.filter(t => t.column === col.key);
-      const byWeek = {};
-      colTasks.forEach(t => { (byWeek[t.week] = byWeek[t.week] || []).push(t); });
-      const weekBlocks = Object.entries(byWeek).map(([wk, items]) => `
-        <div class="kanban-week">${esc(wk)}</div>
-        ${items.map(taskCardHTML).join('')}
-      `).join('') || '<div class="empty-state" style="padding:20px 0;">No tasks</div>';
       return `
         <div class="kanban-col" data-col="${col.key}">
           <div class="kanban-col-head">
@@ -136,7 +118,7 @@ async function init() {
             <span class="kanban-count">${colTasks.length}</span>
           </div>
           ${col.key === 'agent' ? '<div class="dropzone-hint">Drop here to assign to Agent</div>' : ''}
-          ${weekBlocks}
+          ${colTasks.map(taskCardHTML).join('') || '<div class="empty-state" style="padding:20px 0;">No tasks</div>'}
         </div>
       `;
     }).join('');
@@ -158,11 +140,7 @@ async function init() {
         col.classList.remove('dragover');
         const id = e.dataTransfer.getData('text/plain');
         const t = tasks.find(x => x.id === id);
-        if (t) {
-          t.column = col.dataset.col;
-          if (t.column === 'completed' && t.performance == null) t.performance = 5 + Math.floor(Math.random() * 30);
-          render();
-        }
+        if (t) { t.column = col.dataset.col; render(); }
       });
     });
   }
@@ -171,12 +149,9 @@ async function init() {
     if (!t) return;
     document.getElementById('modal-title').textContent = t.title;
     document.getElementById('tab-props').innerHTML = `
-      <div class="prop-row"><span class="k">Channel</span><span>${esc(t.channel)}</span></div>
-      <div class="prop-row"><span class="k">Assignee</span><span>${esc(t.assignee)}</span></div>
-      <div class="prop-row"><span class="k">Week</span><span>${esc(t.week)}</span></div>
+      <div class="prop-row"><span class="k">Topic</span><span>${esc(t.category)}</span></div>
       <div class="prop-row"><span class="k">Status</span><span>${esc(COLUMNS.find(c => c.key === t.column).label)}</span></div>
-      ${t.source ? `<div class="prop-row"><span class="k">Source</span><span>${esc(t.source)}</span></div>` : ''}
-      ${t.performance != null ? `<div class="prop-row"><span class="k">Performance</span><span>+${t.performance}% lift</span></div>` : ''}
+      <div class="prop-row"><span class="k">Source</span><span>${esc(t.source)}</span></div>
     `;
     document.getElementById('modal-overlay').classList.add('open');
   }
@@ -203,7 +178,7 @@ async function init() {
     });
   });
 
-  [fWeek, fChannel, fAssignee].forEach(el => el.addEventListener('change', render));
+  fCategory.addEventListener('change', render);
   render();
 }
 init();

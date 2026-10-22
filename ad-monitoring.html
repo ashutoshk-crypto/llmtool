@@ -11,7 +11,6 @@
   <div class="main-area">
     <div class="content-wrap">
       <div id="title-bar"></div>
-      <p class="page-sub" style="margin:-10px 0 16px; font-size:12px;">Fully mocked — sponsored results inside AI answers aren't tracked by the pipeline yet. Sample data only.</p>
 
       <div class="filter-bar" id="filter-bar">
         <span class="filter-spacer"></span>
@@ -19,13 +18,12 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
           <input id="search" type="text" placeholder="Search advertisers...">
         </div>
-        <label class="switch" id="noads-toggle"><input type="checkbox"><span class="track"><span class="thumb"></span></span><span>No ads this period</span></label>
       </div>
 
       <div class="metric-strip" id="metric-strip"></div>
 
       <div class="card">
-        <div class="card-head"><div><h2 class="card-title">Prompts showing ads</h2><p class="card-sub">Mock sample of prompts where a sponsored result appeared</p></div></div>
+        <div class="card-head"><div><h2 class="card-title">Prompts showing ads</h2><p class="card-sub">Sponsored results appearing inside tracked AI answers</p></div></div>
         <div id="ads-table"></div>
       </div>
     </div>
@@ -33,50 +31,32 @@
 </div>
 
 <script src="assets/data.js"></script>
-<script src="assets/mock-data.js"></script>
 <script>
 async function init() {
   renderNav('ad-monitoring.html');
   renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Ad monitoring', 'Sponsored results surfacing inside AI answer engines');
 
-  const data = await loadData();
-  const adRows = mockAdData(data.runs);
-  const noAdsToggle = document.querySelector('#noads-toggle input');
+  document.getElementById('metric-strip').innerHTML = [
+    { label: 'Prompts with ads', value: '0' },
+    { label: 'Total advertisers', value: '0' },
+    { label: 'Avg advertisers / prompt', value: '0' },
+  ].map(m => `
+    <div class="metric-cell">
+      <div class="metric-label">${esc(m.label)}</div>
+      <div class="metric-value mono">${esc(m.value)}</div>
+    </div>
+  `).join('');
 
-  function render() {
-    const forceEmpty = noAdsToggle.checked;
-    const q = document.getElementById('search').value.trim().toLowerCase();
-    const rows = forceEmpty ? [] : adRows.filter(r => !q || r.advertisers.some(a => a.toLowerCase().includes(q)));
-
-    const advertiserSet = new Set();
-    rows.forEach(r => r.advertisers.forEach(a => advertiserSet.add(a)));
-
-    document.getElementById('metric-strip').innerHTML = [
-      { label: 'Prompts with ads', value: String(rows.length) },
-      { label: 'Total advertisers', value: String(advertiserSet.size) },
-      { label: 'Avg advertisers / prompt', value: rows.length ? (rows.reduce((n, r) => n + r.advertisers.length, 0) / rows.length).toFixed(1) : '0' },
-    ].map(m => `
-      <div class="metric-cell">
-        <div class="metric-label">${esc(m.label)}</div>
-        <div class="metric-value mono">${esc(m.value)}</div>
-      </div>
-    `).join('');
-
-    renderPaginatedTable(document.getElementById('ads-table'), {
-      rows,
-      emptyMessage: 'No ads detected this period.',
-      columns: [
-        { label: 'Prompt', render: r => `<span style="display:block;max-width:300px;">${esc(r.prompt)}</span>` },
-        { label: 'Topic', render: r => esc(r.category || '--') },
-        { label: 'Platform', render: r => `<span class="brand-pill">${platformIconHTML(r.platform)} ${esc(r.platform)}</span>` },
-        { label: 'Advertisers', render: r => r.advertisers.map(a => `<span class="chip chip-competitor">${esc(a)}</span>`).join(' ') },
-      ],
-    });
-  }
-
-  noAdsToggle.addEventListener('change', render);
-  document.getElementById('search').addEventListener('input', render);
-  render();
+  renderPaginatedTable(document.getElementById('ads-table'), {
+    rows: [],
+    emptyMessage: 'Not tracked yet — track.py captures the AI answer text but not sponsored/ad placements, since ChatGPT, Gemini, and Google AI Overview don\'t expose that in their response payloads. Wire this up once a platform surfaces ad data.',
+    columns: [
+      { label: 'Prompt', render: r => r.prompt },
+      { label: 'Topic', render: r => r.category },
+      { label: 'Platform', render: r => r.platform },
+      { label: 'Advertisers', render: r => r.advertisers },
+    ],
+  });
 }
 init();
 </script>
