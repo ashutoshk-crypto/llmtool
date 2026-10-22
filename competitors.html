@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Tracker — Competitors</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-area">
+    <div class="content-wrap">
+      <div id="title-bar"></div>
+
+      <div class="filter-bar" id="filter-bar">
+        <span class="filter-spacer"></span>
+      </div>
+
+      <div class="content-grid">
+        <div class="card" id="top-competitor-card"></div>
+        <div class="card">
+          <div class="card-head"><div><h2 class="card-title">Competitor table</h2><p class="card-sub">Visibility % and mention count, excluding CoinSwitch</p></div></div>
+          <div id="competitor-table"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">Topic × brand heatmap</h2>
+            <p class="card-sub">Mention rate per topic, CoinSwitch pinned first</p>
+          </div>
+        </div>
+        <div id="heatmap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script>
+async function init() {
+  renderNav('competitors.html');
+  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Competitors', 'How rival brands compare to CoinSwitch across tracked AI answers');
+
+  const data = await loadData();
+  const { competitors, runs } = data;
+  const OWN = competitors.includes(OWN_BRAND) ? OWN_BRAND : competitors[0];
+  const rivals = competitors.filter(c => c !== OWN);
+  const categories = [...new Set(runs.map(r => r.category).filter(Boolean))].sort();
+
+  const bar = document.getElementById('filter-bar');
+  const spacer = bar.querySelector('.filter-spacer');
+  const fTopic = buildFilterPill(bar, 'topic', 'All topics', categories);
+  const fCountry = buildFilterPill(bar, 'country', 'Country', ['India']);
+  bar.insertBefore(fTopic.closest('.filter-pill'), spacer);
+  bar.insertBefore(fCountry.closest('.filter-pill'), spacer);
+
+  function render() {
+    const fr = runs.filter(r => !fTopic.value || r.category === fTopic.value);
+    const total = fr.length;
+    const counts = brandCounts(competitors, fr);
+    const rivalSorted = rivals.map(c => ({ name: c, count: counts[c] || 0, pct: total ? Math.round(((counts[c] || 0) / total) * 100) : 0 }))
+      .sort((a, b) => b.count - a.count);
+
+    const top = rivalSorted[0];
+    document.getElementById('top-competitor-card').innerHTML = top ? `
+      <div class="card-head"><div><h2 class="card-title">Top competitor</h2><p class="card-sub">Highest mention count after CoinSwitch</p></div></div>
+      <div style="display:flex; align-items:center; gap:14px; margin-top:10px;">
+        ${brandInitialsHTML(top.name, competitors, 'lg')}
+        <div>
+          <div style="font-size:16px; font-weight:600; color:var(--title);">${esc(top.name)}</div>
+          <div class="text-muted" style="font-size:12.5px;">${top.count} mentions · ${top.pct}% visibility</div>
+        </div>
+      </div>
+    ` : '<div class="empty-state">No data yet.</div>';
+
+    renderPaginatedTable(document.getElementById('competitor-table'), {
+      rows: rivalSorted,
+      pageSize: 10,
+      emptyMessage: 'No competitor data yet.',
+      columns: [
+        { label: 'Brand', render: r => `<span class="brand-pill">${brandInitialsHTML(r.name, competitors)} ${esc(r.name)}</span>` },
+        { label: 'Visibility', num: true, render: r => r.pct + '%' },
+        { label: 'Mentions', num: true, render: r => String(r.count) },
+      ],
+    });
+
+    const heatRows = categories.map(cat => {
+      const catRuns = runs.filter(r => r.category === cat);
+      const cells = {};
+      competitors.forEach(c => {
+        cells[c] = catRuns.length ? Math.round((catRuns.filter(r => r.mentions.includes(c)).length / catRuns.length) * 100) : null;
+      });
+      return { label: cat, cells };
+    });
+    const orderedBrands = [OWN, ...rivals];
+    renderHeatmap(document.getElementById('heatmap'), orderedBrands, heatRows);
+  }
+
+  [fTopic, fCountry].forEach(el => el.addEventListener('change', render));
+  render();
+}
+init();
+</script>
+</body>
+</html>

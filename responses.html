@@ -2,100 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Visibility Tracker — All Responses</title>
-<link rel="stylesheet" href="assets/style.css">
+<meta http-equiv="refresh" content="0; url=answers.html">
+<title>AI Visibility Tracker</title>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Prompt-level detail</h1>
-    <p id="meta-line">Loading results...</p>
-  </header>
-
-  <div class="panel">
-    <p class="panel-sub">Every prompt and platform run, with detected brand mentions</p>
-    <div class="filters">
-      <select id="filter-platform"><option value="">All platforms</option></select>
-      <select id="filter-category"><option value="">All categories</option></select>
-      <select id="filter-brand"><option value="">All brands</option></select>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Prompt</th>
-            <th>Category</th>
-            <th>Platform</th>
-            <th>Mentions</th>
-            <th>Citations</th>
-            <th>Response</th>
-          </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<script src="assets/data.js"></script>
-<script>
-async function init() {
-  renderNav('responses.html');
-  const data = await loadData();
-  const { competitors, platforms, runs } = data;
-  setMetaLine(data);
-
-  const fPlatform = document.getElementById('filter-platform');
-  const fCategory = document.getElementById('filter-category');
-  const fBrand = document.getElementById('filter-brand');
-  const tbody = document.getElementById('table-body');
-
-  if (!runs.length) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">No data yet.</div></td></tr>`;
-    return;
-  }
-
-  const categories = [...new Set(runs.map(r => r.category).filter(Boolean))].sort();
-  platforms.forEach(p => fPlatform.insertAdjacentHTML('beforeend', `<option value="${esc(p)}">${esc(p)}</option>`));
-  categories.forEach(c => fCategory.insertAdjacentHTML('beforeend', `<option value="${esc(c)}">${esc(c)}</option>`));
-  competitors.forEach(c => fBrand.insertAdjacentHTML('beforeend', `<option value="${esc(c)}">${esc(c)}</option>`));
-
-  function renderTable() {
-    const pf = fPlatform.value, cf = fCategory.value, bf = fBrand.value;
-    const filtered = runs.filter(r =>
-      (!pf || r.platform === pf) &&
-      (!cf || r.category === cf) &&
-      (!bf || r.mentions.includes(bf))
-    );
-    if (!filtered.length) {
-      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">No responses match these filters.</div></td></tr>`;
-      return;
-    }
-    tbody.innerHTML = filtered.map(r => `
-      <tr>
-        <td style="max-width:260px;">${esc(r.prompt)}</td>
-        <td style="color:var(--text-secondary); white-space:nowrap;">${esc(r.category || '--')}</td>
-        <td><span class="platform-chip">${esc(r.platform)}</span></td>
-        <td>${
-          r.mentions.length
-            ? r.mentions.map(m => `<span class="mention-chip" style="background:${colorForBrand(m, competitors)}">${esc(m)}</span>`).join('')
-            : `<span class="no-mentions">none detected</span>`
-        }</td>
-        <td style="max-width:200px;">${
-          (r.citations || []).length
-            ? r.citations.slice(0, 3).map(c => `<a class="source-url" style="display:inline" href="${esc(c.url)}" target="_blank" rel="noopener noreferrer">${esc(c.domain)}</a>`).join(', ')
-            : `<span class="no-mentions">none</span>`
-        }</td>
-        <td class="response-cell">${esc((r.response || '').slice(0, 220))}${(r.response||'').length > 220 ? '...' : ''}</td>
-      </tr>
-    `).join('');
-  }
-
-  [fPlatform, fCategory, fBrand].forEach(el => el.addEventListener('change', renderTable));
-  renderTable();
-}
-init();
-</script>
+<p>Moved to <a href="answers.html">answers.html</a>.</p>
 </body>
 </html>

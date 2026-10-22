@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Tracker — Sub-queries</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-area">
+    <div class="content-wrap">
+      <div id="title-bar"></div>
+      <p class="page-sub" style="margin:-10px 0 16px; font-size:12px;">Mocked — secondary/expanded searches an engine issues while researching a prompt aren't captured by the pipeline. Sample sub-queries are synthesized per topic.</p>
+
+      <div class="filter-bar" id="filter-bar">
+        <span class="filter-spacer"></span>
+        <span id="grounding-switch-mount"></span>
+      </div>
+
+      <div class="table-card">
+        <div id="table-mount"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/mock-data.js"></script>
+<script>
+async function init() {
+  renderNav('sub-queries.html');
+  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Sub-queries', 'Expanded searches AI engines may issue while researching a prompt topic');
+
+  const data = await loadData();
+  const { runs } = data;
+  const uniquePrompts = [...new Map(runs.map(r => [r.prompt, r])).values()];
+
+  let groundingOn = true;
+  buildSwitch(document.getElementById('grounding-switch-mount'), 'Search grounding', true, (v) => { groundingOn = v; render(); });
+
+  const mount = document.getElementById('table-mount');
+
+  function render() {
+    if (!groundingOn) {
+      mount.innerHTML = '<div class="empty-state">Search grounding is off — sub-queries are only shown for grounded (web-search-enabled) runs.</div>';
+      return;
+    }
+    const rows = [];
+    uniquePrompts.forEach(r => {
+      mockSubQueries(r.prompt, r.category).forEach(sq => rows.push({ prompt: r.prompt, category: r.category || '--', subQuery: sq }));
+    });
+    renderPaginatedTable(mount, {
+      rows,
+      pageSize: 25,
+      emptyMessage: uniquePrompts.length ? 'No sub-queries to show.' : 'No data yet — run track.py to generate results.json.',
+      columns: [
+        { label: 'Parent prompt', render: r => `<span style="display:block;max-width:280px;">${esc(r.prompt)}</span>` },
+        { label: 'Topic', render: r => esc(r.category) },
+        { label: 'Sub-query', render: r => esc(r.subQuery) },
+      ],
+    });
+  }
+  render();
+}
+init();
+</script>
+</body>
+</html>

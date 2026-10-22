@@ -1,13 +1,30 @@
-const SERIES_COLORS = ['--series-1','--series-2','--series-3','--series-4','--series-5','--series-6','--series-7'];
+/* ============================================================
+   AI Visibility Tracker — shared data + render helpers
+   Real data: results.json / history.json (via track.py — do not fake)
+   Mock data: assets/mock-data.js (clearly synthetic, documented)
+   ============================================================ */
 
-const NAV_LINKS = [
-  { href: 'index.html', label: 'Overview', icon: 'M3 13h4v7H3zm7-6h4v13h-4zm7-4h4v17h-4z' },
-  { href: 'platforms.html', label: 'Platforms', icon: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
-  { href: 'categories.html', label: 'Categories', icon: 'M4 6h16M4 12h16M4 18h10' },
-  { href: 'opportunities.html', label: 'Content Opportunities', icon: 'M12 2l2.2 6.8H21l-5.6 4.1 2.2 6.8L12 15.6 6.4 19.7l2.2-6.8L3 8.8h6.8z' },
-  { href: 'content-plan.html', label: 'Content Plan', icon: 'M5 4h14v16l-3-2-2 2-2-2-2 2-2-2-3 2z' },
-  { href: 'responses.html', label: 'All Responses', icon: 'M4 5h16v11H7l-3 3z' },
+const SERIES_COLORS = ['--series-1','--series-2','--series-3','--series-4','--series-5','--series-6','--series-7'];
+const OWN_BRAND = 'CoinSwitch';
+
+const NAV_SECTIONS = [
+  { kind: 'single', href: 'task-board.html', label: 'Task board', icon: 'M4 5h16v14H4zM4 10h16M9 5v14' },
+  { kind: 'group', label: 'Analytics', items: [
+    { href: 'index.html', label: 'Overview', icon: 'M3 13h4v7H3zm7-6h4v13h-4zm7-4h4v17h-4z' },
+    { href: 'prompts.html', label: 'Prompts', icon: 'M4 5h16v11H7l-3 3z' },
+    { href: 'sub-queries.html', label: 'Sub-queries', icon: 'M10 4a6 6 0 104.47 10.03l4.25 4.25M10 4a6 6 0 016 6', badge: 'New' },
+    { href: 'answers.html', label: 'Answers', icon: 'M4 5h16v11H7l-3 3z' },
+    { href: 'citations.html', label: 'Citations', icon: 'M9 5H5v14h14v-4M14 4h6v6M20 4l-9 9' },
+    { href: 'own-pages.html', label: 'Own-page tracking', icon: 'M12 3l8 4v5c0 5-3.4 8.4-8 9-4.6-.6-8-4-8-9V7z' },
+    { href: 'competitors.html', label: 'Competitors', icon: 'M4 6h16M4 12h16M4 18h10' },
+    { href: 'ad-monitoring.html', label: 'Ad monitoring', icon: 'M3 11l18-7-7 18-2-8-8-2z' },
+  ]},
+  { kind: 'group', label: 'Configuration', items: [
+    { href: '#', label: 'Settings & integrations', icon: 'M12 15a3 3 0 100-6 3 3 0 000 6z', disabled: true },
+  ]},
 ];
+// flat list kept for pages that still reference NAV_LINKS
+const NAV_LINKS = NAV_SECTIONS.flatMap(s => s.kind === 'single' ? [s] : s.items);
 
 function cssVar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -25,7 +42,57 @@ function esc(str) {
   return d.innerHTML;
 }
 
-function renderNav(activeHref) {
+function initials(name) {
+  return String(name || '?').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+
+/** Deterministic hash → pick one of the series colors, for things that aren't in `competitors`. */
+function colorForString(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+  return cssVar(SERIES_COLORS[h % SERIES_COLORS.length]);
+}
+
+function brandInitialsHTML(name, competitors, size) {
+  const color = competitors ? colorForBrand(name, competitors) : colorForString(name);
+  return `<span class="initial-circle${size === 'lg' ? ' lg' : ''}" style="background:${color}">${esc(initials(name))}</span>`;
+}
+
+const PLATFORM_COLORS = { ChatGPT: '#3FB950', Gemini: '#5B9BF8' };
+function platformIconHTML(platform) {
+  const color = PLATFORM_COLORS[platform] || colorForString(platform);
+  return `<span class="platform-icon" style="background:${color}" title="${esc(platform)}">${esc((platform || '?')[0])}</span>`;
+}
+function platformStackHTML(platforms, max) {
+  max = max || 3;
+  const shown = platforms.slice(0, max);
+  const rest = platforms.length - shown.length;
+  return `<span class="platform-stack">${shown.map(platformIconHTML).join('')}${rest > 0 ? `<span class="platform-overflow">+${rest}</span>` : ''}</span>`;
+}
+
+/* ---------------- Status chips ---------------- */
+function chip(label, variant) {
+  return `<span class="chip chip-${variant}">${esc(label)}</span>`;
+}
+function ownOrCompetitorChip(isOwn) {
+  return isOwn ? chip('Own', 'own') : chip('Competitor', 'competitor');
+}
+function yesNoChip(val) {
+  return val ? chip('Yes', 'yes') : chip('No', 'no');
+}
+function sourceTypeChip(type) {
+  return chip(type, 'neutral');
+}
+function intentChip(intent) {
+  return chip(intent, 'neutral');
+}
+function newBadge() {
+  return '<span class="chip chip-new">New</span>';
+}
+
+/* ---------------- App shell ---------------- */
+function renderNav(activeHref, opts) {
+  opts = opts || {};
   document.body.classList.add('has-sidebar');
 
   const toggle = document.createElement('button');
@@ -37,21 +104,52 @@ function renderNav(activeHref) {
   const overlay = document.createElement('div');
   overlay.className = 'sidebar-overlay';
 
+  function renderItem(item) {
+    if (item.disabled) {
+      return `<span class="nav-link-disabled" title="Not available in this demo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${item.icon}"/></svg>
+        <span>${esc(item.label)}</span>
+      </span>`;
+    }
+    return `<a class="nav-link${item.href === activeHref ? ' active' : ''}" href="${item.href}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${item.icon}"/></svg>
+      <span>${esc(item.label)}</span>
+      ${item.badge ? `<span class="nav-badge-new">${esc(item.badge)}</span>` : ''}
+    </a>`;
+  }
+
+  const sectionsHTML = NAV_SECTIONS.map(s => {
+    if (s.kind === 'single') {
+      return `<div class="sidebar-nav">${renderItem(s)}</div>`;
+    }
+    return `
+      <div>
+        <div class="sidebar-group-label">${esc(s.label)}</div>
+        <div class="sidebar-nav">${s.items.map(renderItem).join('')}</div>
+      </div>
+    `;
+  }).join('');
+
   const nav = document.createElement('div');
   nav.className = 'sidebar';
   nav.innerHTML = `
-    <a class="sidebar-brand" href="index.html">
-      <span class="sidebar-brand-mark">AI</span>
-      <span>Visibility Tracker</span>
-    </a>
-    <nav class="sidebar-nav">
-      ${NAV_LINKS.map(l => `
-        <a class="nav-link${l.href === activeHref ? ' active' : ''}" href="${l.href}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${l.icon}"/></svg>
-          <span>${esc(l.label)}</span>
-        </a>
-      `).join('')}
-    </nav>
+    <div class="workspace-switch">
+      <span class="workspace-mark">CS</span>
+      <span class="workspace-name">CoinSwitch</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 10l5 5 5-5"/></svg>
+    </div>
+    <button class="sidebar-collapse" type="button">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+      Collapse
+    </button>
+    <div class="sidebar-scroll">${sectionsHTML}</div>
+    <div class="sidebar-account">
+      <span class="avatar">AK</span>
+      <div class="who">
+        <div class="name">Ashutosh Kumar</div>
+        <div class="email">ashutosh.k@peepal.co</div>
+      </div>
+    </div>
   `;
   document.body.insertBefore(nav, document.body.firstChild);
   document.body.insertBefore(overlay, nav.nextSibling);
@@ -59,8 +157,236 @@ function renderNav(activeHref) {
   const closeSidebar = () => document.body.classList.remove('sidebar-open');
   toggle.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
   overlay.addEventListener('click', closeSidebar);
+  nav.querySelector('.sidebar-collapse').addEventListener('click', () => {
+    nav.classList.toggle('collapsed');
+  });
 }
 
+function renderTitleBar(container, section, page, sub) {
+  container.innerHTML = `
+    <div class="title-bar">
+      <div class="breadcrumb"><span class="section">${esc(section)}</span><span class="sep">·</span><span class="page">${esc(page)}</span></div>
+      ${sub ? `<p class="page-sub">${esc(sub)}</p>` : ''}
+    </div>
+  `;
+}
+
+/* ---------------- Filter bar ---------------- */
+const FILTER_ICONS = {
+  date: 'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z',
+  type: 'M4 6h16M4 12h16M4 18h10',
+  platform: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
+  topic: 'M20.59 13.41L13 21l-9-9V4h8l8.59 8.41a2 2 0 010 2.82z',
+  country: 'M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z',
+};
+function filterIconSVG(kind) {
+  const d = FILTER_ICONS[kind] || FILTER_ICONS.type;
+  return `<svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+}
+const CHEV_SVG = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 10l5 5 5-5"/></svg>';
+
+/** Build a simple single-select filter pill wrapping a <select>. Returns the <select> element. */
+function buildFilterPill(parent, kind, labelAll, options) {
+  const wrap = document.createElement('label');
+  wrap.className = 'filter-pill';
+  const sel = document.createElement('select');
+  sel.insertAdjacentHTML('beforeend', `<option value="">${esc(labelAll)}</option>`);
+  options.forEach(o => sel.insertAdjacentHTML('beforeend', `<option value="${esc(o)}">${esc(o)}</option>`));
+  wrap.innerHTML = filterIconSVG(kind);
+  wrap.appendChild(sel);
+  wrap.insertAdjacentHTML('beforeend', CHEV_SVG);
+  parent.appendChild(wrap);
+  return sel;
+}
+
+/* ---------------- Toggle switch ---------------- */
+function buildSwitch(parent, label, checked, onChange) {
+  const wrap = document.createElement('label');
+  wrap.className = 'switch';
+  wrap.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}><span class="track"><span class="thumb"></span></span><span>${esc(label)}</span>`;
+  parent.appendChild(wrap);
+  const input = wrap.querySelector('input');
+  input.addEventListener('change', () => onChange(input.checked));
+  return input;
+}
+
+/* ---------------- CSV export ---------------- */
+function exportCSV(filename, rows, columns) {
+  // columns: [{key, label}]
+  const esc2 = v => {
+    const s = v == null ? '' : String(v);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  const lines = [columns.map(c => esc2(c.label)).join(',')];
+  rows.forEach(r => lines.push(columns.map(c => esc2(typeof c.key === 'function' ? c.key(r) : r[c.key])).join(',')));
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ---------------- Generic paginated table ---------------- */
+/**
+ * Renders a paginated data table.
+ * opts: { columns:[{label,key,render(row),num}], rows:[...], pageSize, emptyMessage, onRowClick(row) }
+ */
+function renderPaginatedTable(container, opts) {
+  const state = { page: 1, pageSize: opts.pageSize || 10 };
+
+  function render() {
+    const rows = opts.rows;
+    if (!rows.length) {
+      container.innerHTML = `<div class="empty-state">${esc(opts.emptyMessage || 'No rows match these filters.')}</div>`;
+      return;
+    }
+    const pageSize = state.pageSize === 'all' ? rows.length : state.pageSize;
+    const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+    state.page = Math.min(state.page, totalPages);
+    const start = (state.page - 1) * pageSize;
+    const pageRows = rows.slice(start, start + pageSize);
+
+    const thead = `<thead><tr>
+      ${opts.showCheckbox ? '<th style="width:30px"></th>' : ''}
+      ${opts.columns.map(c => `<th${c.num ? ' class="num"' : ''}>${esc(c.label)}</th>`).join('')}
+    </tr></thead>`;
+
+    const tbody = `<tbody>${pageRows.map((row, i) => `
+      <tr${opts.onRowClick ? ' class="clickable"' : ''} data-idx="${start + i}">
+        ${opts.showCheckbox ? `<td><input type="checkbox" class="checkbox"></td>` : ''}
+        ${opts.columns.map(c => `<td${c.num ? ' class="num mono"' : ''}>${c.render ? c.render(row) : esc(row[c.key])}</td>`).join('')}
+      </tr>
+    `).join('')}</tbody>`;
+
+    const pageButtons = [];
+    for (let p = 1; p <= totalPages; p++) {
+      if (p === 1 || p === totalPages || Math.abs(p - state.page) <= 1) pageButtons.push(p);
+      else if (pageButtons[pageButtons.length - 1] !== '...') pageButtons.push('...');
+    }
+
+    container.innerHTML = `
+      <div class="table-scroll"><table>${thead}${tbody}</table></div>
+      <div class="table-footer">
+        <div class="rows-per-page">
+          Rows per page
+          <select class="rpp-select">
+            ${[10, 25, 50, 'all'].map(n => `<option value="${n}" ${String(state.pageSize) === String(n) ? 'selected' : ''}>${n === 'all' ? 'All' : n}</option>`).join('')}
+          </select>
+        </div>
+        <div class="text-muted" style="font-size:12.5px;">Page ${state.page}/${totalPages}</div>
+        <div class="pagination">
+          <button class="pg-prev" ${state.page === 1 ? 'disabled' : ''}>Prev</button>
+          ${pageButtons.map(p => p === '...'
+            ? '<span class="ellipsis">…</span>'
+            : `<button data-page="${p}" class="${p === state.page ? 'active' : ''}">${p}</button>`).join('')}
+          <button class="pg-next" ${state.page === totalPages ? 'disabled' : ''}>Next</button>
+        </div>
+      </div>
+    `;
+
+    container.querySelectorAll('.pagination button[data-page]').forEach(b => {
+      b.addEventListener('click', () => { state.page = Number(b.dataset.page); render(); });
+    });
+    const prevBtn = container.querySelector('.pg-prev');
+    const nextBtn = container.querySelector('.pg-next');
+    if (prevBtn) prevBtn.addEventListener('click', () => { state.page--; render(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { state.page++; render(); });
+    const rppSel = container.querySelector('.rpp-select');
+    if (rppSel) rppSel.addEventListener('change', () => {
+      state.pageSize = rppSel.value === 'all' ? 'all' : Number(rppSel.value);
+      state.page = 1; render();
+    });
+    if (opts.onRowClick) {
+      container.querySelectorAll('tbody tr.clickable').forEach(tr => {
+        tr.addEventListener('click', (e) => {
+          if (e.target.closest('input,a,button')) return;
+          opts.onRowClick(rows[Number(tr.dataset.idx)]);
+        });
+      });
+    }
+  }
+  render();
+  return { refresh: render, resetPage: () => { state.page = 1; render(); } };
+}
+
+/* ---------------- Heatmap table ---------------- */
+/** rows: [{label, cells: {brand: pct|null}}], brands: ordered brand list (own brand first) */
+function renderHeatmap(container, brands, rows) {
+  if (!rows.length) {
+    container.innerHTML = '<div class="empty-state">No topics to show yet.</div>';
+    return;
+  }
+  const thead = `<thead><tr>
+    <th class="row-label">Topic</th>
+    ${brands.map(b => `<th>${esc(b)}</th>`).join('')}
+  </tr></thead>`;
+  const tbody = `<tbody>${rows.map(r => `
+    <tr>
+      <td class="row-label">${esc(r.label)}</td>
+      ${brands.map(b => {
+        const v = r.cells[b];
+        if (v == null) return `<td><span class="text-muted">-</span></td>`;
+        const alpha = Math.min(0.9, 0.12 + v / 100 * 0.6);
+        const color = b === OWN_BRAND ? `rgba(63,185,80,${alpha})` : `rgba(91,155,248,${alpha})`;
+        return `<td><span class="heatmap-cell" style="background:${color}">${v}%</span></td>`;
+      }).join('')}
+    </tr>
+  `).join('')}</tbody>`;
+  container.innerHTML = `<div class="heatmap-scroll"><table class="heatmap">${thead}${tbody}</table></div>`;
+}
+
+/* ---------------- Side drawer (singleton) ---------------- */
+function ensureDrawer() {
+  let overlay = document.querySelector('.drawer-overlay');
+  if (overlay) return overlay;
+  overlay = document.createElement('div');
+  overlay.className = 'drawer-overlay';
+  overlay.innerHTML = `
+    <div class="drawer">
+      <div class="drawer-head">
+        <div class="title" id="drawer-title">Detail</div>
+        <button class="drawer-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="drawer-body" id="drawer-body"></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeDrawer(); });
+  overlay.querySelector('.drawer-close').addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+  return overlay;
+}
+function openDrawer(title, bodyHTML) {
+  const overlay = ensureDrawer();
+  overlay.querySelector('#drawer-title').textContent = title;
+  overlay.querySelector('#drawer-body').innerHTML = bodyHTML;
+  overlay.classList.add('open');
+}
+function closeDrawer() {
+  const overlay = document.querySelector('.drawer-overlay');
+  if (overlay) overlay.classList.remove('open');
+}
+
+/* ---------------- Onboarding tip (dismissible, localStorage) ---------------- */
+function showOnboardingTip(anchorEl, key, text) {
+  if (localStorage.getItem('tip-dismissed-' + key)) return;
+  const tip = document.createElement('div');
+  tip.className = 'tip-bubble';
+  tip.innerHTML = `${esc(text)}<span class="tip-dismiss">Got it</span>`;
+  document.body.appendChild(tip);
+  const r = anchorEl.getBoundingClientRect();
+  tip.style.top = (r.bottom + window.scrollY + 10) + 'px';
+  tip.style.left = Math.max(10, r.left + window.scrollX - 20) + 'px';
+  tip.querySelector('.tip-dismiss').addEventListener('click', () => {
+    localStorage.setItem('tip-dismissed-' + key, '1');
+    tip.remove();
+  });
+}
+
+/* ---------------- Data loading (real data — untouched pipeline) ---------------- */
 async function loadData() {
   try {
     const res = await fetch('results.json');
@@ -84,8 +410,8 @@ async function loadHistory() {
   }
 }
 
-function setMetaLine(data) {
-  const el = document.getElementById('meta-line');
+function setMetaLine(data, elId) {
+  const el = document.getElementById(elId || 'meta-line');
   if (!el) return;
   if (!data.runs.length) {
     el.textContent = 'No results yet — run track.py to generate results.json.';
@@ -102,8 +428,13 @@ function brandCounts(competitors, runs) {
   return counts;
 }
 
-/** Render a multi-series SoV-over-time line chart (percent, 0-100) into containerEl. */
-function renderTrendChart(containerEl, history, competitors) {
+/** Render a multi-series SoV-over-time line chart (percent, 0-100) into containerEl.
+ *  Own brand renders as a thin white line; everything else as soft-blue family tints,
+ *  only shown when compareOn is true. */
+function renderTrendChart(containerEl, history, competitors, opts) {
+  opts = opts || {};
+  const compareOn = !!opts.compareOn;
+  const ownBrand = opts.ownBrand || (competitors.includes(OWN_BRAND) ? OWN_BRAND : competitors[0]);
   if (!history.length) {
     containerEl.innerHTML = '<p class="empty-state">Not enough history yet — run the tracker on more days to build a trend.</p>';
     return;
@@ -120,24 +451,28 @@ function renderTrendChart(containerEl, history, competitors) {
   const y = pct => padT + plotH - (Math.max(0, Math.min(100, pct)) / 100) * plotH;
 
   const gridLines = [0, 25, 50, 75, 100].map(pct => `
-    <line x1="${padL}" y1="${y(pct)}" x2="${W - padR}" y2="${y(pct)}" stroke="var(--gridline)" stroke-width="1"/>
-    <text x="${padL - 8}" y="${y(pct) + 4}" text-anchor="end" font-size="10" fill="var(--text-muted)">${pct}%</text>
+    <line x1="${padL}" y1="${y(pct)}" x2="${W - padR}" y2="${y(pct)}" stroke="var(--border)" stroke-width="1"/>
+    <text x="${padL - 8}" y="${y(pct) + 4}" text-anchor="end" font-size="10" fill="var(--muted-fg)" font-family="var(--font-mono)">${pct}%</text>
   `).join('');
 
   const xLabels = history.map((h, i) => {
     if (n > 8 && i % Math.ceil(n / 8) !== 0 && i !== n - 1) return '';
-    return `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="var(--text-muted)">${esc(h.date.slice(5))}</text>`;
+    return `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="var(--muted-fg)" font-family="var(--font-mono)">${esc(h.date.slice(5))}</text>`;
   }).join('');
 
-  const lines = competitors.map(c => {
+  const seriesList = compareOn ? competitors : [ownBrand];
+  const softBlues = ['#5B9BF8', '#86B6F6', '#3C7FD6', '#9FC4F2', '#2E67B3'];
+  let blueIdx = 0;
+  const lines = seriesList.map((c) => {
+    const isOwn = c === ownBrand;
+    const color = isOwn ? 'var(--white-line)' : softBlues[(blueIdx++) % softBlues.length];
     const pts = history.map((h, i) => [x(i), y(h.pct ? (h.pct[c] || 0) : 0)]);
     const path = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
-    const color = colorForBrand(c, competitors);
     const dots = pts.map((p, i) => {
       const pct = history[i].pct ? (history[i].pct[c] || 0) : 0;
-      return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="${color}" stroke="var(--surface-1)" stroke-width="1.5"><title>${esc(c)} - ${esc(history[i].date)}: ${pct}%</title></circle>`;
+      return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="${color}" stroke="var(--card)" stroke-width="1.5"><title>${esc(c)} - ${esc(history[i].date)}: ${pct}%</title></circle>`;
     }).join('');
-    return `<path d="${path}" fill="none" stroke="${color}" stroke-width="2"/>${dots}`;
+    return `<path d="${path}" fill="none" stroke="${color}" stroke-width="${isOwn ? 2.5 : 1.6}"/>${dots}`;
   }).join('');
 
   containerEl.innerHTML = `
@@ -166,4 +501,36 @@ function aggregateCitations(runs) {
   return Object.values(byUrl)
     .map(s => ({ ...s, prompts: [...s.prompts], categories: [...s.categories], platforms: [...s.platforms] }))
     .sort((a, b) => b.count - a.count);
+}
+
+/* ---------------- Deterministic "mock" helpers shared across pages ----------------
+   Real pipeline doesn't track rank, intent-type-of-prompt classification detail,
+   sub-queries, citations detail, ads, or own-page URLs. Where the brief needs these,
+   we synthesize plausible, internally-consistent values from a seeded hash so the
+   same prompt/run always maps to the same mock value (no flicker on re-render). */
+function seededRandom(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+  return function () {
+    h = (h * 1664525 + 1013904223) >>> 0;
+    return h / 4294967296;
+  };
+}
+
+/** Mock rank 1-5+ for a run, only meaningful when the brand was actually mentioned. */
+function mockRank(run, brand) {
+  const rnd = seededRandom(run.prompt + '|' + run.platform + '|' + brand);
+  const bucket = rnd();
+  if (bucket < 0.35) return 1;
+  if (bucket < 0.6) return 2;
+  if (bucket < 0.8) return 3;
+  if (bucket < 0.92) return 4;
+  return '5+';
+}
+
+/** Classify a prompt as Branded / Non-branded by whether it names any tracked brand. */
+function classifyPromptType(prompt, competitors) {
+  const p = prompt.toLowerCase();
+  const named = competitors.some(c => p.includes(c.toLowerCase()));
+  return named ? 'Branded' : 'Non-branded';
 }

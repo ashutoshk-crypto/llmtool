@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LLM visibility tracker: run prompts across ChatGPT, Claude, Gemini."""
+"""LLM visibility tracker: run prompts across ChatGPT, Claude, Gemini, Google AI Overview."""
 
 import csv
 import json
@@ -9,7 +9,6 @@ import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
-from urllib.parse import quote_plus
 
 import requests
 from dotenv import load_dotenv
@@ -116,44 +115,38 @@ def query_gemini(prompt):
     data = resp.json()
     return data.get("results_text") or data.get("results_markdown") or json.dumps(data)
 
-def _scrapingbee_get(target_url, render_js=True, extra_params=None):
-    params = {
-        "api_key": os.environ["SCRAPINGBEE_API_KEY"],
-        "url": target_url,
-        "render_js": "true" if render_js else "false",
-    }
-    if extra_params:
-        params.update(extra_params)
-    with scrapingbee_semaphore:
-        resp = requests.get("https://app.scrapingbee.com/api/v1/", params=params, timeout=60)
-    resp.raise_for_status()
-    return resp.text
-
 def query_google_ai_overview(prompt):
-    url = f"https://www.google.com/search?q={quote_plus(prompt)}"
-    html = _scrapingbee_get(url, render_js=True, extra_params={"wait": "3000", "custom_google": "True"})
-    match = re.search(r'id="m-x-content"[^>]*>(.*?)</div>\s*</div>\s*</div>', html, re.DOTALL)
-    if not match:
-        text = re.sub(r"<[^>]+>", " ", html)
-        text = "" if "AI Overview" not in html else re.sub(r"\s+", " ", text)[:3000]
-        return text, html
-    fragment = match.group(1)
-    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", fragment)).strip()
-    return text, fragment
-
-def query_perplexity_web(prompt):
-    url = f"https://www.perplexity.ai/search?q={quote_plus(prompt)}"
-    html = _scrapingbee_get(url, render_js=True, extra_params={"wait": "5000"})
-    stripped = re.sub(r"<script[^>]*>.*?</script>", " ", html, flags=re.DOTALL)
-    text = re.sub(r"<[^>]+>", " ", stripped)
-    return re.sub(r"\s+", " ", text).strip()[:5000], stripped
+    with scrapingbee_semaphore:
+        resp = requests.get(
+            "https://app.scrapingbee.com/api/v1/google",
+            params={
+                "api_key": os.environ["SCRAPINGBEE_API_KEY"],
+                "search": prompt,
+                "country_code": "in",
+            },
+            timeout=60,
+        )
+    resp.raise_for_status()
+    data = resp.json()
+    ai_overview = data.get("ai_overview") or {}
+    text_blocks = ai_overview.get("text_blocks") or []
+    text = re.sub(r"\s+", " ", " ".join(
+        block.get("snippet", "") for block in text_blocks if isinstance(block, dict)
+    )).strip()
+    if not text:
+        text = re.sub(r"\s+", " ", str(ai_overview.get("text") or "")).strip()
+    references = ai_overview.get("references") or []
+    html = "".join(
+        f'<a href="{ref.get("link", "")}">{ref.get("title", "")}</a>'
+        for ref in references if isinstance(ref, dict) and ref.get("link")
+    )
+    return text, html
 
 PLATFORMS = {
     "ChatGPT": (query_openai, "SCRAPINGBEE_API_KEY"),
     "Claude": (query_claude, "ANTHROPIC_API_KEY"),
     "Gemini": (query_gemini, "SCRAPINGBEE_API_KEY"),
     "Google AI Overview": (query_google_ai_overview, "SCRAPINGBEE_API_KEY"),
-    "Perplexity": (query_perplexity_web, "SCRAPINGBEE_API_KEY"),
 }
 
 def main():

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Tracker — Prompts</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-area">
+    <div class="content-wrap">
+      <div id="title-bar"></div>
+
+      <div class="filter-bar" id="filter-bar">
+        <span class="filter-spacer"></span>
+        <div class="search-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="search" type="text" placeholder="Search prompts...">
+        </div>
+        <button class="btn btn-ghost" id="export-btn">Export CSV</button>
+      </div>
+
+      <div class="table-card">
+        <div id="table-mount"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script>
+async function init() {
+  renderNav('prompts.html');
+  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Prompts', 'One row per unique prompt tracked, with computed visibility and platform coverage');
+
+  const data = await loadData();
+  const { competitors, platforms, runs } = data;
+  const OWN = competitors.includes(OWN_BRAND) ? OWN_BRAND : competitors[0];
+  const categories = [...new Set(runs.map(r => r.category).filter(Boolean))].sort();
+
+  const bar = document.getElementById('filter-bar');
+  const spacer = bar.querySelector('.filter-spacer');
+  const fTopic = buildFilterPill(bar, 'topic', 'All topics', categories);
+  const fPlatform = buildFilterPill(bar, 'platform', 'All platforms', platforms);
+  const fType = buildFilterPill(bar, 'type', 'All prompt types', ['Branded', 'Non-branded']);
+  bar.insertBefore(fTopic.closest('.filter-pill'), spacer);
+  bar.insertBefore(fPlatform.closest('.filter-pill'), spacer);
+  bar.insertBefore(fType.closest('.filter-pill'), spacer);
+
+  // one row per unique prompt
+  const byPrompt = {};
+  runs.forEach(r => {
+    if (!byPrompt[r.prompt]) byPrompt[r.prompt] = { prompt: r.prompt, category: r.category, intent: r.intent, platforms: new Set(), runs: [] };
+    byPrompt[r.prompt].platforms.add(r.platform);
+    byPrompt[r.prompt].runs.push(r);
+  });
+  const allPromptRows = Object.values(byPrompt).map(p => {
+    const mentioned = p.runs.filter(r => r.mentions.includes(OWN)).length;
+    return {
+      prompt: p.prompt,
+      category: p.category || '--',
+      platforms: [...p.platforms],
+      visibility: p.runs.length ? Math.round((mentioned / p.runs.length) * 100) : 0,
+      type: classifyPromptType(p.prompt, competitors),
+    };
+  });
+
+  const tableMount = document.getElementById('table-mount');
+  let tableHandle = null;
+
+  function getFiltered() {
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    return allPromptRows.filter(r =>
+      (!fTopic.value || r.category === fTopic.value) &&
+      (!fPlatform.value || r.platforms.includes(fPlatform.value)) &&
+      (!fType.value || r.type === fType.value) &&
+      (!q || r.prompt.toLowerCase().includes(q))
+    );
+  }
+
+  function render() {
+    const rows = getFiltered();
+    tableHandle = renderPaginatedTable(tableMount, {
+      rows,
+      emptyMessage: runs.length ? 'No prompts match these filters.' : 'No data yet — run track.py to generate results.json.',
+      columns: [
+        { label: 'Prompt', render: r => `<a class="cell-link" href="answers.html?prompt=${encodeURIComponent(r.prompt)}">${esc(r.prompt)}</a>` },
+        { label: 'Topic', render: r => esc(r.category) },
+        { label: 'Type', render: r => chip(r.type, r.type === 'Branded' ? 'competitor' : 'neutral') },
+        { label: 'Platforms', render: r => platformStackHTML(r.platforms) },
+        { label: 'Visibility', num: true, render: r => r.visibility + '%' },
+      ],
+      onRowClick: r => { window.location.href = 'answers.html?prompt=' + encodeURIComponent(r.prompt); },
+    });
+  }
+
+  [fTopic, fPlatform, fType].forEach(el => el.addEventListener('change', render));
+  document.getElementById('search').addEventListener('input', render);
+  document.getElementById('export-btn').addEventListener('click', () => {
+    exportCSV('prompts.csv', getFiltered(), [
+      { label: 'Prompt', key: 'prompt' },
+      { label: 'Topic', key: 'category' },
+      { label: 'Type', key: 'type' },
+      { label: 'Platforms', key: r => r.platforms.join('; ') },
+      { label: 'Visibility %', key: 'visibility' },
+    ]);
+  });
+
+  render();
+}
+init();
+</script>
+</body>
+</html>

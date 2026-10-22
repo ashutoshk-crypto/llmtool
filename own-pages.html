@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Tracker — Own-page tracking</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-area">
+    <div class="content-wrap">
+      <div id="title-bar"></div>
+      <p class="page-sub" style="margin:-10px 0 16px; font-size:12px;">Mocked sample list — own-page citation tracking isn't in the pipeline yet. Added URLs are saved to this browser's localStorage.</p>
+
+      <div class="filter-bar" id="filter-bar">
+        <span class="filter-spacer"></span>
+        <div class="search-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="search" type="text" placeholder="Search URLs...">
+        </div>
+        <span id="suggested-switch-mount"></span>
+        <button class="btn btn-primary" id="add-url-btn">+ Add URL</button>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">Own-page trend</h2>
+            <p class="card-sub">Citations vs. brand mentions for tracked own pages (mock trend, follows real tracker run dates)</p>
+          </div>
+        </div>
+        <div class="legend" id="trend-legend"></div>
+        <div id="trend-chart"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div><h2 class="card-title">Tracked URLs</h2></div></div>
+        <div id="urls-table"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/mock-data.js"></script>
+<script>
+async function init() {
+  renderNav('own-pages.html');
+  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Own-page tracking', 'Monitor which CoinSwitch pages get cited or help drive brand mentions');
+
+  const history = await loadHistory();
+  const trend = mockOwnPageTrend(history);
+  document.getElementById('trend-legend').innerHTML = `
+    <div class="legend-item"><span class="legend-dot" style="background:var(--white-line)"></span>Own-page citations</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>Brand mentions</div>
+  `;
+  renderTrendChart(document.getElementById('trend-chart'), trend, ['Own-page citations', 'Brand mentions'], { compareOn: true, ownBrand: 'Own-page citations' });
+
+  const addBtn = document.getElementById('add-url-btn');
+  let suggestedOnly = false;
+  buildSwitch(document.getElementById('suggested-switch-mount'), 'Suggested only', false, (v) => { suggestedOnly = v; render(); });
+
+  const bar = document.getElementById('filter-bar');
+  const spacer = bar.querySelector('.filter-spacer');
+  const fGroup = buildFilterPill(bar, 'type', 'Group by: none', ['Suggested', 'Not suggested']);
+  bar.insertBefore(fGroup.closest('.filter-pill'), spacer);
+
+  function getFiltered() {
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    let rows = mockOwnPages();
+    if (suggestedOnly) rows = rows.filter(r => r.suggested);
+    if (fGroup.value) rows = rows.filter(r => (fGroup.value === 'Suggested') === r.suggested);
+    if (q) rows = rows.filter(r => r.url.toLowerCase().includes(q));
+    return rows.sort((a, b) => b.citations - a.citations);
+  }
+
+  function render() {
+    renderPaginatedTable(document.getElementById('urls-table'), {
+      rows: getFiltered(),
+      emptyMessage: 'No tracked URLs match these filters.',
+      columns: [
+        { label: 'URL', render: r => `<a class="cell-link" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.url.replace('https://coinswitch.co',''))}</a>` },
+        { label: 'Citations', num: true, render: r => String(r.citations) },
+        { label: 'Brand mentions', num: true, render: r => String(r.mentions) },
+        { label: 'Updated', render: r => esc(r.updated) },
+        { label: 'Suggested', render: r => r.suggested ? chip('Suggested', 'neutral') : '<span class="text-muted">--</span>' },
+      ],
+    });
+  }
+
+  fGroup.addEventListener('change', render);
+  document.getElementById('search').addEventListener('input', render);
+  addBtn.addEventListener('click', () => {
+    const url = window.prompt('Enter the own-page URL to track:');
+    if (url && url.trim()) { addOwnPage(url.trim()); render(); }
+  });
+  showOnboardingTip(addBtn, 'own-pages-add', 'Track a CoinSwitch URL to see how often it gets cited or drives a brand mention.');
+
+  render();
+}
+init();
+</script>
+</body>
+</html>

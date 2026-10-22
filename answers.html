@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Tracker — Answers</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <div class="main-area">
+    <div class="content-wrap">
+      <div id="title-bar"></div>
+
+      <div class="filter-bar" id="filter-bar">
+        <span class="filter-spacer"></span>
+        <div class="search-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="search" type="text" placeholder="Search prompts or responses...">
+        </div>
+        <button class="btn btn-ghost" id="export-btn">Export CSV</button>
+      </div>
+
+      <div class="table-card">
+        <div id="table-mount"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script>
+async function init() {
+  renderNav('answers.html');
+  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Answers', 'Every prompt × platform run, with mention status, rank (simulated) and competitors named');
+
+  const data = await loadData();
+  const { competitors, platforms, runs } = data;
+  const OWN = competitors.includes(OWN_BRAND) ? OWN_BRAND : competitors[0];
+  const categories = [...new Set(runs.map(r => r.category).filter(Boolean))].sort();
+  const params = new URLSearchParams(window.location.search);
+  const promptFilter = params.get('prompt') || '';
+
+  const bar = document.getElementById('filter-bar');
+  const spacer = bar.querySelector('.filter-spacer');
+  const fPlatform = buildFilterPill(bar, 'platform', 'All platforms', platforms);
+  const fTopic = buildFilterPill(bar, 'topic', 'All topics', categories);
+  const fMention = buildFilterPill(bar, 'type', 'Brand mention', ['Mentioned', 'Not mentioned']);
+  bar.insertBefore(fPlatform.closest('.filter-pill'), spacer);
+  bar.insertBefore(fTopic.closest('.filter-pill'), spacer);
+  bar.insertBefore(fMention.closest('.filter-pill'), spacer);
+
+  if (promptFilter) {
+    const note = document.createElement('div');
+    note.className = 'chip chip-neutral';
+    note.style.cursor = 'pointer';
+    note.innerHTML = 'Filtered to one prompt ✕';
+    note.addEventListener('click', () => { window.location.href = 'answers.html'; });
+    bar.insertBefore(note, spacer);
+  }
+
+  const tableMount = document.getElementById('table-mount');
+
+  function getFiltered() {
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    return runs.filter(r =>
+      (!promptFilter || r.prompt === promptFilter) &&
+      (!fPlatform.value || r.platform === fPlatform.value) &&
+      (!fTopic.value || r.category === fTopic.value) &&
+      (!fMention.value || (fMention.value === 'Mentioned' ? r.mentions.includes(OWN) : !r.mentions.includes(OWN))) &&
+      (!q || r.prompt.toLowerCase().includes(q) || (r.response || '').toLowerCase().includes(q))
+    );
+  }
+
+  function openAnswerDrawer(r) {
+    const mentioned = r.mentions.includes(OWN);
+    const body = `
+      <div class="drawer-section">
+        <div class="drawer-label">Platform</div>
+        <div class="brand-pill">${platformIconHTML(r.platform)} ${esc(r.platform)}</div>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-label">Prompt</div>
+        <div class="prompt-bubble">${esc(r.prompt)}</div>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-label">Status</div>
+        <div class="stack-gap" style="flex-direction:row; flex-wrap:wrap;">
+          ${mentioned ? chip('Mentioned', 'own') : chip('Not mentioned', 'neutral')}
+          ${mentioned ? chip('Rank ' + mockRank(r, OWN), 'neutral') : ''}
+        </div>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-label">Full answer</div>
+        <div class="answer-text">${r.error ? '<span class="text-muted">Error fetching response: ' + esc(r.error) + '</span>' : esc(r.response || '(empty response)')}</div>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-label">Competitors mentioned</div>
+        <div class="source-chip-list">
+          ${r.mentions.filter(m => m !== OWN).map(m => `<span class="chip chip-competitor">${esc(m)}</span>`).join('') || '<span class="text-muted" style="font-size:12.5px;">None</span>'}
+        </div>
+      </div>
+      <div class="drawer-section">
+        <a class="btn btn-ghost" href="#" onclick="return false;" aria-disabled="true" title="Mock link — not wired to a live platform session">Open in platform</a>
+      </div>
+    `;
+    openDrawer(r.platform + ' · ' + r.category, body);
+  }
+
+  function render() {
+    const rows = getFiltered();
+    renderPaginatedTable(tableMount, {
+      rows,
+      emptyMessage: runs.length ? 'No answers match these filters.' : 'No data yet — run track.py to generate results.json.',
+      onRowClick: openAnswerDrawer,
+      columns: [
+        { label: 'Prompt', render: r => `<span style="display:block; max-width:300px;">${esc(r.prompt)}</span>` },
+        { label: 'Topic', render: r => esc(r.category || '--') },
+        { label: 'Platform', render: r => `<span class="brand-pill">${platformIconHTML(r.platform)} ${esc(r.platform)}</span>` },
+        { label: 'Mentioned', render: r => yesNoChip(r.mentions.includes(OWN)) },
+        { label: 'Rank', render: r => r.mentions.includes(OWN) ? chip('Rank ' + mockRank(r, OWN), 'neutral') : '<span class="text-muted">--</span>' },
+        { label: 'Competitors', render: r => r.mentions.filter(m => m !== OWN).map(m => `<span class="mention-chip" style="background:${colorForBrand(m, competitors)}">${esc(m)}</span>`).join('') || '<span class="no-mentions">none</span>' },
+      ],
+    });
+  }
+
+  [fPlatform, fTopic, fMention].forEach(el => el.addEventListener('change', render));
+  document.getElementById('search').addEventListener('input', render);
+  document.getElementById('export-btn').addEventListener('click', () => {
+    exportCSV('answers.csv', getFiltered(), [
+      { label: 'Prompt', key: 'prompt' },
+      { label: 'Topic', key: 'category' },
+      { label: 'Platform', key: 'platform' },
+      { label: 'Mentioned', key: r => r.mentions.includes(OWN) ? 'Yes' : 'No' },
+      { label: 'Competitors', key: r => r.mentions.filter(m => m !== OWN).join('; ') },
+    ]);
+  });
+
+  render();
+}
+init();
+</script>
+</body>
+</html>

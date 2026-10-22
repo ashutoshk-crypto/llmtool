@@ -7,126 +7,209 @@
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Overview</h1>
-    <p id="meta-line">Loading results...</p>
-  </header>
+<div class="app-shell">
+  <div class="main-area">
+    <div class="content-wrap">
+      <div id="title-bar"></div>
 
-  <div class="stat-row" id="stat-row"></div>
+      <div class="filter-bar" id="filter-bar">
+        <span class="filter-spacer"></span>
+      </div>
 
-  <div class="panel">
-    <h2>Share of voice by competitor</h2>
-    <p class="panel-sub">Percent of AI responses that mentioned each brand, across all platforms and prompts</p>
-    <div id="sov-chart"></div>
-  </div>
+      <div class="metric-strip" id="metric-strip"></div>
 
-  <div class="panel">
-    <h2>Share of voice by platform</h2>
-    <p class="panel-sub">Compare every tracked platform side by side, same brand order and colors throughout</p>
-    <div class="legend" id="platform-compare-legend"></div>
-    <div class="platform-grid" id="platform-compare-grid"></div>
-  </div>
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Visibility trend</h2>
+              <p class="card-sub">CoinSwitch mention rate across tracker runs, daily</p>
+            </div>
+            <div class="card-tools">
+              <label class="filter-pill" style="padding:6px 10px;">
+                <select id="group-by"><option value="daily">Daily</option></select>
+              </label>
+              <span id="compare-switch-mount"></span>
+            </div>
+          </div>
+          <div class="legend" id="trend-legend"></div>
+          <div id="trend-chart"></div>
+        </div>
 
-  <div class="panel">
-    <h2>Share of voice over time</h2>
-    <p class="panel-sub">Mention rate per brand across tracker runs, one snapshot per day</p>
-    <div class="legend" id="trend-legend"></div>
-    <div id="trend-chart"></div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Brand leaderboard</h2>
+              <p class="card-sub">Share of all tracked AI responses</p>
+            </div>
+          </div>
+          <div id="leaderboard"></div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Visibility by topic</h2>
+              <p class="card-sub">CoinSwitch mention rate per prompt category</p>
+            </div>
+          </div>
+          <div id="topic-bars"></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Visibility by platform</h2>
+              <p class="card-sub">CoinSwitch mention rate per platform</p>
+            </div>
+          </div>
+          <div id="platform-bars"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">Rank position distribution</h2>
+            <p class="card-sub">Where CoinSwitch tends to land when mentioned — rank is simulated for this demo (not tracked by the pipeline yet), derived deterministically per response</p>
+          </div>
+        </div>
+        <div id="rank-bars"></div>
+      </div>
+
+      <div style="text-align:right; margin-top:4px;">
+        <a class="btn btn-ghost" href="prompts.html">View full report →</a>
+      </div>
+    </div>
   </div>
 </div>
 
 <script src="assets/data.js"></script>
+<script src="assets/mock-data.js"></script>
 <script>
 async function init() {
   renderNav('index.html');
+  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Overview', 'How often AI answer engines mention CoinSwitch versus competitors');
+
   const data = await loadData();
   const { competitors, platforms, runs } = data;
-  setMetaLine(data);
+  const OWN = competitors.includes(OWN_BRAND) ? OWN_BRAND : competitors[0];
 
-  const totalRuns = runs.length;
-  const uniquePrompts = new Set(runs.map(r => r.prompt)).size;
-  const runsWithMention = runs.filter(r => r.mentions.length > 0).length;
-  const mentionRate = totalRuns ? Math.round((runsWithMention / totalRuns) * 100) : 0;
+  // filters (date range / prompt type / platform / topic / country)
+  const bar = document.getElementById('filter-bar');
+  const spacer = bar.querySelector('.filter-spacer');
+  const categories = [...new Set(runs.map(r => r.category).filter(Boolean))].sort();
+  const fType = buildFilterPill(bar, 'type', 'All prompt types', ['Branded', 'Non-branded']);
+  const fPlatform = buildFilterPill(bar, 'platform', 'All platforms', platforms);
+  const fTopic = buildFilterPill(bar, 'topic', 'All topics', categories);
+  const fCountry = buildFilterPill(bar, 'country', 'Country', ['India']);
+  bar.insertBefore(fType.closest('.filter-pill'), spacer);
+  bar.insertBefore(fPlatform.closest('.filter-pill'), spacer);
+  bar.insertBefore(fTopic.closest('.filter-pill'), spacer);
+  bar.insertBefore(fCountry.closest('.filter-pill'), spacer);
 
-  const counts = brandCounts(competitors, runs);
-  const topBrand = Object.entries(counts).sort((a,b) => b[1]-a[1])[0];
+  const compareMount = document.getElementById('compare-switch-mount');
+  let compareOn = false;
+  buildSwitch(compareMount, 'Compare', false, (val) => { compareOn = val; renderAll(); });
 
-  const statRow = document.getElementById('stat-row');
-  const stats = [
-    { label: 'Prompts analyzed', value: uniquePrompts, sub: totalRuns + ' total responses' },
-    { label: 'Mention rate', value: mentionRate + '%', sub: 'responses naming any tracked brand' },
-    { label: 'Top mentioned brand', value: topBrand ? topBrand[0] : '--', sub: topBrand ? topBrand[1] + ' mentions' : '' },
-    { label: 'Platforms tracked', value: platforms.length, sub: platforms.join(', ') },
-  ];
-  statRow.innerHTML = stats.map(s => `
-    <div class="stat-tile">
-      <div class="label">${esc(s.label)}</div>
-      <div class="value">${esc(String(s.value))}</div>
-      <div class="sub">${esc(s.sub)}</div>
-    </div>
-  `).join('');
-
-  if (!totalRuns) {
-    document.getElementById('sov-chart').innerHTML = '<p class="empty-state">No data yet.</p>';
-    return;
+  function filteredRuns() {
+    return runs.filter(r =>
+      (!fPlatform.value || r.platform === fPlatform.value) &&
+      (!fTopic.value || r.category === fTopic.value) &&
+      (!fType.value || classifyPromptType(r.prompt, competitors) === fType.value)
+    );
   }
 
-  const sovData = competitors.map(c => ({
-    name: c,
-    count: counts[c] || 0,
-    pct: totalRuns ? Math.round(((counts[c] || 0) / totalRuns) * 100) : 0,
-  })).sort((a,b) => b.count - a.count);
-  const maxPct = Math.max(1, ...sovData.map(d => d.pct));
+  async function renderAll() {
+    const fr = filteredRuns();
+    const totalRuns = fr.length;
+    const uniquePrompts = new Set(fr.map(r => r.prompt)).size;
+    const ownRuns = fr.filter(r => r.mentions.includes(OWN));
+    const mentionRate = totalRuns ? Math.round((ownRuns.length / totalRuns) * 100) : 0;
 
-  document.getElementById('sov-chart').innerHTML = sovData.map(d => `
-    <div class="bar-row">
-      <div class="name">${esc(d.name)}</div>
-      <div class="bar-track">
-        <div class="bar-fill" style="width:${(d.pct / maxPct) * 100}%; background:${colorForBrand(d.name, competitors)};"></div>
+    // mock-derived metrics the real pipeline doesn't capture
+    const ownPages = mockOwnPages();
+    const ownPagesCited = ownPages.reduce((n, p) => n + p.citations, 0);
+    const pagesWithMentions = ownPages.filter(p => p.mentions > 0).length;
+
+    document.getElementById('metric-strip').innerHTML = [
+      { label: 'Visibility', info: 'Share of filtered responses mentioning CoinSwitch', value: mentionRate + '%' },
+      { label: 'Answers mentioning brand', info: 'Responses naming CoinSwitch', value: String(ownRuns.length) },
+      { label: 'Own pages cited (mock)', info: 'Simulated — citations.json not yet tracked by the pipeline', value: String(ownPagesCited) },
+      { label: 'Pages mentioning brand (mock)', info: 'Simulated own-page tracking sample', value: String(pagesWithMentions) },
+    ].map(m => `
+      <div class="metric-cell">
+        <div class="metric-label">${esc(m.label)} <span class="info" title="${esc(m.info)}">i</span></div>
+        <div class="metric-value mono">${esc(m.value)}</div>
       </div>
-      <div class="count">${d.pct}% - ${d.count}</div>
-    </div>
-  `).join('');
+    `).join('');
 
-  // Share of voice by platform, all platforms compared side by side
-  document.getElementById('platform-compare-legend').innerHTML = competitors.map(c => `
-    <div class="legend-item">
-      <span class="legend-dot" style="background:${colorForBrand(c, competitors)}"></span>
-      ${esc(c)}
-    </div>
-  `).join('');
+    // trend chart
+    const history = await loadHistory();
+    document.getElementById('trend-legend').innerHTML = (compareOn ? competitors : [OWN]).map(c => `
+      <div class="legend-item"><span class="legend-dot" style="background:${c === OWN ? 'var(--white-line)' : colorForBrand(c, competitors)}"></span>${esc(c)}</div>
+    `).join('');
+    renderTrendChart(document.getElementById('trend-chart'), history, competitors, { compareOn, ownBrand: OWN });
 
-  document.getElementById('platform-compare-grid').innerHTML = platforms.map(p => {
-    const platRuns = runs.filter(r => r.platform === p);
-    const pCounts = brandCounts(competitors, platRuns);
-    const sorted = competitors
-      .map(c => ({ name: c, count: pCounts[c] || 0, pct: platRuns.length ? Math.round(((pCounts[c] || 0) / platRuns.length) * 100) : 0 }))
+    // leaderboard
+    const counts = brandCounts(competitors, fr);
+    const sorted = competitors.map(c => ({ name: c, count: counts[c] || 0, pct: totalRuns ? Math.round(((counts[c] || 0) / totalRuns) * 100) : 0 }))
       .sort((a, b) => b.count - a.count);
-    const max = Math.max(1, ...sorted.map(d => d.count));
-    return `
-      <div class="platform-card">
-        <h3>${esc(p)} <span style="color:var(--text-muted); font-weight:400;">(${platRuns.length} responses)</span></h3>
-        ${sorted.map(d => `
-          <div class="mini-bar-row">
-            <div class="name">${esc(d.name)}</div>
-            <div class="mini-track"><div class="mini-fill" style="width:${(d.count/max)*100}%; background:${colorForBrand(d.name, competitors)};"></div></div>
-            <div class="count">${d.pct}% - ${d.count}</div>
-          </div>
-        `).join('')}
+    document.getElementById('leaderboard').innerHTML = totalRuns ? sorted.map((d, i) => `
+      <div class="leader-row">
+        <div class="leader-rank">${i + 1}</div>
+        <div class="leader-name">${brandInitialsHTML(d.name, competitors)} ${esc(d.name)} ${d.name === OWN ? chip('Own', 'own') : ''}</div>
+        <div class="leader-value">${d.pct}%</div>
       </div>
-    `;
-  }).join('');
+    `).join('') : '<div class="empty-state">No data yet.</div>';
 
-  // Share of voice over time
-  const history = await loadHistory();
-  document.getElementById('trend-legend').innerHTML = competitors.map(c => `
-    <div class="legend-item">
-      <span class="legend-dot" style="background:${colorForBrand(c, competitors)}"></span>
-      ${esc(c)}
-    </div>
-  `).join('');
-  renderTrendChart(document.getElementById('trend-chart'), history, competitors);
+    // topic-wise visibility (own brand mention rate per category)
+    const topicRows = categories.map(cat => {
+      const catRuns = fr.filter(r => r.category === cat);
+      const pct = catRuns.length ? Math.round((catRuns.filter(r => r.mentions.includes(OWN)).length / catRuns.length) * 100) : 0;
+      return { name: cat, pct, count: catRuns.length };
+    }).sort((a, b) => b.pct - a.pct);
+    const maxTopic = Math.max(1, ...topicRows.map(d => d.pct));
+    document.getElementById('topic-bars').innerHTML = topicRows.length ? topicRows.map(d => `
+      <div class="bar-row">
+        <div class="name">${esc(d.name)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(d.pct/maxTopic)*100}%; background:var(--green);"></div></div>
+        <div class="count">${d.pct}% · ${d.count}</div>
+      </div>
+    `).join('') : '<div class="empty-state">No topics to show.</div>';
+
+    // platform-wise visibility (own brand)
+    const platRows = platforms.map(p => {
+      const pRuns = fr.filter(r => r.platform === p);
+      const pct = pRuns.length ? Math.round((pRuns.filter(r => r.mentions.includes(OWN)).length / pRuns.length) * 100) : 0;
+      return { name: p, pct, count: pRuns.length };
+    });
+    const maxPlat = Math.max(1, ...platRows.map(d => d.pct));
+    document.getElementById('platform-bars').innerHTML = platRows.length ? platRows.map(d => `
+      <div class="bar-row">
+        <div class="name">${esc(d.name)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(d.pct/maxPlat)*100}%; background:var(--blue);"></div></div>
+        <div class="count">${d.pct}% · ${d.count}</div>
+      </div>
+    `).join('') : '<div class="empty-state">No platforms to show.</div>';
+
+    // rank distribution (simulated — see card subtitle)
+    const rankCounts = { '1': 0, '2': 0, '3': 0, '4': 0, '5+': 0 };
+    ownRuns.forEach(r => { const rk = String(mockRank(r, OWN)); if (rankCounts[rk] !== undefined) rankCounts[rk]++; });
+    const maxRank = Math.max(1, ...Object.values(rankCounts));
+    document.getElementById('rank-bars').innerHTML = ownRuns.length ? Object.entries(rankCounts).map(([rk, c]) => `
+      <div class="bar-row">
+        <div class="name">Rank ${esc(rk)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(c/maxRank)*100}%; background:var(--series-5);"></div></div>
+        <div class="count">${c}</div>
+      </div>
+    `).join('') : '<div class="empty-state">No mentions to rank yet.</div>';
+  }
+
+  setMetaLine(data);
+  [fType, fPlatform, fTopic, fCountry].forEach(el => el.addEventListener('change', renderAll));
+  renderAll();
 }
 init();
 </script>
