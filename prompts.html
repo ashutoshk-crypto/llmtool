@@ -45,9 +45,11 @@ async function init() {
   const fTopic = buildFilterPill(bar, 'topic', 'All topics', categories);
   const fPlatform = buildFilterPill(bar, 'platform', 'All platforms', platforms);
   const fType = buildFilterPill(bar, 'type', 'All prompt types', ['Branded', 'Non-branded']);
+  const fBrand = buildFilterPill(bar, 'brand', 'All brands', competitors);
   bar.insertBefore(fTopic.closest('.filter-pill'), spacer);
   bar.insertBefore(fPlatform.closest('.filter-pill'), spacer);
   bar.insertBefore(fType.closest('.filter-pill'), spacer);
+  bar.insertBefore(fBrand.closest('.filter-pill'), spacer);
 
   // one row per unique prompt
   const byPrompt = {};
@@ -63,6 +65,7 @@ async function init() {
       prompt: p.prompt,
       category: p.category || '--',
       platforms: [...p.platforms],
+      brands: [...new Set(relevantRuns.flatMap(r => r.mentions))],
       visibility: relevantRuns.length ? Math.round((mentioned / relevantRuns.length) * 100) : 0,
       type: classifyPromptType(p.prompt, competitors),
     };
@@ -77,6 +80,7 @@ async function init() {
       (!fTopic.value || r.category === fTopic.value) &&
       (!fPlatform.value || r.platforms.includes(fPlatform.value)) &&
       (!fType.value || r.type === fType.value) &&
+      (!fBrand.value || r.brands.includes(fBrand.value)) &&
       (!q || r.prompt.toLowerCase().includes(q))
     );
   }
@@ -97,7 +101,7 @@ async function init() {
     });
   }
 
-  [fTopic, fPlatform, fType].forEach(el => el.addEventListener('change', render));
+  [fTopic, fPlatform, fType, fBrand].forEach(el => el.addEventListener('change', render));
   document.getElementById('search').addEventListener('input', render);
   document.getElementById('export-btn').addEventListener('click', () => {
     exportCSV('prompts.csv', getFiltered(), [
@@ -105,6 +109,7 @@ async function init() {
       { label: 'Topic', key: 'category' },
       { label: 'Type', key: 'type' },
       { label: 'Platforms', key: r => r.platforms.join('; ') },
+      { label: 'Brands mentioned', key: r => r.brands.join('; ') },
       { label: 'Visibility %', key: 'visibility' },
     ]);
   });

@@ -103,7 +103,7 @@ function brandInitialsHTML(name, competitors, size) {
   return `<span class="initial-circle${lg}" style="background:${color}">${esc(initials(name))}</span>`;
 }
 
-const PLATFORM_COLORS = { ChatGPT: '#3FB950', Gemini: '#5B9BF8' };
+const PLATFORM_COLORS = { ChatGPT: '#3FB950', Gemini: '#5B9BF8', Claude: '#D97757', 'Google AI Overview': '#F4B400' };
 function platformIconHTML(platform) {
   const color = PLATFORM_COLORS[platform] || colorForString(platform);
   return `<span class="platform-icon" style="background:${color}" title="${esc(platform)}">${esc((platform || '?')[0])}</span>`;

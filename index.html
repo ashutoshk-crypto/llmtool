@@ -23,7 +23,7 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Visibility trend</h2>
+              <h2 class="card-title">Visibility trend <span class="info" title="Daily share of brand-relevant responses that mention CoinSwitch, tracked over time">i</span></h2>
               <p class="card-sub">CoinSwitch mention rate across tracker runs, daily</p>
             </div>
             <div class="card-tools">
@@ -40,7 +40,7 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Brand leaderboard</h2>
+              <h2 class="card-title">Brand leaderboard <span class="info" title="Every tracked brand ranked by the share of brand-relevant responses that mention it">i</span></h2>
               <p class="card-sub">Share of all tracked AI responses</p>
             </div>
           </div>
@@ -52,7 +52,7 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Visibility by topic</h2>
+              <h2 class="card-title">Visibility by topic <span class="info" title="CoinSwitch mention rate broken down by prompt category/topic">i</span></h2>
               <p class="card-sub">CoinSwitch mention rate per prompt category</p>
             </div>
           </div>
@@ -61,7 +61,7 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Visibility by platform</h2>
+              <h2 class="card-title">Visibility by platform <span class="info" title="CoinSwitch mention rate broken down by AI platform (ChatGPT, Claude, Gemini, etc.)">i</span></h2>
               <p class="card-sub">CoinSwitch mention rate per platform</p>
             </div>
           </div>
@@ -72,7 +72,7 @@
       <div class="card">
         <div class="card-head">
           <div>
-            <h2 class="card-title">Rank position distribution</h2>
+            <h2 class="card-title">Rank position distribution <span class="info" title="How many of CoinSwitch's mentions landed at each rank, by the order brands were first named in the response">i</span></h2>
             <p class="card-sub">Where CoinSwitch tends to land when mentioned — position among all brands named in the response, by first-mention order</p>
           </div>
         </div>
@@ -96,15 +96,13 @@ async function init() {
   const { competitors, platforms, runs } = data;
   const OWN = competitors.includes(OWN_BRAND) ? OWN_BRAND : competitors[0];
 
-  // filters (date range / prompt type / platform / topic / country)
+  // filters (date range / platform / topic / country)
   const bar = document.getElementById('filter-bar');
   const spacer = bar.querySelector('.filter-spacer');
   const categories = [...new Set(runs.map(r => r.category).filter(Boolean))].sort();
-  const fType = buildFilterPill(bar, 'type', 'All prompt types', ['Branded', 'Non-branded']);
   const fPlatform = buildFilterPill(bar, 'platform', 'All platforms', platforms);
   const fTopic = buildFilterPill(bar, 'topic', 'All topics', categories);
   const fCountry = buildFilterPill(bar, 'country', 'Country', ['India']);
-  bar.insertBefore(fType.closest('.filter-pill'), spacer);
   bar.insertBefore(fPlatform.closest('.filter-pill'), spacer);
   bar.insertBefore(fTopic.closest('.filter-pill'), spacer);
   bar.insertBefore(fCountry.closest('.filter-pill'), spacer);
@@ -116,8 +114,7 @@ async function init() {
   function filteredRuns() {
     return runs.filter(r =>
       (!fPlatform.value || r.platform === fPlatform.value) &&
-      (!fTopic.value || r.category === fTopic.value) &&
-      (!fType.value || classifyPromptType(r.prompt, competitors) === fType.value)
+      (!fTopic.value || r.category === fTopic.value)
     );
   }
 
@@ -209,7 +206,7 @@ async function init() {
   }
 
   setMetaLine(data);
-  [fType, fPlatform, fTopic, fCountry].forEach(el => el.addEventListener('change', renderAll));
+  [fPlatform, fTopic, fCountry].forEach(el => el.addEventListener('change', renderAll));
   renderAll();
 }
 init();
