@@ -488,25 +488,68 @@ function renderTrendChart(containerEl, history, competitors, opts) {
   const seriesList = compareOn ? competitors : [ownBrand];
   const softBlues = ['#5B9BF8', '#86B6F6', '#3C7FD6', '#9FC4F2', '#2E67B3'];
   let blueIdx = 0;
+  const seriesColors = {};
   const lines = seriesList.map((c) => {
     const isOwn = c === ownBrand;
     const color = isOwn ? 'var(--white-line)' : softBlues[(blueIdx++) % softBlues.length];
+    seriesColors[c] = color;
     const pts = history.map((h, i) => [x(i), y(h.pct ? (h.pct[c] || 0) : 0)]);
     const path = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
-    const dots = pts.map((p, i) => {
-      const pct = history[i].pct ? (history[i].pct[c] || 0) : 0;
-      return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="${color}" stroke="var(--card)" stroke-width="1.5"><title>${esc(c)} - ${esc(history[i].date)}: ${pct}%</title></circle>`;
-    }).join('');
+    const dots = pts.map((p, i) => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="${color}" stroke="var(--card)" stroke-width="1.5"/>`).join('');
     return `<path d="${path}" fill="none" stroke="${color}" stroke-width="${isOwn ? 2.5 : 1.6}"/>${dots}`;
   }).join('');
 
+  const hoverCols = history.map((h, i) => {
+    const left = i === 0 ? padL : (x(i - 1) + x(i)) / 2;
+    const right = i === n - 1 ? W - padR : (x(i) + x(i + 1)) / 2;
+    return `<rect class="trend-hover-col" data-idx="${i}" x="${left.toFixed(1)}" y="${padT}" width="${(right - left).toFixed(1)}" height="${plotH}" fill="transparent"/>`;
+  }).join('');
+
   containerEl.innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}" style="width:100%; height:auto; display:block;" role="img" aria-label="Share of voice over time">
-      ${gridLines}
-      ${lines}
-      ${xLabels}
-    </svg>
+    <div class="chart-wrap">
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%; height:auto; display:block;" role="img" aria-label="Share of voice over time">
+        ${gridLines}
+        ${lines}
+        <line class="trend-hover-line" x1="0" y1="${padT}" x2="0" y2="${H - padB}" stroke="var(--border)" stroke-width="1" opacity="0"/>
+        ${xLabels}
+        ${hoverCols}
+      </svg>
+      <div class="chart-tooltip"></div>
+    </div>
   `;
+
+  const svg = containerEl.querySelector('svg');
+  const tooltip = containerEl.querySelector('.chart-tooltip');
+  const hoverLine = containerEl.querySelector('.trend-hover-line');
+  const cols = containerEl.querySelectorAll('.trend-hover-col');
+
+  function showTooltip(i) {
+    const h = history[i];
+    hoverLine.setAttribute('x1', x(i).toFixed(1));
+    hoverLine.setAttribute('x2', x(i).toFixed(1));
+    hoverLine.setAttribute('opacity', '1');
+    const rows = seriesList.map(c => {
+      const pct = h.pct ? (h.pct[c] || 0) : 0;
+      return `<div class="chart-tooltip-row"><span class="chart-tooltip-dot" style="background:${seriesColors[c]}"></span><span class="chart-tooltip-name">${esc(c)}</span><span class="chart-tooltip-val">${pct}%</span></div>`;
+    }).join('');
+    tooltip.innerHTML = `<div class="chart-tooltip-date">${esc(h.date)}</div>${rows}`;
+    const pctX = (x(i) / W) * 100;
+    tooltip.style.left = pctX + '%';
+    const pctY = (y(Math.max(...seriesList.map(c => h.pct ? (h.pct[c] || 0) : 0))) / H) * 100;
+    tooltip.style.top = Math.max(pctY - 2, 4) + '%';
+    tooltip.style.opacity = '1';
+  }
+
+  function hideTooltip() {
+    hoverLine.setAttribute('opacity', '0');
+    tooltip.style.opacity = '0';
+  }
+
+  cols.forEach(col => {
+    col.addEventListener('mouseenter', () => showTooltip(+col.dataset.idx));
+    col.addEventListener('mouseleave', hideTooltip);
+  });
+  svg.addEventListener('mouseleave', hideTooltip);
 }
 
 /** Aggregate every citation URL seen across runs into a ranked source list. */
