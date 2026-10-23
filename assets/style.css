@@ -113,7 +113,7 @@ body.has-sidebar .main-area { margin-left: 264px; }
 }
 .workspace-mark img { width: 16px; height: 16px; }
 .workspace-name { font-size: 13.5px; font-weight: 600; color: var(--title); flex: 1; }
-.workspace-wordmark { height: 15px; width: auto; flex: 1; object-fit: contain; object-position: left; }
+.workspace-wordmark { height: 34px; width: auto; max-width: 160px; flex: 1; object-fit: contain; object-position: left; }
 .brand-logo-circle {
   display: inline-flex; align-items: center; justify-content: center;
   width: 20px; height: 20px; border-radius: 999px; flex-shrink: 0;

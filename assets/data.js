@@ -43,7 +43,7 @@ const BRANDS = {
     resultsFile: 'results-lemonn.json',
     historyFile: 'history-lemonn.json',
     mark: 'icons/lemonn.png',
-    wordmark: 'icons/lemonn.png',
+    wordmark: 'icons/lemonn-wordmark-white.png',
     competitorDomains: {
       'groww.in': 'Groww',
       'zerodha.com': 'Zerodha',
