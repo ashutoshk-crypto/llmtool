@@ -1,0 +1,15 @@
+# One competitor/brand name per line. Lines starting with # are ignored.
+Lemonn
+Groww
+Zerodha
+Angel One
+Upstox
+Dhan
+FYERS
+5paisa
+ICICI Direct
+Kotak Securities
+HDFC Securities
+Sahi
+Paytm Money
+Share.Market

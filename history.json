@@ -44,5 +44,28 @@
       "Delta Exchange": 1.4,
       "Mudrex": 6.5
     }
+  },
+  {
+    "date": "2026-10-23",
+    "generated_at": "2026-10-23T08:02:33.924646+00:00",
+    "total_runs": 179,
+    "counts": {
+      "CoinSwitch": 27,
+      "CoinDCX": 35,
+      "Binance": 161,
+      "WazirX": 21,
+      "Zebpay": 22,
+      "Delta Exchange": 3,
+      "Mudrex": 8
+    },
+    "pct": {
+      "CoinSwitch": 15.1,
+      "CoinDCX": 19.6,
+      "Binance": 89.9,
+      "WazirX": 11.7,
+      "Zebpay": 12.3,
+      "Delta Exchange": 1.7,
+      "Mudrex": 4.5
+    }
   }
 ]

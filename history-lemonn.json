@@ -1,0 +1,39 @@
+[
+  {
+    "date": "2026-10-23",
+    "generated_at": "2026-10-23T07:36:11.044600+00:00",
+    "total_runs": 107,
+    "counts": {
+      "Lemonn": 14,
+      "Groww": 62,
+      "Zerodha": 95,
+      "Angel One": 82,
+      "Upstox": 86,
+      "Dhan": 51,
+      "FYERS": 37,
+      "5paisa": 24,
+      "ICICI Direct": 48,
+      "Kotak Securities": 31,
+      "HDFC Securities": 31,
+      "Sahi": 3,
+      "Paytm Money": 15,
+      "Share.Market": 5
+    },
+    "pct": {
+      "Lemonn": 13.1,
+      "Groww": 57.9,
+      "Zerodha": 88.8,
+      "Angel One": 76.6,
+      "Upstox": 80.4,
+      "Dhan": 47.7,
+      "FYERS": 34.6,
+      "5paisa": 22.4,
+      "ICICI Direct": 44.9,
+      "Kotak Securities": 29.0,
+      "HDFC Securities": 29.0,
+      "Sahi": 2.8,
+      "Paytm Money": 14.0,
+      "Share.Market": 4.7
+    }
+  }
+]

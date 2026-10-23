@@ -1,0 +1,47 @@
+prompt,intent,category
+"What are the best trading and investing apps in India?",Commercial,Overall app discovery
+"Which Indian apps offer stocks, F&O, mutual funds, IPOs and commodities in one account?",Informational,Overall app discovery
+Which app should I use to start investing in Indian stocks?,Transactional,Stocks and demat
+"Compare Indian stockbrokers by account opening fees, brokerage, AMC and DP charges.",Commercial,Stocks and demat
+Which stock trading apps in India are easy for beginners to use?,Commercial,Stocks and demat
+Which are the best apps for intraday trading in India?,Commercial,Intraday trading
+"Compare Indian intraday trading apps by brokerage, charting tools and order features.",Commercial,Intraday trading
+Which are the best futures and options trading apps in India?,Commercial,F&O trading
+Which apps should I compare for trading Nifty and Bank Nifty options?,Commercial,F&O trading
+Which Indian brokers offer options analytics and an easy-to-use option chain?,Informational,F&O trading
+Which Indian trading apps provide F&O signals with entry, target and stop-loss levels?,Informational,Zing: F&O signals
+Which platforms offer indicator-based options trade ideas that I can review before placing a trade?,Informational,Zing: F&O signals
+Which trading apps offer pre-built F&O strategies with manual trade confirmation?,Informational,Zing: F&O signals
+Which brokers in India offer margin trading facilities for buying stocks?,Informational,Boost: MTF
+"Compare Indian brokers by MTF interest rates, brokerage and other funding charges.",Commercial,Boost: MTF
+Which brokers offer up to 4x funding on eligible stocks through MTF?,Informational,Boost: MTF
+Which apps let me hold delivery stocks using broker funding beyond the trading day?,Informational,Boost: MTF
+Which Indian brokers let me pledge existing shares to get trading margin?,Informational,Pledge
+Which brokers allow pledged holdings to be used as collateral for F&O trading?,Informational,Pledge
+"Compare stockbrokers by pledge charges, haircuts and collateral margin rules.",Commercial,Pledge
+Which are the best apps for MCX commodity trading in India?,Commercial,Commodity trading
+Which apps let me trade gold, silver and crude oil futures in India?,Informational,Commodity trading
+"Compare commodity brokers in India by brokerage, trading tools and available MCX contracts.",Commercial,Commodity trading
+"Which apps let me trade stocks, F&O and commodities through the same account?",Informational,Commodity trading
+Which apps should I compare for direct mutual fund investing in India?,Commercial,Mutual funds and SIPs
+Which apps let me manage mutual fund SIPs and stock investments together?,Informational,Mutual funds and SIPs
+Which apps should I compare for applying to IPOs through UPI in India?,Commercial,IPOs
+Which platforms let me track upcoming IPOs and apply from the same app?,Informational,IPOs
+Which Indian brokers offer both a mobile trading app and a web trading terminal?,Informational,Web trading
+Which Indian brokers offer TradingView charts for stock and options trading?,Informational,Web trading
+What are the best alternatives to Groww for investing and active trading in India?,Competitor,Competitor
+What are the best alternatives to Zerodha for stocks and F&O trading?,Competitor,Competitor
+What are the best alternatives to Dhan for options and commodity trading?,Competitor,Competitor
+What are the best alternatives to Sahi for intraday and options trading?,Competitor,Competitor
+"What are the best alternatives to Paytm Money for stocks, mutual funds and IPOs?",Competitor,Competitor
+What are the best alternatives to Share.Market for trading and investing?,Competitor,Competitor
+What are the best alternatives to PhonePe Invest for trading and investing?,Competitor,Competitor
+"What products does Lemonn offer, and who is it suitable for?",Branded,Product Branded
+"What are Lemonn's current brokerage, account maintenance and DP charges?",Branded,Product Branded
+"How does Zing by Lemonn work, and does it require manual trade confirmation?",Branded,Product Branded
+"How does Lemonn Boost MTF work, including interest, eligible stocks and margin requirements?",Branded,Product Branded
+"How does pledging stocks on Lemonn work, including charges, haircuts and permitted uses?",Branded,Product Branded
+"Does Lemonn offer MCX commodity trading, and which contracts are available?",Branded,Product Branded
+Compare Lemonn and Sahi for intraday and F&O trading.,Branded,Product Branded
+"Compare Lemonn and Paytm Money for stocks, mutual funds and IPOs.",Branded,Product Branded
+"Compare Lemonn and PhonePe Invest, formerly Share.Market, by products, charges and trading tools.",Branded,Product Branded

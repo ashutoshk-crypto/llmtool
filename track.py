@@ -14,10 +14,16 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
-PROMPTS_FILE = "prompts.csv"
-COMPETITORS_FILE = "competitors.txt"
-RESULTS_FILE = "results.json"
-HISTORY_FILE = "history.json"
+BRAND = os.environ.get("BRAND", "coinswitch").strip().lower()
+BRAND_FILES = {
+    "coinswitch": dict(prompts="prompts.csv", competitors="competitors.txt", results="results.json", history="history.json"),
+    "lemonn": dict(prompts="lemonn-prompts.csv", competitors="lemonn-competitors.txt", results="results-lemonn.json", history="history-lemonn.json"),
+}
+cfg = BRAND_FILES.get(BRAND, BRAND_FILES["coinswitch"])
+PROMPTS_FILE = cfg["prompts"]
+COMPETITORS_FILE = cfg["competitors"]
+RESULTS_FILE = cfg["results"]
+HISTORY_FILE = cfg["history"]
 SEARCH_QUERY_CACHE_FILE = "search_queries_cache.json"
 
 OPENAI_MODEL = "gpt-5.1"
@@ -132,7 +138,7 @@ def query_openai(prompt):
                 "prompt": prompt,
             },
             headers={"authorization": f"Bearer {os.environ['SCRAPINGBEE_API_KEY']}"},
-            timeout=60,
+            timeout=120,
         )
     resp.raise_for_status()
     data = resp.json()
@@ -157,7 +163,7 @@ def query_gemini(prompt):
                 "country_code": "in",
             },
             headers={"authorization": f"Bearer {os.environ['SCRAPINGBEE_API_KEY']}"},
-            timeout=60,
+            timeout=120,
         )
     resp.raise_for_status()
     data = resp.json()
