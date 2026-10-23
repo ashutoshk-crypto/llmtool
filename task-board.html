@@ -19,7 +19,7 @@
       </div>
 
       <div class="card" style="padding:12px 14px;">
-        <p class="page-sub" style="margin:0; font-size:12px;">Cards are seeded from real content-opportunity gaps — categories where CoinSwitch loses to a competitor or gets no mention at all (same logic as <a class="cell-link" href="content-plan.html">content-plan.html</a>). Drag cards between columns to track progress; column placement is this browser's working state only, not published anywhere.</p>
+        <p class="page-sub" style="margin:0; font-size:12px;">Cards are seeded from real content-opportunity gaps — categories where <span id="task-board-brand"></span> loses to a competitor or gets no mention at all (same logic as <a class="cell-link" href="content-plan.html">content-plan.html</a>). Drag cards between columns to track progress; column placement is this browser's working state only, not published anywhere.</p>
       </div>
 
       <div class="kanban-board" id="board"></div>
@@ -67,6 +67,7 @@ const COLUMNS = [
 async function init() {
   renderNav('task-board.html');
   renderTitleBar(document.getElementById('title-bar'), 'Task board', 'Content tasks', 'Kanban view of content tasks moving from gap → agent draft → review → published');
+  document.getElementById('task-board-brand').textContent = OWN_BRAND;
 
   const data = await loadData();
   const tasks = taskCardsFromContentGaps(data.competitors, data.runs);

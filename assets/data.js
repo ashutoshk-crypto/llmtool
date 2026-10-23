@@ -7,21 +7,100 @@
    ============================================================ */
 
 const SERIES_COLORS = ['--series-1','--series-2','--series-3','--series-4','--series-5','--series-6','--series-7'];
-const OWN_BRAND = 'CoinSwitch';
-const OWN_DOMAIN = 'coinswitch.co';
+
+/** Brand registry — each entry is a fully separate tracked brand with its own data files,
+ *  competitor set and branding assets. Add a new brand here to make it selectable in the UI. */
+const BRANDS = {
+  coinswitch: {
+    label: 'CoinSwitch',
+    ownBrand: 'CoinSwitch',
+    ownDomain: 'coinswitch.co',
+    resultsFile: 'results.json',
+    historyFile: 'history.json',
+    mark: 'icons/cs_mark.svg',
+    wordmark: 'icons/cs_logo.svg',
+    competitorDomains: {
+      'coindcx.com': 'CoinDCX',
+      'binance.com': 'Binance',
+      'wazirx.com': 'WazirX',
+      'zebpay.com': 'Zebpay',
+      'delta.exchange': 'Delta Exchange',
+      'mudrex.com': 'Mudrex',
+    },
+    competitorLogos: {
+      'CoinDCX': 'icons/coindcx.png',
+      'Binance': 'icons/binance.png',
+      'WazirX': 'icons/wazirx.png',
+      'Zebpay': 'icons/zebpay.png',
+      'Delta Exchange': 'icons/delta-exchange.png',
+      'Mudrex': 'icons/mudrex.png',
+    },
+  },
+  lemonn: {
+    label: 'Lemonn',
+    ownBrand: 'Lemonn',
+    ownDomain: 'lemonn.co.in',
+    resultsFile: 'results-lemonn.json',
+    historyFile: 'history-lemonn.json',
+    mark: 'icons/lemonn.png',
+    wordmark: 'icons/lemonn.png',
+    competitorDomains: {
+      'groww.in': 'Groww',
+      'zerodha.com': 'Zerodha',
+      'angelone.in': 'Angel One',
+      'upstox.com': 'Upstox',
+      'dhan.co': 'Dhan',
+      'fyers.in': 'FYERS',
+      '5paisa.com': '5paisa',
+      'icicidirect.com': 'ICICI Direct',
+      'kotaksecurities.com': 'Kotak Securities',
+      'hdfcsec.com': 'HDFC Securities',
+      'sahi.com': 'Sahi',
+      'paytmmoney.com': 'Paytm Money',
+      'phonepeinvest.com': 'Share.Market',
+    },
+    competitorLogos: {
+      'Groww': 'icons/groww.png',
+      'Zerodha': 'icons/zerodha.png',
+      'Angel One': 'icons/angelone.png',
+      'Upstox': 'icons/upstox.png',
+      'Dhan': 'icons/dhan.png',
+      'FYERS': 'icons/fyers.png',
+      '5paisa': 'icons/paisa5.png',
+      'ICICI Direct': 'icons/icicidirect.png',
+      'Kotak Securities': 'icons/kotaksecurities.png',
+      'HDFC Securities': 'icons/hdfcsec.svg',
+      'Sahi': 'icons/sahi.png',
+      'Paytm Money': 'icons/paytmmoney.png',
+      'Share.Market': 'icons/sharemarket.png',
+    },
+  },
+};
+const BRAND_STORAGE_KEY = 'tracker-brand';
+function getCurrentBrandKey() {
+  try {
+    const k = localStorage.getItem(BRAND_STORAGE_KEY);
+    return BRANDS[k] ? k : 'coinswitch';
+  } catch (e) {
+    return 'coinswitch';
+  }
+}
+function setCurrentBrand(key) {
+  if (!BRANDS[key]) return;
+  try { localStorage.setItem(BRAND_STORAGE_KEY, key); } catch (e) { /* ignore */ }
+  location.reload();
+}
+const CURRENT_BRAND_KEY = getCurrentBrandKey();
+const CURRENT_BRAND = BRANDS[CURRENT_BRAND_KEY];
+
+const OWN_BRAND = CURRENT_BRAND.ownBrand;
+const OWN_DOMAIN = CURRENT_BRAND.ownDomain;
 function isOwnDomain(domain) {
   return !!domain && (domain === OWN_DOMAIN || domain.endsWith('.' + OWN_DOMAIN));
 }
 
 /** Known competitor domains, for classifying a cited source as Own / Competitor / Third party. */
-const COMPETITOR_DOMAINS = {
-  'coindcx.com': 'CoinDCX',
-  'binance.com': 'Binance',
-  'wazirx.com': 'WazirX',
-  'zebpay.com': 'Zebpay',
-  'delta.exchange': 'Delta Exchange',
-  'mudrex.com': 'Mudrex',
-};
+const COMPETITOR_DOMAINS = CURRENT_BRAND.competitorDomains;
 function sourceTypeForDomain(domain) {
   if (isOwnDomain(domain)) return 'Own';
   const hit = Object.keys(COMPETITOR_DOMAINS).find(d => domain === d || domain.endsWith('.' + d));
@@ -82,18 +161,15 @@ function logoFallback(img, initialsText, color, lg) {
   span.textContent = initialsText;
   img.parentElement.replaceWith(span);
 }
-const COMPETITOR_LOGOS = {
-  'CoinDCX': 'icons/coindcx.png',
-  'Binance': 'icons/binance.png',
-  'WazirX': 'icons/wazirx.png',
-  'Zebpay': 'icons/zebpay.png',
-  'Delta Exchange': 'icons/delta-exchange.png',
-  'Mudrex': 'icons/mudrex.png',
-};
+const COMPETITOR_LOGOS = CURRENT_BRAND.competitorLogos;
 function brandInitialsHTML(name, competitors, size) {
   const lg = size === 'lg' ? ' lg' : '';
   if (name === OWN_BRAND) {
-    return `<span class="brand-logo-circle${lg}"><img src="icons/cs_mark.svg" alt="CoinSwitch" /></span>`;
+    if (CURRENT_BRAND.mark) {
+      return `<span class="brand-logo-circle${lg}"><img src="${CURRENT_BRAND.mark}" alt="${esc(OWN_BRAND)}" /></span>`;
+    }
+    const ownColor = competitors ? colorForBrand(name, competitors) : colorForString(name);
+    return `<span class="initial-circle${lg}" style="background:${ownColor}">${esc(initials(name))}</span>`;
   }
   const color = competitors ? colorForBrand(name, competitors) : colorForString(name);
   const logo = COMPETITOR_LOGOS[name];
@@ -178,10 +254,19 @@ function renderNav(activeHref, opts) {
   const nav = document.createElement('div');
   nav.className = 'sidebar';
   nav.innerHTML = `
-    <div class="workspace-switch">
-      <span class="workspace-mark"><img src="icons/cs_mark.svg" alt="" /></span>
-      <img class="workspace-wordmark" src="icons/cs_logo.svg" alt="CoinSwitch" />
+    <div class="workspace-switch" style="position:relative;cursor:pointer;">
+      ${CURRENT_BRAND.mark ? `<span class="workspace-mark"><img src="${CURRENT_BRAND.mark}" alt="" /></span>` : ''}
+      ${CURRENT_BRAND.wordmark
+        ? `<img class="workspace-wordmark" src="${CURRENT_BRAND.wordmark}" alt="${esc(CURRENT_BRAND.label)}" />`
+        : `<span class="workspace-wordmark" style="font-weight:700;">${esc(CURRENT_BRAND.label)}</span>`}
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 10l5 5 5-5"/></svg>
+      <div class="workspace-switch-menu" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:6px;background:var(--panel, #1c1f26);border:1px solid var(--border, #333);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.3);z-index:50;overflow:hidden;">
+        ${Object.keys(BRANDS).map(k => `
+          <div class="workspace-switch-item" data-brand="${esc(k)}" style="padding:8px 14px;font-size:13px;cursor:pointer;${k === CURRENT_BRAND_KEY ? 'font-weight:700;' : ''}">
+            ${esc(BRANDS[k].label)}${k === CURRENT_BRAND_KEY ? ' ✓' : ''}
+          </div>
+        `).join('')}
+      </div>
     </div>
     <button class="sidebar-collapse" type="button">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
@@ -198,6 +283,24 @@ function renderNav(activeHref, opts) {
   `;
   document.body.insertBefore(nav, document.body.firstChild);
   document.body.insertBefore(overlay, nav.nextSibling);
+
+  const workspaceSwitch = nav.querySelector('.workspace-switch');
+  const workspaceMenu = nav.querySelector('.workspace-switch-menu');
+  if (workspaceSwitch && workspaceMenu) {
+    workspaceSwitch.addEventListener('click', (e) => {
+      workspaceMenu.style.display = workspaceMenu.style.display === 'none' ? 'block' : 'none';
+    });
+    workspaceMenu.querySelectorAll('.workspace-switch-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const key = item.getAttribute('data-brand');
+        if (key && key !== CURRENT_BRAND_KEY) setCurrentBrand(key);
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!workspaceSwitch.contains(e.target)) workspaceMenu.style.display = 'none';
+    });
+  }
 
   const closeSidebar = () => document.body.classList.remove('sidebar-open');
   toggle.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
@@ -434,7 +537,7 @@ function showOnboardingTip(anchorEl, key, text) {
 /* ---------------- Data loading (real data — untouched pipeline) ---------------- */
 async function loadData() {
   try {
-    const res = await fetch('results.json');
+    const res = await fetch(CURRENT_BRAND.resultsFile);
     const data = await res.json();
     if (!data || !data.runs || !data.runs.length) throw new Error('empty');
     data.runs.forEach(r => { if (!r.citations) r.citations = []; });
@@ -446,7 +549,7 @@ async function loadData() {
 
 async function loadHistory() {
   try {
-    const res = await fetch('history.json');
+    const res = await fetch(CURRENT_BRAND.historyFile);
     const data = await res.json();
     if (!Array.isArray(data)) throw new Error('bad shape');
     return data.sort((a, b) => a.date.localeCompare(b.date));

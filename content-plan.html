@@ -46,7 +46,7 @@ function titleCase(s) {
 
 function renderGapContentPlan(competitors, runs) {
   const listEl = document.getElementById('gap-plan-list');
-  const TARGET = competitors.includes('CoinSwitch') ? 'CoinSwitch' : competitors[0];
+  const TARGET = competitors.includes(OWN_BRAND) ? OWN_BRAND : competitors[0];
   if (!TARGET || !runs.length) {
     document.getElementById('gap-plan-brand').textContent = TARGET || 'your brand';
     listEl.innerHTML = '<p class="empty-state">No data yet.</p>';

@@ -23,8 +23,8 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Visibility trend <span class="info" data-tip="Daily share of brand-relevant responses that mention CoinSwitch, tracked over time">i</span></h2>
-              <p class="card-sub">CoinSwitch mention rate across tracker runs, daily</p>
+              <h2 class="card-title">Visibility trend <span class="info" id="trend-info-tip" data-tip="">i</span></h2>
+              <p class="card-sub" id="trend-card-sub"></p>
             </div>
             <div class="card-tools">
               <label class="filter-pill" style="padding:6px 10px;">
@@ -52,8 +52,8 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Visibility by topic <span class="info" data-tip="CoinSwitch mention rate broken down by prompt category/topic">i</span></h2>
-              <p class="card-sub">CoinSwitch mention rate per prompt category</p>
+              <h2 class="card-title">Visibility by topic <span class="info" id="topic-info-tip" data-tip="">i</span></h2>
+              <p class="card-sub" id="topic-card-sub"></p>
             </div>
           </div>
           <div id="topic-bars"></div>
@@ -61,8 +61,8 @@
         <div class="card">
           <div class="card-head">
             <div>
-              <h2 class="card-title">Visibility by platform <span class="info" data-tip="CoinSwitch mention rate broken down by AI platform (ChatGPT, Claude, Gemini, etc.)">i</span></h2>
-              <p class="card-sub">CoinSwitch mention rate per platform</p>
+              <h2 class="card-title">Visibility by platform <span class="info" id="platform-info-tip" data-tip="">i</span></h2>
+              <p class="card-sub" id="platform-card-sub"></p>
             </div>
           </div>
           <div id="platform-bars"></div>
@@ -72,8 +72,8 @@
       <div class="card">
         <div class="card-head">
           <div>
-            <h2 class="card-title">Rank position distribution <span class="info" data-tip="How many of CoinSwitch's mentions landed at each rank, by the order brands were first named in the response">i</span></h2>
-            <p class="card-sub">Where CoinSwitch tends to land when mentioned — position among all brands named in the response, by first-mention order</p>
+            <h2 class="card-title">Rank position distribution <span class="info" id="rank-info-tip" data-tip="">i</span></h2>
+            <p class="card-sub" id="rank-card-sub"></p>
           </div>
         </div>
         <div id="rank-bars"></div>
@@ -90,7 +90,15 @@
 <script>
 async function init() {
   renderNav('index.html');
-  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Overview', 'How often AI answer engines mention CoinSwitch versus competitors');
+  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Overview', `How often AI answer engines mention ${OWN_BRAND} versus competitors`);
+  document.getElementById('trend-info-tip').setAttribute('data-tip', `Daily share of brand-relevant responses that mention ${OWN_BRAND}, tracked over time`);
+  document.getElementById('trend-card-sub').textContent = `${OWN_BRAND} mention rate across tracker runs, daily`;
+  document.getElementById('topic-info-tip').setAttribute('data-tip', `${OWN_BRAND} mention rate broken down by prompt category/topic`);
+  document.getElementById('topic-card-sub').textContent = `${OWN_BRAND} mention rate per prompt category`;
+  document.getElementById('platform-info-tip').setAttribute('data-tip', `${OWN_BRAND} mention rate broken down by AI platform (ChatGPT, Claude, Gemini, etc.)`);
+  document.getElementById('platform-card-sub').textContent = `${OWN_BRAND} mention rate per platform`;
+  document.getElementById('rank-info-tip').setAttribute('data-tip', `How many of ${OWN_BRAND}'s mentions landed at each rank, by the order brands were first named in the response`);
+  document.getElementById('rank-card-sub').textContent = `Where ${OWN_BRAND} tends to land when mentioned — position among all brands named in the response, by first-mention order`;
 
   const data = await loadData();
   const { competitors, platforms, runs } = data;
@@ -132,10 +140,10 @@ async function init() {
     const distinctOwnPages = new Set(ownCitations.map(c => c.url)).size;
 
     document.getElementById('metric-strip').innerHTML = [
-      { label: 'Visibility', info: 'Share of brand-relevant responses (those naming any brand) mentioning CoinSwitch', value: mentionRate + '%' },
-      { label: 'Answers mentioning brand', info: 'Responses naming CoinSwitch', value: `${ownRuns.length} / ${totalRuns}` },
-      { label: 'Answers citing an own page', info: 'Responses that cited at least one coinswitch.co URL', value: String(ownCitedRuns) },
-      { label: 'Distinct own pages cited', info: 'Unique coinswitch.co URLs cited across filtered responses', value: String(distinctOwnPages) },
+      { label: 'Visibility', info: `Share of brand-relevant responses (those naming any brand) mentioning ${OWN_BRAND}`, value: mentionRate + '%' },
+      { label: 'Answers mentioning brand', info: `Responses naming ${OWN_BRAND}`, value: `${ownRuns.length} / ${totalRuns}` },
+      { label: 'Answers citing an own page', info: `Responses that cited at least one ${OWN_DOMAIN} URL`, value: String(ownCitedRuns) },
+      { label: 'Distinct own pages cited', info: `Unique ${OWN_DOMAIN} URLs cited across filtered responses`, value: String(distinctOwnPages) },
     ].map(m => `
       <div class="metric-cell">
         <div class="metric-label">${esc(m.label)} <span class="info" data-tip="${esc(m.info)}">i</span></div>

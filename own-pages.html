@@ -26,7 +26,7 @@
       <div class="metric-strip" id="metric-strip"></div>
 
       <div class="card">
-        <div class="card-head"><div><h2 class="card-title">Tracked URLs</h2><p class="card-sub">coinswitch.co pages cited by AI answer engines, from real tracked citations</p></div></div>
+        <div class="card-head"><div><h2 class="card-title">Tracked URLs</h2><p class="card-sub" id="tracked-urls-sub"></p></div></div>
         <div id="urls-table"></div>
       </div>
     </div>
@@ -37,7 +37,8 @@
 <script>
 async function init() {
   renderNav('own-pages.html');
-  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Own-page tracking', 'Monitor which CoinSwitch pages get cited or help drive brand mentions');
+  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Own-page tracking', `Monitor which ${OWN_BRAND} pages get cited or help drive brand mentions`);
+  document.getElementById('tracked-urls-sub').textContent = `${OWN_DOMAIN} pages cited by AI answer engines, from real tracked citations`;
 
   const data = await loadData();
   const { runs } = data;
@@ -86,9 +87,9 @@ async function init() {
   function render() {
     renderPaginatedTable(document.getElementById('urls-table'), {
       rows: getFiltered(),
-      emptyMessage: 'No coinswitch.co citations tracked yet — run track.py, or add a URL to watch for it.',
+      emptyMessage: `No ${OWN_DOMAIN} citations tracked yet — run track.py, or add a URL to watch for it.`,
       columns: [
-        { label: 'URL', render: r => `<a class="cell-link" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.url.replace('https://coinswitch.co',''))}</a>` },
+        { label: 'URL', render: r => `<a class="cell-link" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.url.replace('https://' + OWN_DOMAIN,''))}</a>` },
         { label: 'Citations', num: true, render: r => String(r.citations) },
         { label: 'With brand mention', num: true, render: r => String(r.coMentions) },
         { label: 'Status', render: r => r.addedByYou && r.citations === 0 ? chip('Watching — not yet cited', 'neutral') : (r.addedByYou ? chip('Added by you', 'neutral') : '<span class="text-muted">--</span>') },
@@ -107,7 +108,7 @@ async function init() {
       render();
     }
   });
-  showOnboardingTip(addBtn, 'own-pages-add', 'Track a CoinSwitch URL to watch for it in future AI answers.');
+  showOnboardingTip(addBtn, 'own-pages-add', `Track a ${OWN_BRAND} URL to watch for it in future AI answers.`);
 
   render();
 }

@@ -20,7 +20,7 @@
       <div class="content-grid">
         <div class="card" id="top-competitor-card"></div>
         <div class="card">
-          <div class="card-head"><div><h2 class="card-title">Competitor table</h2><p class="card-sub">Visibility % and mention count, including CoinSwitch</p></div></div>
+          <div class="card-head"><div><h2 class="card-title">Competitor table</h2><p class="card-sub" id="competitor-table-sub"></p></div></div>
           <div id="competitor-table"></div>
         </div>
       </div>
@@ -29,7 +29,7 @@
         <div class="card-head">
           <div>
             <h2 class="card-title">Topic × brand heatmap</h2>
-            <p class="card-sub">Mention rate per topic, CoinSwitch pinned first</p>
+            <p class="card-sub" id="heatmap-sub"></p>
           </div>
         </div>
         <div id="heatmap"></div>
@@ -42,7 +42,9 @@
 <script>
 async function init() {
   renderNav('competitors.html');
-  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Competitors', 'How rival brands compare to CoinSwitch across tracked AI answers');
+  renderTitleBar(document.getElementById('title-bar'), 'Analytics', 'Competitors', `How rival brands compare to ${OWN_BRAND} across tracked AI answers`);
+  document.getElementById('competitor-table-sub').textContent = `Visibility % and mention count, including ${OWN_BRAND}`;
+  document.getElementById('heatmap-sub').textContent = `Mention rate per topic, ${OWN_BRAND} pinned first`;
 
   const data = await loadData();
   const { competitors, runs } = data;
@@ -68,7 +70,7 @@ async function init() {
 
     const top = rivalSorted[0];
     document.getElementById('top-competitor-card').innerHTML = top ? `
-      <div class="card-head"><div><h2 class="card-title">Top competitor</h2><p class="card-sub">Highest mention count after CoinSwitch</p></div></div>
+      <div class="card-head"><div><h2 class="card-title">Top competitor</h2><p class="card-sub">Highest mention count after ${esc(OWN)}</p></div></div>
       <div style="display:flex; align-items:center; gap:14px; margin-top:10px;">
         ${brandInitialsHTML(top.name, competitors, 'lg')}
         <div>
